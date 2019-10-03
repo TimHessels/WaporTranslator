@@ -21,7 +21,7 @@ def main(output_folder_L1, latlim, lonlim):
     watertools.Collect.SoilGrids.Bulk_Density(output_folder_L1, latlim, lonlim, level = 'sl6')    
 
     # Download organic carbon content from SoilGrids        
-    watertools.Collect.SoilGrids.Organic_Carbon_Content(output_folder_L1, latlim, lonlim, level = 'sl6')     
+    watertools.Collect.SoilGrids.Organic_Carbon_Content(output_folder_L1, latlim, lonlim, level = 'sl1')     
 
     # Download organic carbon stock from SoilGrid for 6 different layers 
     watertools.Collect.SoilGrids.Organic_Carbon_Stock(output_folder_L1, latlim, lonlim, level = 'sd1')  
