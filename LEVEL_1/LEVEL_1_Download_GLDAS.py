@@ -9,6 +9,7 @@ import os
 import gdal
 import pandas as pd
 import numpy as np
+from joblib import Parallel, delayed
 
 import watertools
 import watertools.General.data_conversions as DC
@@ -16,12 +17,17 @@ import watertools.General.data_conversions as DC
 def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim):
 
     # Get Date range
+    cores = 4
     Startdate = "%s-01-01" %Start_year_analyses
     Enddate = "%s-12-31" %End_year_analyses
     Dates = pd.date_range(Startdate, Enddate, freq = "D")
+    Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst']
     
+    print("Downloading METEO data from GLDAS")
+
     # Download required GLDAS data    
-    watertools.Collect.GLDAS.daily(output_folder_L1, ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst'], Startdate, Enddate, latlim, lonlim)
+    Parallel(n_jobs=cores)(delayed(Download_GLDAS_Parallel)(Var, output_folder_L1, Startdate, Enddate, latlim, lonlim)
+                                             for Var in Vars)
 
     # Create folder for relative humidity
     output_dir = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", "daily", "hum_f_inst", "mean")
@@ -36,6 +42,12 @@ def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonli
             Calc_Humidity(output_folder_L1, output_filename)
         
     return()
+    
+def Download_GLDAS_Parallel(Var, output_folder_L1, Startdate, Enddate, latlim, lonlim):
+    
+    Var_array = ["%s" %Var]
+    watertools.Collect.GLDAS.daily(output_folder_L1, Var_array, Startdate, Enddate, latlim, lonlim, Waitbar = 0)
+    
         
 def Calc_Humidity(output_folder_L1, output_filename):
     
