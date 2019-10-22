@@ -429,124 +429,124 @@ Now you can also run the WaporTranslator with the "LANDSAF" as "Radiation_Source
 
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| Available_Before_Depletion  | mm | Dekadal | [click here]() |
-| Critical_Soil_Moisture | cm3/cm3 | Dekadal | [click here]() |
-| Crop_Coef_Dry_Soil | - | Dekadal | [click here]() |
-| Crop_Coef_Update | - | Dekadal | [click here]() |
-| Crop_Water_Requirement | mm/dekadal | Dekadal | [click here]() |
+| Available_Before_Depletion  | mm | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L657) |
+| Critical_Soil_Moisture | cm3/cm3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L409) |
+| Crop_Coef_Dry_Soil | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L138) |
+| Crop_Coef_Update | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L567) |
+| Crop_Water_Requirement | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L390) |
 | **Cumulative** |  |  | 
-| _1. ET0_| Cumulative mm | Dekadal | [click here]() |
-| _2. Evapotranspiration_ | Cumulative mm | Dekadal | [click here]() |
-| _3. NPP_ | Cumulative kg/ha | Dekadal | [click here]() |
-| _4. Precipitation_ | Cumulative mm | Dekadal | [click here]() |
-| _5. Temperature_ | Cumulative Celcius | Dekadal | [click here]() |
-| _6. Transpiration_ | Cumulative mm | Dekadal | [click here]() |
-| Deep_Percolation | mm/dekadal | Dekadal | [click here]() |
-| Evaporative_Fraction | - |  Dekadal | [click here]() |
-| Evaporative_Fraction_Long_Term | - | Long Term Dekadal |[click here]() |
-| Fractional_Vegetation_Cover | - | Dekadal | [click here]() |
-| LAI | m2/m2      | Dekadal | [click here]() |
-| Land_Surface_Emissivity (only LANDSAF option) | - | Dekadal | [click here]() |
-| LU_END | - | Yearly | [click here]() |
-| Net_Radiation | W/m2 | Dekadal | [click here]() |
-| Net_Radiation_Long_Term | W/m2 | Long Term Dekadal | [click here]() |
-| Net_Supply_Drainage | mm/dekadal | Dekadal | [click here]() |
+| _1. ET0_| Cumulative mm | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _2. Evapotranspiration_ | Cumulative mm | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _3. NPP_ | Cumulative kg/ha | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _4. Precipitation_ | Cumulative mm | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _5. Temperature_ | Cumulative Celcius | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _6. Transpiration_ | Cumulative mm | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| Deep_Percolation | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L493) |
+| Evaporative_Fraction | - |  Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L282) |
+| Evaporative_Fraction_Long_Term | - | Long Term Dekadal |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L610) |
+| Fractional_Vegetation_Cover | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L120) |
+| LAI | m2/m2      | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L83) |
+| Land_Surface_Emissivity (only LANDSAF option) | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L162) |
+| LU_END | - | Yearly | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L81) |
+| Net_Radiation | W/m2 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L190) |
+| Net_Radiation_Long_Term | W/m2 | Long Term Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L586) |
+| Net_Supply_Drainage | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L475) |
 | **Phenelogy** |      |   | 
-| _1. CropClass_ | - | Yearly | [click here]() |
-| _2. End_ | DOY | S1/S2 | [click here]() |
-| _3. Perenial_ | DOY | S1/S2 | [click here]() |
-| _4. Start_ | DOY | S1/S2 | [click here]() |
-| Root_Depth | cm | Dekadal | [click here]() |
-| Soil_Moisture | cm3/cm3 | Dekadal | [click here]() |
-| Soil_Moisture_Change | mm/dekadal | Dekadal | [click here]() |
-| Soil_Moisture_End | cm3/cm3  | Dekadal | [click here]() |
-| Soil_Moisture_Long_Term |  cm3/cm3  | Long Term Dekadal | [click here]() |
-| Soil_Moisture_Start | cm3/cm3  | Dekadal | [click here]() |
-| Soil_Water_Holding_Capacity | mm/m | Static | [click here]() |
-| Storage_Coeff_Surface_Runoff | mm/dekadal | Dekadal | [click here]() |
-| Surface_Runoff_Coefficient | - | Dekadal | [click here]() |
-| Surface_Runoff_P | mm/dekadal | Dekadal | [click here]() |
-| Theta_FC_Subsoil | cm3/cm3 | Static | [click here]() |
-| Theta_Sat_Subsoil | cm3/cm3 | Static | [click here]() |
-| Theta_WP_Subsoil | cm3/cm3 | Static | [click here]() |
+| _1. CropClass_ | - | Yearly | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _2. End_ | DOY | S1/S2 | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _3. Perenial_ | DOY | S1/S2 | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| _4. Start_ | DOY | S1/S2 | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Phenology.py#L151) |
+| Root_Depth | cm | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L102) |
+| Soil_Moisture | cm3/cm3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L368) |
+| Soil_Moisture_Change | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L457) |
+| Soil_Moisture_End | cm3/cm3  | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L428) |
+| Soil_Moisture_Long_Term |  cm3/cm3  | Long Term Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L634) |
+| Soil_Moisture_Start | cm3/cm3  | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L427) |
+| Soil_Water_Holding_Capacity | mm/m | Static | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L351) |
+| Storage_Coeff_Surface_Runoff | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L511) |
+| Surface_Runoff_Coefficient | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L548) |
+| Surface_Runoff_P | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L529) |
+| Theta_FC_Subsoil | cm3/cm3 | Static | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L317) |
+| Theta_Sat_Subsoil | cm3/cm3 | Static | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L300) |
+| Theta_WP_Subsoil | cm3/cm3 | Static | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_2/Run_Intermediate_Parameters.py#L334) |
 
 ### <a name="chapter10_2"></a>**LEVEL 3 Results**
 
 #### **Climate Smart**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| Carbon_Root_Zone  | kg/ha | Dekadal | [click here]() |
-| Carbon_Sequestration |  kg/ha/dekadal| Dekadal | [click here]() |
-| Climatic_Cooling | Celsius/dekadal | Dekadal | [click here]() |
-| Combating_Soil_Erosion | kg/ha/dekadal | Dekadal | [click here]() |
-| NPP_Change_In_Time | Percentage/year | Static | [click here]() |
-| Soil_Erodibility | - | Static | [click here]() |
-| Sustaining_Rainfall | m3/ha/dekadal | Dekadal | [click here]() |
-| Water_Generation | m3/ha/dekadal | Dekadal | [click here]() |
+| Carbon_Root_Zone  | kg/ha | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L76) |
+| Carbon_Sequestration |  kg/ha/dekadal| Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L100) |
+| Climatic_Cooling | Celsius/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L123) |
+| Combating_Soil_Erosion | kg/ha/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L174) |
+| NPP_Change_In_Time | Percentage/year | Static | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L215) |
+| Soil_Erodibility | - | Static | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L157) |
+| Sustaining_Rainfall | m3/ha/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L191) |
+| Water_Generation | m3/ha/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Climate_Smart/LEVEL_3_Calc_Climate_Smart.py#L140) |
 
 #### **Drought**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| Accumulated_Rainfall_Deficit  | mm | Dekadal |[click here]() |
-| ET_Deficit | mm/dekadal | Dekadal | [click here]() |
-| Integrated_Drought_Alert_Level | Level | Dekadal | [click here]() |
-| Soil_Moisture_Anomaly | Percentage | Dekadal |[click here]() | 
+| Accumulated_Rainfall_Deficit  | mm | Dekadal |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Drought/LEVEL_3_Calc_Drought.py#L73) |
+| ET_Deficit | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Drought/LEVEL_3_Calc_Drought.py#L56) |
+| Integrated_Drought_Alert_Level | Level | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Drought/LEVEL_3_Calc_Drought.py#L115) |
+| Soil_Moisture_Anomaly | Percentage | Dekadal |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Drought/LEVEL_3_Calc_Drought.py#L90) | 
 
 #### **Food Security**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| Accumulated_Biomass_Production_Season  | kg/ha/season | Season |[click here]() |
-| Accumulated_NPP_Season |  kg/ha/season | Season | [click here]() |
-| Actual_Biomass_Production | kg/ha/day | Dekadal | [click here]() |
-| AEZ | - | Yearly | [click here]() |
-| Grassland | - | Yearly | [click here]() |
-| Irrigation | - | Dekadal | [click here]() |
-| Irrigation_Maps_Yearly | - | Yearly | [click here]() |
-| Mean_Biomass_Production | kg/ha/day | Long Term Dekadal | [click here]() |
-| Production_Gap_Soil_Moisture | kg/ha/day | Dekadal | [click here]() |
-| Production_Gap_Spatial | kg/ha/day | Dekadal | [click here]() |
-| Production_Gap_Temporal | kg/ha/day | Dekadal | [click here]() |
-| Soil_Moisture_Stress | - | Dekadal | [click here]() |
-| Target_Biomass_Production |kg/ha/day | Dekadal | [click here]() |
-| Water_Unlimited_Biomass_Production | kg/ha/day  | Dekadal | [click here]() |
-| Yield | kg/ha/season | Season | [click here]() |
-| Water_Unlimited_Biomass_Production | kg/ha/season  | Season | [click here]() |
+| Accumulated_Biomass_Production_Season  | kg/ha/season | Season |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L345) |
+| Accumulated_NPP_Season |  kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L283) |
+| Actual_Biomass_Production | kg/ha/day | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L140) |
+| AEZ | - | Yearly | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L127) |
+| Grassland | - | Yearly | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L81) |
+| Irrigation | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L77) |
+| Irrigation_Maps_Yearly | - | Yearly | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L99) |
+| Mean_Biomass_Production | kg/ha/day | Long Term Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L196) |
+| Production_Gap_Soil_Moisture | kg/ha/day | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L249) |
+| Production_Gap_Spatial | kg/ha/day | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L179) |
+| Production_Gap_Temporal | kg/ha/day | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L217) |
+| Soil_Moisture_Stress | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L232) |
+| Target_Biomass_Production |kg/ha/day | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L161) |
+| Water_Unlimited_Biomass_Production | kg/ha/season  | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L266) |
+| Yield | kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L361) |
+| Yield_Fresh_Grass | kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L375) |
 
 #### **Irrigation**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| Adequacy_Crop_Water_Deficit  | mm/dekadal | Dekadal |[click here]() |
-| Adequacy_Relative_Irrigation_Water_Supply | - | Dekadal | [click here]() |
-| Adequacy_Relative_Water_Supply | - | Dekadal | [click here]() |
-| Degree_Of_Over_Irrigation | - | Dekadal | [click here]() |
-| Degree_Of_Under_Irrigation | - | Dekadal | [click here]() |
-| Equity_Soil_Moisture | - | Dekadal | [click here]() |
-| ET_Savings_Spatial | mm/dekadal | Dekadal | [click here]() |
-| ET_Target_Spatial | mm/dekadal | Dekadal | [click here]() |
-| ETblue | mm/dekadal| Dekadal | [click here]() |
-| ETgap | mm/dekadal | Dekadal | [click here]() |
-| Feasible_Water_Conservation | mm/dekadal| Dekadal | [click here]() |
-| Gross_Irrigation_Water_Supply | mm/dekadal | Dekadal | [click here]() |
-| Irrigation_Water_Requirement | mm/dekadal| Dekadal | [click here]() |
-| Mean_Long_Term_Evapotranspiration | mm/dekadal | Long Term Dekadal | [click here]() |
-| Non_Beneficial_Water_Losses | mm/dekadal | Dekadal | [click here]() |
-| Non_Consumptive_Use_Due_To_Irrigation |  mm/dekadal | Dekadal | [click here]() |
-| Onfarm_Irrigation_Efficiency | Percentage | Dekadal | [click here]() |
-| Reliability_Soil_Moisture | - | Yearly | [click here]() |
+| Adequacy_Crop_Water_Deficit  | mm/dekadal | Dekadal |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L224) |
+| Adequacy_Relative_Irrigation_Water_Supply | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L122) |
+| Adequacy_Relative_Water_Supply | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L105) |
+| Degree_Of_Over_Irrigation | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L190) |
+| Degree_Of_Under_Irrigation | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L207) |
+| Equity_Soil_Moisture | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L361) |
+| ET_Savings_Spatial | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L269) |
+| ET_Target_Spatial | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L246) |
+| ETblue | mm/dekadal| Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L139) |
+| ETgap | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L310) |
+| Feasible_Water_Conservation | mm/dekadal| Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L327) |
+| Gross_Irrigation_Water_Supply | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L88) |
+| Irrigation_Water_Requirement | mm/dekadal| Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L71) |
+| Mean_Long_Term_Evapotranspiration | mm/dekadal | Long Term Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L287) |
+| Non_Beneficial_Water_Losses | mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L244) |
+| Non_Consumptive_Use_Due_To_Irrigation |  mm/dekadal | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L156) |
+| Onfarm_Irrigation_Efficiency | Percentage | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L173) |
+| Reliability_Soil_Moisture | - | Yearly | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Irrigation/LEVEL_3_Calc_Irrigation.py#L381) |
 
 #### **Water Productivity**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| AquaCrop_Water_Use_Efficiency  | kg/m2 | Dekadal |[click here]() |
-| GBWP_Decade | kg/m3 | Dekadal | [click here]() |
-| GBWP_Gap | kg/m3 | Dekadal | [click here]() |
-| GBWP_Improvement_Required | Percentage | Dekadal | [click here]() |
-| GBWP_Season | kg/m3 | Season | [click here]() |
-| GBWP_Target | kg/m3 | Dekadal | [click here]() |
-| Normalized_GBWP_Max_Per_TBP | kg/m3 | Dekadal | [click here]() |
-| Normalized_GBWP_Min_Per_TBP | kg/m3  | Dekadal | [click here]() |
-| T_Efficiency | mm/dekadal| Dekadal | [click here]() |
-| Water_Productivity | kg/m3| Season | [click here]() |
-| Water_Productivity_Score | - | Dekadal | [click here]() |
+| AquaCrop_Water_Use_Efficiency  | kg/m2 | Dekadal |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L215) |
+| GBWP_Decade | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L323) |
+| GBWP_Gap | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L292 |
+| GBWP_Improvement_Required | Percentage | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L310) |
+| GBWP_Season | kg/m3 | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L249) |
+| GBWP_Target | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L275) |
+| Normalized_GBWP_Max_Per_TBP | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L335) |
+| Normalized_GBWP_Min_Per_TBP | kg/m3  | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#352) |
+| T_Efficiency | mm/dekadal| Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L78) |
+| Water_Productivity | kg/m3| Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L386) |
+| Water_Productivity_Score | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L369) |
 
 ---
