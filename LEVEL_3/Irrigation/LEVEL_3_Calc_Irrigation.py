@@ -7,186 +7,395 @@ Created on Tue Oct  1 19:06:20 2019
 
 import os
 import gdal
-import datetime
+import warnings
 import pandas as pd
-import calendar
 import numpy as np
 
-import WaporTranslator.LEVEL_2.LEVEL_2_Calc_Radiation as L2_Rad
+import WaporTranslator.LEVEL_1.Input_Data as Inputs
+import WaporTranslator.LEVEL_1.DataCube as DataCube
+import WaporTranslator.LEVEL_2.Functions as Functions
 
-import watertools.General.raster_conversions as RC
-import watertools.General.data_conversions as DC
+def main(Start_year_analyses, End_year_analyses, output_folder):
 
-
-def Calc_Irrigation(output_folder_L2, Date, example_file):
-
-    # Get Date
-    Date_datetime = datetime.datetime.strptime(Date, "%Y-%m-%d")
+    # Do not show non relevant warnings
+    warnings.filterwarnings("ignore")
+    warnings.filterwarnings("ignore", category=FutureWarning)
+    warnings.filterwarnings("ignore", category=RuntimeWarning)
     
-    # Get folder L1
-    input_folder_L1 = output_folder_L2.replace("LEVEL_2", "LEVEL_1")
+    Startdate = "%s-01-01" %Start_year_analyses
+    Enddate = "%s-12-31" %End_year_analyses
+    
+    # Define dates
+    Dates = Functions.Get_Dekads(Start_year_analyses, End_year_analyses)
+    Dates_Years = pd.date_range(Startdate, Enddate, freq = "AS")
+    
+    # Get path and formats
+    Paths = Inputs.Input_Paths()
+    Formats = Inputs.Input_Formats()
+    Conversions = Inputs.Input_Conversions()
+    
+    # Set example file
+    example_file = os.path.join(output_folder, "LEVEL_1", "MASK", "MASK.tif")
+    
+    # Open Mask
+    dest_mask = gdal.Open(example_file)
+    MASK = dest_mask.GetRasterBand(1).ReadAsArray()
+    
+    # Define output folder LEVEL 3
+    output_folder_L3 = os.path.join(output_folder, "LEVEL_3", "Irrigation")
+    if not os.path.exists(output_folder_L3):
+        os.makedirs(output_folder_L3)
+    
+    ################################# Dynamic maps #################################
+    Crop_Water_Requirement = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Crop_Water_Requirement), Formats.Crop_Water_Requirement, Dates, Conversion = Conversions.Crop_Water_Requirement, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Crop Water Requirement', Product = '', Unit = 'mm/decade')
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    E = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.E), Formats.E, Dates, Conversion = Conversions.E, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'E', Product = 'WAPOR', Unit = 'mm/day')
+    P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.P), Formats.P, Dates, Conversion = Conversions.P, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'P', Product = 'WAPOR', Unit = 'mm/day')
+    Critical_Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Critical_Soil_Moisture), Formats.Critical_Soil_Moisture, Dates, Conversion = Conversions.Critical_Soil_Moisture, Variable = 'Critical Soil Moisture', Product = 'SoilGrids', Unit = 'cm3/cm3')
+    Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Soil_Moisture), Formats.Soil_Moisture, Dates, Conversion = Conversions.Soil_Moisture, Variable = 'Soil Moisture', Product = '', Unit = 'cm3/cm3')
+    Net_Supply_Drainage  = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Net_Supply_Drainage), Formats.Net_Supply_Drainage, Dates, Conversion = Conversions.Net_Supply_Drainage, Variable = 'Net Supply Drainage', Product = '', Unit = 'mm/decade')
+    Deep_Percolation = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Deep_Percolation), Formats.Deep_Percolation, Dates, Conversion = Conversions.Deep_Percolation, Variable = 'Deep Percolation', Product = '', Unit = 'mm/decade')
+    Surface_Runoff_Coefficient = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Surface_Runoff_Coefficient), Formats.Surface_Runoff_Coefficient, Dates, Conversion = Conversions.Surface_Runoff_Coefficient, Variable = 'Surface Runoff Coefficient', Product = '', Unit = '-')
+    Surface_Runoff_P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Surface_Runoff_P), Formats.Surface_Runoff_P, Dates, Conversion = Conversions.Surface_Runoff_P, Variable = 'Surface Runoff Precipitation', Product = '', Unit = 'mm/decade')
+    AEZ = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.AEZ), Formats.AEZ, Dates, Conversion = Conversions.AEZ, Variable = 'Surface Runoff Coefficient', Product = '', Unit = '-')  
+    ETcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET), Formats.Cumulative_ET, Dates, Conversion = Conversions.Cumulative_ET, Variable = 'Cumulated Evapotranspiration', Product = '', Unit = 'mm/decade')      
+    Irrigation = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Irrigation), Formats.Irrigation, Dates, Conversion = Conversions.Irrigation, Variable = 'Irrigation', Product = '', Unit = '-')  
+    
+    ################################# Static maps #################################     
+    Theta_FC_Subsoil = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Theta_FC_Subsoil), Formats.Theta_FC_Subsoil, Dates = None, Conversion = Conversions.Theta_FC_Subsoil, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Theta Field Capacity Subsoil', Product = 'SoilGrids', Unit = 'cm3/cm3')
 
-    # Get folder L3
-    output_folder_L3 = output_folder_L2.replace("LEVEL_2", "LEVEL_3")   
+    ######################## Calculate days in each dekads #################################
+    Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)
 
-    # date in dekad
-    day_dekad = int("%d" %int(np.minimum(int(("%02d" %int(str(Date_datetime.day)))[0]), 2)))
-        
-    # Conversion WAPOR unit to mm/Dekade
-    if day_dekad == 2:
-        year = Date_datetime.year
-        month = Date_datetime.month
-        NOD = calendar.monthrange(year, month)[1]
-    else:
-        NOD = 10
+    ######################## Calculate Irrigation Water Requirement ########################
+    Irrigation_Water_Requirement_Data = (Crop_Water_Requirement.Data - 0.7 * P.Data * Days_in_Dekads[:, None, None])/(0.65)
+ 
+    # Write in DataCube
+    Irrigation_Water_Requirement = DataCube.Rasterdata_Empty()
+    Irrigation_Water_Requirement.Data = Irrigation_Water_Requirement_Data * MASK
+    Irrigation_Water_Requirement.Projection = ET.Projection
+    Irrigation_Water_Requirement.GeoTransform = ET.GeoTransform
+    Irrigation_Water_Requirement.Ordinal_time = ET.Ordinal_time
+    Irrigation_Water_Requirement.Size = Irrigation_Water_Requirement_Data.shape
+    Irrigation_Water_Requirement.Variable = "Irrigation Water Requirement"
+    Irrigation_Water_Requirement.Unit = "mm-dekad-1"
+    
+    del Irrigation_Water_Requirement_Data
+    
+    Irrigation_Water_Requirement.Save_As_Tiff(os.path.join(output_folder_L3, "Irrigation_Water_Requirement"))    
+    
+    ######################## Calculate Gross Irrigation Water Supply ########################
+    Gross_Irrigation_Water_Supply_Data = np.maximum(0, (Net_Supply_Drainage.Data + Deep_Percolation.Data + Surface_Runoff_P.Data) * (1 + Surface_Runoff_Coefficient.Data))
+ 
+    # Write in DataCube
+    Gross_Irrigation_Water_Supply = DataCube.Rasterdata_Empty()
+    Gross_Irrigation_Water_Supply.Data = Gross_Irrigation_Water_Supply_Data * MASK
+    Gross_Irrigation_Water_Supply.Projection = ET.Projection
+    Gross_Irrigation_Water_Supply.GeoTransform = ET.GeoTransform
+    Gross_Irrigation_Water_Supply.Ordinal_time = ET.Ordinal_time
+    Gross_Irrigation_Water_Supply.Size = Gross_Irrigation_Water_Supply_Data.shape
+    Gross_Irrigation_Water_Supply.Variable = "Gross Irrigation Water Supply"
+    Gross_Irrigation_Water_Supply.Unit = "mm-dekad-1"
+    
+    del Gross_Irrigation_Water_Supply_Data
+    
+    Gross_Irrigation_Water_Supply.Save_As_Tiff(os.path.join(output_folder_L3, "Gross_Irrigation_Water_Supply"))    
+    
+    ######################## Calculate Adequacy Relative Water Supply ########################
+    Adequacy_Relative_Water_Supply_Data = (Gross_Irrigation_Water_Supply.Data + P.Data * Days_in_Dekads[:, None, None])/Crop_Water_Requirement.Data
+    
+    # Write in DataCube
+    Adequacy_Relative_Water_Supply = DataCube.Rasterdata_Empty()
+    Adequacy_Relative_Water_Supply.Data = Adequacy_Relative_Water_Supply_Data * MASK
+    Adequacy_Relative_Water_Supply.Projection = ET.Projection
+    Adequacy_Relative_Water_Supply.GeoTransform = ET.GeoTransform
+    Adequacy_Relative_Water_Supply.Ordinal_time = ET.Ordinal_time
+    Adequacy_Relative_Water_Supply.Size = Adequacy_Relative_Water_Supply_Data.shape
+    Adequacy_Relative_Water_Supply.Variable = "Adequacy Relative Water Supply"
+    Adequacy_Relative_Water_Supply.Unit = "-"
+    
+    del Adequacy_Relative_Water_Supply_Data
+    
+    Adequacy_Relative_Water_Supply.Save_As_Tiff(os.path.join(output_folder_L3, "Adequacy_Relative_Water_Supply"))    
+       
+    ######################## Calculate Adequacy Relative Irrigation Water Supply ########################
+    Adequacy_Relative_Irrigation_Water_Supply_Data = Gross_Irrigation_Water_Supply.Data/Irrigation_Water_Requirement.Data
+    
+    # Write in DataCube
+    Adequacy_Relative_Irrigation_Water_Supply = DataCube.Rasterdata_Empty()
+    Adequacy_Relative_Irrigation_Water_Supply.Data = Adequacy_Relative_Irrigation_Water_Supply_Data * MASK
+    Adequacy_Relative_Irrigation_Water_Supply.Projection = ET.Projection
+    Adequacy_Relative_Irrigation_Water_Supply.GeoTransform = ET.GeoTransform
+    Adequacy_Relative_Irrigation_Water_Supply.Ordinal_time = ET.Ordinal_time
+    Adequacy_Relative_Irrigation_Water_Supply.Size = Adequacy_Relative_Irrigation_Water_Supply_Data.shape
+    Adequacy_Relative_Irrigation_Water_Supply.Variable = "Adequacy Relative Irrigation Water Supply"
+    Adequacy_Relative_Irrigation_Water_Supply.Unit = "-"
+    
+    del Adequacy_Relative_Irrigation_Water_Supply_Data
+    
+    Adequacy_Relative_Irrigation_Water_Supply.Save_As_Tiff(os.path.join(output_folder_L3, "Adequacy_Relative_Irrigation_Water_Supply"))    
+    
+    ######################## Calculate ETblue ########################
+    ETblue_Data = np.where(ET.Data > 0.7 * P.Data, Days_in_Dekads[:, None, None] * (ET.Data - 0.7 * P.Data), 0)
+    
+    # Write in DataCube
+    ETblue = DataCube.Rasterdata_Empty()
+    ETblue.Data = ETblue_Data * MASK
+    ETblue.Projection = ET.Projection
+    ETblue.GeoTransform = ET.GeoTransform
+    ETblue.Ordinal_time = ET.Ordinal_time
+    ETblue.Size = ETblue_Data.shape
+    ETblue.Variable = "Blue Evapotranspiration"
+    ETblue.Unit = "mm-dekad-1"
+    
+    del ETblue_Data
+    
+    ETblue.Save_As_Tiff(os.path.join(output_folder_L3, "ETblue"))    
+     
+    ######################## Calculate Non Consumptive Use Due To Irrigation ########################
+    Non_Consumptive_Use_Due_To_Irrigation_Data = np.maximum(0, Gross_Irrigation_Water_Supply.Data - ETblue.Data)
 
-    # Create output folder for Irrigation
-    output_folder_Irrigation = os.path.join(output_folder_L3, "Irrigation")
-    if not os.path.exists(output_folder_Irrigation):
-        os.makedirs(output_folder_Irrigation)
-        
-    # Define output files
-    filename_out_irrigation_water_requirement = os.path.join(output_folder_Irrigation, "Irrigation_Water_Requirement", "Irrigation_Water_Requirement_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_gross_irrigation_water_supply = os.path.join(output_folder_Irrigation, "Gross_Irrigation_Water_Supply", "Gross_Irrigation_Water_Supply_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_adequacy_relative_water_supply = os.path.join(output_folder_Irrigation, "Adequacy_Relative_Water_Supply", "Adequacy_Relative_Water_Supply_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_adequacy_relative_irrigation_water_supply = os.path.join(output_folder_Irrigation, "Adequacy_Relative_Irrigation_Water_Supply", "Adequacy_Relative_Irrigation_Water_Supply_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_etblue = os.path.join(output_folder_Irrigation, "ETblue", "ETblue_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_non_consumptive_use_due_to_irrigation = os.path.join(output_folder_Irrigation, "Non_Consumptive_Use_Due_To_Irrigation", "Non_Consumptive_Use_Due_To_Irrigation_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_onfarm_irrigation_efficiency = os.path.join(output_folder_Irrigation, "Onfarm_Irrigation_Efficiency", "Onfarm_Irrigation_Efficiency_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_degree_of_over_irrigation = os.path.join(output_folder_Irrigation, "Degree_Of_Over_Irrigation", "Degree_Of_Over_Irrigation_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_adequacy_degree_of_under_irrigation = os.path.join(output_folder_Irrigation, "Adequacy_Degree_Of_Under_Irrigation", "Adequacy_Degree_Of_Under_Irrigation_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_adequacy_crop_water_deficit = os.path.join(output_folder_Irrigation, "Adequacy_Crop_Water_Deficit", "Adequacy_Crop_Water_Deficit_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_target_et = os.path.join(output_folder_Irrigation, "Target_ET", "Target_ET_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_et_savings = os.path.join(output_folder_Irrigation, "ET_Savings", "ET_Savings_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_long_term_etmean = os.path.join(output_folder_Irrigation, "Long_Term_ETmean", "Long_Term_ETmean_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_etgap = os.path.join(output_folder_Irrigation, "ETgap", "ETgap_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_feasible_water_conservation = os.path.join(output_folder_Irrigation, "Feasible_Water_Conservation", "Feasible_Water_Conservation_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_non_beneficial_water_losses = os.path.join(output_folder_Irrigation, "Non_Beneficial_Water_Losses", "Non_Beneficial_Water_Losses_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_equity = os.path.join(output_folder_Irrigation, "Equity", "Equity_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_reliability = os.path.join(output_folder_Irrigation, "Reliability", "Reliability_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
+    # Write in DataCube
+    Non_Consumptive_Use_Due_To_Irrigation = DataCube.Rasterdata_Empty()
+    Non_Consumptive_Use_Due_To_Irrigation.Data = Non_Consumptive_Use_Due_To_Irrigation_Data * MASK
+    Non_Consumptive_Use_Due_To_Irrigation.Projection = ET.Projection
+    Non_Consumptive_Use_Due_To_Irrigation.GeoTransform = ET.GeoTransform
+    Non_Consumptive_Use_Due_To_Irrigation.Ordinal_time = ET.Ordinal_time
+    Non_Consumptive_Use_Due_To_Irrigation.Size = Non_Consumptive_Use_Due_To_Irrigation_Data.shape
+    Non_Consumptive_Use_Due_To_Irrigation.Variable = "Non Consumptive Use Due To Irrigation"
+    Non_Consumptive_Use_Due_To_Irrigation.Unit = "mm-dekad-1"
+    
+    del Non_Consumptive_Use_Due_To_Irrigation_Data
+    
+    Non_Consumptive_Use_Due_To_Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Non_Consumptive_Use_Due_To_Irrigation"))    
+    
+    ######################### Calculate Onfarm Irrigation Efficiency ########################
+    Onfarm_Irrigation_Efficiency_Data = ETblue.Data/Gross_Irrigation_Water_Supply.Data * 100
+    
+    # Write in DataCube
+    Onfarm_Irrigation_Efficiency = DataCube.Rasterdata_Empty()
+    Onfarm_Irrigation_Efficiency.Data = Onfarm_Irrigation_Efficiency_Data * MASK
+    Onfarm_Irrigation_Efficiency.Projection = ET.Projection
+    Onfarm_Irrigation_Efficiency.GeoTransform = ET.GeoTransform
+    Onfarm_Irrigation_Efficiency.Ordinal_time = ET.Ordinal_time
+    Onfarm_Irrigation_Efficiency.Size = Onfarm_Irrigation_Efficiency_Data.shape
+    Onfarm_Irrigation_Efficiency.Variable = "Onfarm Irrigation Efficiency"
+    Onfarm_Irrigation_Efficiency.Unit = "Percentage"
+    
+    del Onfarm_Irrigation_Efficiency_Data
+    
+    Onfarm_Irrigation_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "Onfarm_Irrigation_Efficiency"))    
+    
+    ########################## Calculate Degree Of Over Irrigation #########################
+    Degree_Of_Over_Irrigation_Data = Soil_Moisture.Data/Theta_FC_Subsoil.Data[None, :, :]
+ 
+    # Write in DataCube
+    Degree_Of_Over_Irrigation = DataCube.Rasterdata_Empty()
+    Degree_Of_Over_Irrigation.Data = Degree_Of_Over_Irrigation_Data * MASK
+    Degree_Of_Over_Irrigation.Projection = ET.Projection
+    Degree_Of_Over_Irrigation.GeoTransform = ET.GeoTransform
+    Degree_Of_Over_Irrigation.Ordinal_time = ET.Ordinal_time
+    Degree_Of_Over_Irrigation.Size = Degree_Of_Over_Irrigation_Data.shape
+    Degree_Of_Over_Irrigation.Variable = "Degree Of Over Irrigation"
+    Degree_Of_Over_Irrigation.Unit = "-"
+    
+    del Degree_Of_Over_Irrigation_Data
+    
+    Degree_Of_Over_Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Degree_Of_Over_Irrigation"))        
+    
+    ########################### Calculate Adequacy Degree Of Under Irrigation ##########################
+    Degree_Of_Under_Irrigation_Data = Soil_Moisture.Data/Critical_Soil_Moisture.Data
+ 
+    # Write in DataCube
+    Degree_Of_Under_Irrigation = DataCube.Rasterdata_Empty()
+    Degree_Of_Under_Irrigation.Data = Degree_Of_Under_Irrigation_Data * MASK
+    Degree_Of_Under_Irrigation.Projection = ET.Projection
+    Degree_Of_Under_Irrigation.GeoTransform = ET.GeoTransform
+    Degree_Of_Under_Irrigation.Ordinal_time = ET.Ordinal_time
+    Degree_Of_Under_Irrigation.Size = Degree_Of_Under_Irrigation_Data.shape
+    Degree_Of_Under_Irrigation.Variable = "Adequacy Degree Of Under Irrigation"
+    Degree_Of_Under_Irrigation.Unit = "-"
+    
+    del Degree_Of_Under_Irrigation_Data
+    
+    Degree_Of_Under_Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Degree_Of_Under_Irrigation"))       
+    
+    ############################ Calculate Adequacy Crop Water Deficit ###########################
+    Adequacy_Crop_Water_Deficit_Data = Crop_Water_Requirement.Data - ET.Data * Days_in_Dekads[:, None, None]
+    
+    # Write in DataCube
+    Adequacy_Crop_Water_Deficit = DataCube.Rasterdata_Empty()
+    Adequacy_Crop_Water_Deficit.Data = Adequacy_Crop_Water_Deficit_Data * MASK
+    Adequacy_Crop_Water_Deficit.Projection = ET.Projection
+    Adequacy_Crop_Water_Deficit.GeoTransform = ET.GeoTransform
+    Adequacy_Crop_Water_Deficit.Ordinal_time = ET.Ordinal_time
+    Adequacy_Crop_Water_Deficit.Size = Adequacy_Crop_Water_Deficit_Data.shape
+    Adequacy_Crop_Water_Deficit.Variable = "Adequacy Crop Water Deficit"
+    Adequacy_Crop_Water_Deficit.Unit = "mm-dekad-1"
+    
+    del Adequacy_Crop_Water_Deficit_Data
+    
+    Adequacy_Crop_Water_Deficit.Save_As_Tiff(os.path.join(output_folder_L3, "Adequacy_Crop_Water_Deficit"))          
 
+    ################################# Calculate Spatial Target Evapotranspiration #################################
+    L3_AEZ_ET = dict()
+    for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
+        L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ == AEZ_ID, ET.Data, np.nan), 99, axis=(1,2))
+    
+    ################################# Create spatial target maps #################################
+    ET_Target_Spatial_Data = np.ones(Adequacy_Crop_Water_Deficit.Size) * np.nan
+    for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
+        ET_Target_Spatial_Data = np.where(AEZ == AEZ_ID, L3_AEZ_ET[int(AEZ_ID)][:, None, None], ET_Target_Spatial_Data)
+    
+    ############################# Calculate Target Evapotranspiration ############################
 
-    if not os.path.exists(filename_out_reliability):
-   
-        # Get georeference
-        dest_ex = gdal.Open(example_file)
-        geo = dest_ex.GetGeoTransform()
-        proj = dest_ex.GetProjection()
-        
-        # define required filenames
-        filep = os.path.join(input_folder_L1, "L1_PCP_D", "L1_PCP_D_WAPOR_DEKAD_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        fileet = os.path.join(input_folder_L1, "L2_AETI_D", "L2_AETI_D_WAPOR_DEKAD_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filee = os.path.join(input_folder_L1, "L2_E_D", "L2_E_D_WAPOR_DEKAD_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filecwr = os.path.join(output_folder_L2, "Crop_Water_Requirement", "Crop_Water_Requirement_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filensd = os.path.join(output_folder_L2, "Net_Supply_Drainage", "Net_Supply_Drainage_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filedp = os.path.join(output_folder_L2, "Deep_Percolation", "Deep_Percolation_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filesrp = os.path.join(output_folder_L2, "Surface_Runoff_P", "Surface_Runoff_P_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filesrc = os.path.join(output_folder_L2, "Surface_Runoff_Coefficient", "Surface_Runoff_Coefficient_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filesm = os.path.join(output_folder_L2, "Soil_Moisture", "Soil_Moisture_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filecsm = os.path.join(output_folder_L2, "Critical_Soil_Moisture", "Critical_Soil_Moisture_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filetfc = os.path.join(output_folder_L2, "Theta_FC_Subsoil", "Theta_FC_Subsoil.tif")
+    ET_Target_Spatial_Data = ET_Target_Spatial_Data
+  
+    # Write in DataCube
+    ET_Target_Spatial = DataCube.Rasterdata_Empty()
+    ET_Target_Spatial.Data = ET_Target_Spatial_Data * MASK
+    ET_Target_Spatial.Projection = ET.Projection
+    ET_Target_Spatial.GeoTransform = ET.GeoTransform
+    ET_Target_Spatial.Ordinal_time = ET.Ordinal_time
+    ET_Target_Spatial.Size = ET_Target_Spatial_Data.shape
+    ET_Target_Spatial.Variable = "Target Evapotranspiration Spatial"
+    ET_Target_Spatial.Unit = "mm-dekad-1"
+    
+    del ET_Target_Spatial_Data
+    
+    ET_Target_Spatial.Save_As_Tiff(os.path.join(output_folder_L3, "ET_Target_Spatial"))         
+    
+    ############################## Calculate Evapotranspiration Savings #############################
+    ET_Savings_Spatial_Data = np.minimum(0, ET_Target_Spatial.Data - ET.Data * Days_in_Dekads[:, None, None])
+ 
+    # Write in DataCube
+    ET_Savings_Spatial = DataCube.Rasterdata_Empty()
+    ET_Savings_Spatial.Data = ET_Savings_Spatial_Data * MASK
+    ET_Savings_Spatial.Projection = ET.Projection
+    ET_Savings_Spatial.GeoTransform = ET.GeoTransform
+    ET_Savings_Spatial.Ordinal_time = ET.Ordinal_time
+    ET_Savings_Spatial.Size = ET_Savings_Spatial_Data.shape
+    ET_Savings_Spatial.Variable = "Evapotranspiration Savings Spatial"
+    ET_Savings_Spatial.Unit = "mm-dekad-1"
+    
+    del ET_Savings_Spatial_Data
+    
+    ET_Savings_Spatial.Save_As_Tiff(os.path.join(output_folder_L3, "ET_Savings_Spatial"))          
+    
+    ################################# Calculate 10 year mean Evapotranspiration #################################
+    
+    Total_years = int(np.ceil(ET.Size[0]/36))
+    Mean_Long_Term_ET_Data = np.ones([36, ET.Size[1], ET.Size[2]]) * np.nan
+    
+    for dekad in range(0,36):
+        IDs = np.array(range(0, Total_years)) * 36 + dekad  
+        IDs_good = IDs[IDs<=ET.Size[0]]
+        Mean_Long_Term_ET_Data[dekad, :, :] = np.nanmean(ET.Data[IDs_good,:,:] * Days_in_Dekads[IDs_good, None, None], axis = 0) 
+ 
+    # Write in DataCube
+    Mean_Long_Term_ET = DataCube.Rasterdata_Empty()
+    Mean_Long_Term_ET.Data = Mean_Long_Term_ET_Data * MASK
+    Mean_Long_Term_ET.Projection = ET.Projection
+    Mean_Long_Term_ET.GeoTransform = ET.GeoTransform
+    Mean_Long_Term_ET.Ordinal_time = "Long_Term_Decade"
+    Mean_Long_Term_ET.Size = Mean_Long_Term_ET_Data.shape
+    Mean_Long_Term_ET.Variable = "Mean Long Term Evapotranspiration"
+    Mean_Long_Term_ET.Unit = "mm-dekad-1"       
 
-        # Open required files
-        destp = RC.reproject_dataset_example(filep, example_file, 2)
-        destet = RC.reproject_dataset_example(fileet, example_file, 2)
-        deste = RC.reproject_dataset_example(filee, example_file, 2)
-        destcwr = gdal.Open(filecwr)
-        destnsd = gdal.Open(filensd)
-        destdp = gdal.Open(filedp)
-        destsrp = gdal.Open(filesrp)
-        destsrc = gdal.Open(filesrc)
-        destsm = gdal.Open(filesm)
-        destcsm = gdal.Open(filecsm)
-        desttfc = gdal.Open(filetfc)
-         
-        # Open Arrays
-        P = destp.GetRasterBand(1).ReadAsArray()
-        ET = destet.GetRasterBand(1).ReadAsArray()        
-        E = deste.GetRasterBand(1).ReadAsArray() 
-        Crop_Water_Requirement = destcwr.GetRasterBand(1).ReadAsArray()
-        Net_Supply_Drainage = destnsd.GetRasterBand(1).ReadAsArray()        
-        Deep_Percolation = destdp.GetRasterBand(1).ReadAsArray()         
-        Surface_Runoff_P = destsrp.GetRasterBand(1).ReadAsArray()
-        Surface_Runoff_Coefficient = destsrc.GetRasterBand(1).ReadAsArray()        
-        Soil_Moisture = destsm.GetRasterBand(1).ReadAsArray()         
-        Critical_Soil_Moisture = destcsm.GetRasterBand(1).ReadAsArray()
-        Theta_FC_Subsoil = desttfc.GetRasterBand(1).ReadAsArray()        
+    del Mean_Long_Term_ET_Data
+    
+    Mean_Long_Term_ET.Save_As_Tiff(os.path.join(output_folder_L3, "Mean_Long_Term_Evapotranspiration"))
+    
+    ################################## Calculate Gap in Evapotranspiration #################################
+    ET_Gap_Temporal_Data = np.minimum(0, np.tile(Mean_Long_Term_ET.Data, (Total_years, 1, 1)) - ET.Data * Days_in_Dekads[:, None, None])
 
-        # Calculate Irrigation Water Requirement
-        Irrigation_Water_Requirement = (Crop_Water_Requirement - 0.7 * P * NOD)/(0.65)
-        
-        # Calculate Gross Irrigation Water Supply
-        Gross_Irrigation_Water_Supply = np.maximum(0, (Net_Supply_Drainage + Deep_Percolation + Surface_Runoff_P) * (1 + Surface_Runoff_Coefficient))
-        
-        # Calculate Adequacy Relative Water Supply
-        Adequacy_Relative_Water_Supply = (Gross_Irrigation_Water_Supply + P * NOD)/Crop_Water_Requirement
-        
-        # Calculate Adequacy Relative Irrigation Water Suppy
-        Adequacy_Relative_Irrigation_Water_Supply = Gross_Irrigation_Water_Supply/Irrigation_Water_Requirement
-        
-        # Calculate ETblue
-        ETblue = np.where(ET > 0.7 * P, NOD * (ET - 0.7 * P), 0)
-        
-        # Calculate Non Consumptive Use Due To Irrigation
-        Non_Consumptive_Use_Due_To_Irrigation = np.maximum(0, Gross_Irrigation_Water_Supply - ETblue)
-        
-        # Calculate Onfarm Irrigation Efficiency
-        Onfarm_Irrigation_Efficiency = ETblue/Gross_Irrigation_Water_Supply * 100
-        
-        # Calculate Degree Of Over Irrigation
-        Degree_Of_Over_Irrigation = Soil_Moisture/Theta_FC_Subsoil
-        
-        # Calculate Adequacy Degree Of Under Irrigation
-        Adequacy_Degree_Of_Under_Irrigation = Soil_Moisture/Critical_Soil_Moisture
-        
-        # Calculate Adequacy Crop Water Deficit
-        Adequacy_Crop_Water_Deficit = Crop_Water_Requirement - ET * NOD
-        
-        # Calculate Target Evapotranspiration
-        Target_ET = I8 * NOD #!!!
-        
-        # Calculate Evapotranspiration Savings
-        ET_Savings = np.minimum(0, Target_ET - ET * NOD)
-        
-        # Calculate Long Term Average Evapotranspiration
-        Long_Term_ETmean = H8 * NOD #!!!
-        
-        # Calculate Gap in Evapotranspiration
-        ETgap = np.minimum(0, Long_Term_ETmean - ET * NOD)
-        
-        # Calculate Feasible Water Conservation
-        Feasible_Water_Conservation =(ET_Savings + ETgap)/2
-        
-        # Calculate Non Beneficial Water Losses
-        Non_Beneficial_Water_Losses = E * NOD
-        
-        # Calculate Equity
-        Equity = 2#!!!
-        
-        # Calculate Reliability
-        Reliability = 2#!!!  
-            
-        # Save result
-        DC.Save_as_tiff(filename_out_irrigation_water_requirement, Irrigation_Water_Requirement, geo, proj)
-        DC.Save_as_tiff(filename_out_gross_irrigation_water_supply, Gross_Irrigation_Water_Supply, geo, proj)
-        DC.Save_as_tiff(filename_out_adequacy_relative_water_supply, Adequacy_Relative_Water_Supply, geo, proj)
-        DC.Save_as_tiff(filename_out_adequacy_relative_irrigation_water_supply, Adequacy_Relative_Irrigation_Water_Supply, geo, proj)
-        DC.Save_as_tiff(filename_out_etblue, ETblue, geo, proj)
-        DC.Save_as_tiff(filename_out_non_consumptive_use_due_to_irrigation, Non_Consumptive_Use_Due_To_Irrigation, geo, proj)
-        DC.Save_as_tiff(filename_out_onfarm_irrigation_efficiency, Onfarm_Irrigation_Efficiency, geo, proj)
-        DC.Save_as_tiff(filename_out_degree_of_over_irrigation, Degree_Of_Over_Irrigation, geo, proj)
-        DC.Save_as_tiff(filename_out_adequacy_degree_of_under_irrigation, Adequacy_Degree_Of_Under_Irrigation, geo, proj)
-        DC.Save_as_tiff(filename_out_adequacy_crop_water_deficit, Adequacy_Crop_Water_Deficit, geo, proj)
-        DC.Save_as_tiff(filename_out_target_et, Target_ET, geo, proj)
-        DC.Save_as_tiff(filename_out_et_savings, ET_Savings, geo, proj)
-        DC.Save_as_tiff(filename_out_long_term_etmean, Long_Term_ETmean, geo, proj)
-        DC.Save_as_tiff(filename_out_etgap, ETgap, geo, proj)
-        DC.Save_as_tiff(filename_out_feasible_water_conservation, Feasible_Water_Conservation, geo, proj)
-        DC.Save_as_tiff(filename_out_non_beneficial_water_losses, Non_Beneficial_Water_Losses, geo, proj)
-        DC.Save_as_tiff(filename_out_equity, Equity, geo, proj)
-        DC.Save_as_tiff(filename_out_reliability, Reliability, geo, proj)
+    # Write in DataCube    
+    ET_Gap_Temporal = DataCube.Rasterdata_Empty()
+    ET_Gap_Temporal.Data = ET_Gap_Temporal_Data * MASK
+    ET_Gap_Temporal.Projection = ET.Projection
+    ET_Gap_Temporal.GeoTransform = ET.GeoTransform
+    ET_Gap_Temporal.Ordinal_time = ET.Ordinal_time
+    ET_Gap_Temporal.Size = ET_Gap_Temporal_Data.shape
+    ET_Gap_Temporal.Variable = "Evapotranspiration Gap Temporal"
+    ET_Gap_Temporal.Unit = "mm-dekad-1"       
 
-        
+    del ET_Gap_Temporal_Data
+    
+    ET_Gap_Temporal.Save_As_Tiff(os.path.join(output_folder_L3, "ETgap"))
 
-        
+    ################################### Calculate Feasible Water Conservation ##################################
+    Feasible_Water_Conservation_Data =(ET_Savings_Spatial.Data + ET_Gap_Temporal.Data)/2
+
+    # Write in DataCube
+    Feasible_Water_Conservation = DataCube.Rasterdata_Empty()
+    Feasible_Water_Conservation.Data = Feasible_Water_Conservation_Data * MASK
+    Feasible_Water_Conservation.Projection = ET.Projection
+    Feasible_Water_Conservation.GeoTransform = ET.GeoTransform
+    Feasible_Water_Conservation.Ordinal_time = ET.Ordinal_time
+    Feasible_Water_Conservation.Size = Feasible_Water_Conservation_Data.shape
+    Feasible_Water_Conservation.Variable = "Feasible Water Conservation"
+    Feasible_Water_Conservation.Unit = "mm-dekad-1"       
+
+    del Feasible_Water_Conservation_Data
+    
+    Feasible_Water_Conservation.Save_As_Tiff(os.path.join(output_folder_L3, "Feasible_Water_Conservation"))
+    
+    #################################### Calculate Non Beneficial Water Losses ###################################
+    Non_Beneficial_Water_Losses_Data = E.Data * Days_in_Dekads[:, None, None]
+
+    # Write in DataCube 
+    Non_Beneficial_Water_Losses = DataCube.Rasterdata_Empty()
+    Non_Beneficial_Water_Losses.Data = Non_Beneficial_Water_Losses_Data * MASK
+    Non_Beneficial_Water_Losses.Projection = ET.Projection
+    Non_Beneficial_Water_Losses.GeoTransform = ET.GeoTransform
+    Non_Beneficial_Water_Losses.Ordinal_time = ET.Ordinal_time
+    Non_Beneficial_Water_Losses.Size = Non_Beneficial_Water_Losses_Data.shape
+    Non_Beneficial_Water_Losses.Variable = "Non Beneficial Water Losses"
+    Non_Beneficial_Water_Losses.Unit = "mm-dekad-1"       
+
+    del Non_Beneficial_Water_Losses_Data
+    
+    Non_Beneficial_Water_Losses.Save_As_Tiff(os.path.join(output_folder_L3, "Non_Beneficial_Water_Losses"))    
+    
+    ##################################### Calculate Equity ####################################
+    Soil_Moisture_Irrigated = Soil_Moisture.Data * Irrigation.Data
+    Equity_Soil_Moisture_Data = np.nanstd(Soil_Moisture_Irrigated, axis = (1,2))/np.nanmean(Soil_Moisture_Irrigated, axis = (1,2))
+    Equity_Soil_Moisture_Data_Map = np.where(Irrigation.Data == 1, Equity_Soil_Moisture_Data[:, None, None], np.nan)
+ 
+    # Write in DataCube
+    Equity_Soil_Moisture = DataCube.Rasterdata_Empty()
+    Equity_Soil_Moisture.Data = Equity_Soil_Moisture_Data_Map * MASK
+    Equity_Soil_Moisture.Projection = ET.Projection
+    Equity_Soil_Moisture.GeoTransform = ET.GeoTransform
+    Equity_Soil_Moisture.Ordinal_time = ET.Ordinal_time
+    Equity_Soil_Moisture.Size = Equity_Soil_Moisture_Data_Map.shape
+    Equity_Soil_Moisture.Variable = "Equity Soil Moisture"
+    Equity_Soil_Moisture.Unit = "-"       
+
+    del Equity_Soil_Moisture_Data_Map
+    
+    Equity_Soil_Moisture.Save_As_Tiff(os.path.join(output_folder_L3, "Equity_Soil_Moisture"))    
+    
+    ##################################### Calculate Reliability #####################################
+    Soil_Moisture_Season = np.where(np.isnan(ETcum.Data), np.nan, Soil_Moisture.Data)
+    Reliability_Soil_Moisture_Data = np.ones([Total_years, ET.Size[1], ET.Size[2]]) * np.nan
+    for i in range(0, Total_years):
+        Start = int(i * 36)
+        End = int(Start + 36)
+        Reliability_Soil_Moisture_Data[i, :, :] = np.nanstd(Soil_Moisture_Season[Start:End, : ,:], axis = 0)/np.nanmean(Soil_Moisture_Season[Start:End, : ,:], axis = 0) 
+
+    # Write in DataCube    
+    Reliability_Soil_Moisture = DataCube.Rasterdata_Empty()
+    Reliability_Soil_Moisture.Data = Reliability_Soil_Moisture_Data * MASK
+    Reliability_Soil_Moisture.Projection = ET.Projection
+    Reliability_Soil_Moisture.GeoTransform = ET.GeoTransform
+    Reliability_Soil_Moisture.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Reliability_Soil_Moisture.Size = Reliability_Soil_Moisture_Data.shape
+    Reliability_Soil_Moisture.Variable = "Reliability Soil Moisture"
+    Reliability_Soil_Moisture.Unit = "-"       
+
+    del Reliability_Soil_Moisture_Data
+    
+    Reliability_Soil_Moisture.Save_As_Tiff(os.path.join(output_folder_L3, "Reliability_Soil_Moisture"))    
+      
     return()

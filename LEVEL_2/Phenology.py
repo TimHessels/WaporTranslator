@@ -15,10 +15,10 @@ import calendar
 import watertools.General.raster_conversions as RC
 import watertools.General.data_conversions as DC
 
-import WaporTranslator.LEVEL_1.Input_Data as Inputs
+def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU, example_file, Days_in_Dekads):
 
-def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, LU, example_file, Days_in_Dekads):
-
+    import WaporTranslator.LEVEL_1.Input_Data as Inputs
+    
     # Define start and enddate
     Startdate = "%s-01-01" %Start_year_analyses
     Enddate = "%s-12-31" %End_year_analyses
@@ -51,6 +51,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     ESACCI_Conversions_dict = ESACCI_Conversions()
     
     Phenology_pixels_year = np.ones(T.Size) * np.nan
+    Grassland_pixels_year = np.ones(T.Size) * np.nan
     
     # Loop over the years
     for Year in Years:
@@ -70,7 +71,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         
         for number in WAPOR_Conversions_dict.items():
         
-            LU_Map_WAPOR = np.where(LU.Data[int((Year_int - Year_start) * 36),: ,:] == number[0], number[1], LU_Map_WAPOR)
+            LU_Map_WAPOR = np.where(LU.Data[int((Year_int - Year_start)),: ,:] == number[0], number[1], LU_Map_WAPOR)
             
         for number in ESACCI_Conversions_dict.items():
         
@@ -86,6 +87,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         
         # find posible perenial pixels
         Phenology_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(np.logical_or(LU_END==1, LU_END==2), 1, np.nan)[None, :, :]  
+        Grassland_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(LU_END==3, 1, np.nan)[None, :, :]  
 
     # calculate cumulative  
     T_cum = np.where(np.isnan(T.Data), 0, T.Data * Days_in_Dekads[:, None, None])
@@ -98,6 +100,8 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     NPP_cum = NPP_cum.cumsum(axis = 0)
     Temp_cum = np.where(np.isnan(Temp.Data), 0, Temp.Data * Days_in_Dekads[:, None, None])
     Temp_cum = Temp_cum.cumsum(axis = 0)
+    ET0_cum = np.where(np.isnan(ET0.Data), 0, ET0.Data * Days_in_Dekads[:, None, None])
+    ET0_cum = ET0_cum.cumsum(axis = 0)
     
     Seasons_dict_start = dict()
     Seasons_dict_end = dict()
@@ -138,6 +142,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     NPP_end_sum = np.ones(P_cum.shape) * np.nan
     P_end_sum = np.ones(P_cum.shape) * np.nan
     Temp_end_sum = np.ones(P_cum.shape) * np.nan
+    ET0_end_sum = np.ones(P_cum.shape) * np.nan
      
     # create IDs for the Array to reconstruct the array from the dict later
     y,x = np.indices((LU_END.shape[0], LU_END.shape[1]))
@@ -152,15 +157,16 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         End_Map_S1 = np.ones(LU_END.shape) * np.nan
         Start_Map_S2 = np.ones(LU_END.shape) * np.nan
         End_Map_S2 = np.ones(LU_END.shape) * np.nan
-        Per_Map_S2 = np.ones(LU_END.shape) * np.nan
+        Per_Map_Start = np.ones(LU_END.shape) * np.nan
+        Per_Map_End = np.ones(LU_END.shape) * np.nan        
         LU_Crop_Map = np.ones(LU_END.shape) * np.nan
     
         # Select begin and end of the year for the array
         Year_DOY_Start = (year_nmbr - Years[0].year) * 36
         Year_DOY_End = Year_DOY_Start + 36
         count = 1
-        # Create Perenial map
         
+        # Create Perenial map
         for dict_in_per in Seasons_dict_per_start.items():        
         
             sys.stdout.write("\rCreate Maps Perenial of year %s %i/%i (%f %%)" %(year_nmbr, count, len(Seasons_dict_per_start.items()), count/len(Seasons_dict_per_start.items())*100))
@@ -172,23 +178,24 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
             for Start_per in Starts_per:
                 
                 Start_per = int(Start_per)
-                End_per = int(Ends_per[np.argwhere(Start_per==Starts_per)][0][0])
+                End_per = int(Ends_per[np.argwhere(Start_per == Starts_per)][0][0])
                 
-                if np.logical_and(Start_per<Year_DOY_End, End_per > Year_DOY_Start):
+                if np.logical_and(Start_per < Year_DOY_End, End_per > Year_DOY_Start):
                                    
                     T_end_sum[Start_per:End_per, dict_in_per[0]== ID_Matrix] = T_cum[Start_per:End_per, dict_in_per[0]== ID_Matrix] - T_cum[int(np.maximum(Start_per-1, 0)), dict_in_per[0] == ID_Matrix]
                     ET_end_sum[Start_per:End_per, dict_in_per[0]== ID_Matrix] = ET_cum[Start_per:End_per, dict_in_per[0]== ID_Matrix] - ET_cum[int(np.maximum(Start_per-1, 0)), dict_in_per[0] == ID_Matrix]
                     P_end_sum[Start_per:End_per, dict_in_per[0]== ID_Matrix] = P_cum[Start_per:End_per, dict_in_per[0]== ID_Matrix] - P_cum[int(np.maximum(Start_per-1, 0)), dict_in_per[0] == ID_Matrix]
                     NPP_end_sum[Start_per:End_per, dict_in_per[0]== ID_Matrix] = NPP_cum[Start_per:End_per, dict_in_per[0]== ID_Matrix] - NPP_cum[int(np.maximum(Start_per-1, 0)), dict_in_per[0] == ID_Matrix]
                     Temp_end_sum[Start_per:End_per, dict_in_per[0]== ID_Matrix] = Temp_cum[Start_per:End_per, dict_in_per[0]== ID_Matrix] - Temp_cum[int(np.maximum(Start_per-1, 0)), dict_in_per[0] == ID_Matrix]
-                   
-                    if np.logical_and(Start_per <= Year_DOY_End, End_per >= Year_DOY_Start):
+                    ET0_end_sum[Start_per:End_per, dict_in_per[0]== ID_Matrix] = ET0_cum[Start_per:End_per, dict_in_per[0]== ID_Matrix] - ET0_cum[int(np.maximum(Start_per-1, 0)), dict_in_per[0] == ID_Matrix]
+                  
+                    if np.logical_and(Start_per < Year_DOY_End, End_per > Year_DOY_Start):
                         
-                        Per_Map_S2[dict_in_per[0]== ID_Matrix] = 1
-                        LU_Crop_Map[dict_in_per[0]== ID_Matrix] = 3
-                        
+                        Per_Map_Start[dict_in_per[0]== ID_Matrix] = Start_per - Year_DOY_Start
+                        Per_Map_End[dict_in_per[0]== ID_Matrix] = End_per - Year_DOY_Start                        
+                        LU_Crop_Map[dict_in_per[0]== ID_Matrix] = 3     
             count += 1
-        
+
         count = 1
         
         print("                                                                                          ")
@@ -199,7 +206,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
             sys.stdout.flush()
             
             # Check if pixel is not perenial
-            if Per_Map_S2[dict_in[0] == ID_Matrix] != 1:
+            if not np.isnan(Per_Map_Start[dict_in[0] == ID_Matrix]):
              
                 Starts = dict_in[1]
                 
@@ -218,6 +225,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                        P_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
                        NPP_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
                        Temp_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
+                       ET0_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
     
                        # Fill in array
                        Start_Map_S1[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
@@ -236,7 +244,8 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                        P_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
                        NPP_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
                        Temp_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
-    
+                       ET0_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
+      
                        # Fill in array
                        Start_Map_S2[dict_in[0]== ID_Matrix] = Starts[1] - Year_DOY_Start      
                        End_Map_S2[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
@@ -245,19 +254,35 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
             count += 1        
         print("                                                                                         ")      
 
+        for Year in Years:
+            
+           year_ID = int(Year.year - Years[0].year)
+           Start = int(year_ID * 36)
+           End = int(Start + 36)
+           
+           T_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = T_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - T_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+           ET_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = ET_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - ET_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+           P_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = P_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - P_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+           NPP_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = NPP_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - NPP_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+           Temp_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = Temp_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - Temp_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+           ET0_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = ET0_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - ET0_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+
+
         # Do a Growing Degrees Days check
         GDD_CHECK = np.nanmax(Temp_end_sum, axis = 0)
         
         # Make Perenial crop from single crop
-        Per_Map_S2 = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), 1, Per_Map_S2)
+        Per_Map_Start = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), Start_Map_S1, Per_Map_Start)
+        Per_Map_End = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), End_Map_S1, Per_Map_End)       
         Start_Map_S1 = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), np.nan, Start_Map_S1)
         End_Map_S1 = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), np.nan, End_Map_S1)
 
         # Make Single crop from perenial crop       
-        Per_Map_S2 = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), np.nan, Per_Map_S2)  
-        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), 0, Start_Map_S1)        
-        End_Map_S1 = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), 365, End_Map_S1)
-        
+        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), Per_Map_Start, Start_Map_S1)        
+        End_Map_S1 = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), Per_Map_End, End_Map_S1)        
+        Per_Map_Start = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), np.nan, Per_Map_Start)  
+        Per_Map_End = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), np.nan, Per_Map_End)          
+
         LU_Crop_Map = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), 3, LU_Crop_Map)
         LU_Crop_Map = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), 1, LU_Crop_Map)
 
@@ -266,7 +291,8 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S2", "Phenology_Start_S2_%s.tif" %year_nmbr), Start_Map_S2, geo, proj)    
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S1", "Phenology_End_S1_%s.tif" %year_nmbr), End_Map_S1, geo, proj)    
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S2", "Phenology_End_S2_%s.tif" %year_nmbr), End_Map_S2, geo, proj)       
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_%s.tif" %year_nmbr), Per_Map_S2, geo, proj)  
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_Start_%s.tif" %year_nmbr), Per_Map_Start, geo, proj)  
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_End_%s.tif" %year_nmbr), Per_Map_End, geo, proj)          
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "CropClass","LU_CropSeason_%s.tif" %year_nmbr), LU_Crop_Map, geo, proj)      
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "CropClass","LU_CropType_%s.tif" %year_nmbr), LU_END, geo, proj)
     
@@ -312,7 +338,8 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "Precipitation", "P_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), P_end_sum[i,:,:], geo, proj)    
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "NPP", "NPP_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), NPP_end_sum[i,:,:], geo, proj)       
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "Temperature", "Temp_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), Temp_end_sum[i,:,:], geo, proj)  
-        
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "ET0", "ET0_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), ET0_end_sum[i,:,:], geo, proj)  
+       
     return()
     
 def Calc_Season(Ts):
@@ -333,9 +360,9 @@ def Calc_Season(Ts):
     
     # In the end I have set the threshold values on 1.5 and 1.0
     #Maximum_Threshold = np.minimum(Threshold_LVL * (Maximum_T + Minimum_T) / 2 + Minimum_T, Threshold_LVL_min)
-    Maximum_Threshold = 1.5
+    Maximum_Threshold = 2.8
     #Threshold_stop = np.maximum(0.2 * Maximum_Threshold + Minimum_T, 0.3 * Maximum_Threshold)
-    Threshold_stop = 1.0
+    Threshold_stop = 2.8
     
     # Set the start point
     Start = []

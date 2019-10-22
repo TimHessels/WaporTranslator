@@ -11,8 +11,6 @@ import gdal
 import datetime
 import numpy as np
 
-import WaporTranslator.LEVEL_2.Functions as Functions
-
 import watertools.General.raster_conversions as RC
 import watertools.General.data_conversions as DC
 
@@ -44,7 +42,14 @@ class Rasterdata_tiffs:
     Enddate = ''    
     Timestep = ''
     
-    def __init__(self, input_folder, input_format, Dates = None, Conversion = 1, Example_Data = None, gap_filling = None, reprojection_type = 2, Variable = '', Product = '', Description = '', Unit = '', Dimension_description = ''):
+    def __init__(self, input_folder, input_format, Dates = None, Conversion = 1, Example_Data = None, Mask_Data = None, gap_filling = None, reprojection_type = 2, Variable = '', Product = '', Description = '', Unit = '', Dimension_description = ''):
+
+        if Mask_Data != None:
+            dest_MASK = RC.reproject_dataset_example(Mask_Data, Example_Data, 1)
+            MASK = dest_MASK.GetRasterBand(1).ReadAsArray()
+            MASK = np.where(MASK==1, 1, np.nan)
+        else:
+            MASK = 1
         
         if Dates != None: 
             
@@ -58,7 +63,7 @@ class Rasterdata_tiffs:
             
             # Define dimensions
             size_z = len(Dates)
-            
+
             for Date in Dates:
                 
                 sys.stdout.write("\rLoading Data %s %i/%i (%f %%)" %(Variable, i, len(Dates), i/(len(Dates)) * 100))
@@ -80,9 +85,11 @@ class Rasterdata_tiffs:
                     Array[np.isnan(Array)] = -9999
                     Array = RC.gap_filling(Array, -9999, gap_filling)
                     
-                Array_end[time_or==Date.toordinal(), :, : ] = Array * Conversion
+                Array_end[time_or==Date.toordinal(), :, : ] = Array * Conversion * MASK
                 i += 1
                 
+            shape = [size_z, size_y, size_x]
+                        
                 
         else:
             
@@ -100,16 +107,17 @@ class Rasterdata_tiffs:
             # Get dimension
             size_x = dest.RasterXSize
             size_y = dest.RasterYSize
-            size_z = 1
+            shape = [size_y, size_x]
             time_or = ''
             
             # Apply gapfilling if needed
             if gap_filling != None:     
                 Array_end[np.isnan(Array_end)] = -9999
                 Array_end = RC.gap_filling(Array_end, -9999, gap_filling)
-
+            Array_end = Array_end * MASK
+            
         self.Projection = proj
-        self.Size = [size_z, size_y, size_x]
+        self.Size = shape
         self.GeoTransform = geo
         self.Data = Array_end
         self.NoData = np.nan
@@ -142,17 +150,20 @@ class Rasterdata_tiffs:
         proj = self.Projection
         Data = self.Data
         Variable = self.Variable
+        Unit = self.Unit
         
         print("Save %s as tiff file in %s" %(Variable, output_folder))
         
         if Dates == "Long_Term_Decade":
+            
+            import WaporTranslator.LEVEL_2.Functions as Functions
             
             Dates_dek = Functions.Get_Dekads(2009, 2009)
             
             i = 0
             for Date in Dates_dek:
                 
-                output_filename = os.path.join(output_folder, "%s_%02d.%02d.tif" %(Variable.replace(" ", "_"), Date.month, Date.day))
+                output_filename = os.path.join(output_folder, "%s_%s_%02d.%02d.tif" %(Variable.replace(" ", "_"), Unit, Date.month, Date.day))
                 Data_one = Data[i, :, :]  
                 DC.Save_as_tiff(output_filename, Data_one, geo, proj)  
                 i += 1
@@ -161,12 +172,12 @@ class Rasterdata_tiffs:
             for Date in Dates:
                 
                 Date_datetime = datetime.datetime.fromordinal(Date)
-                output_filename = os.path.join(output_folder, "%s_%d.%02d.%02d.tif" %(Variable.replace(" ", "_"), Date_datetime.year, Date_datetime.month, Date_datetime.day))
+                output_filename = os.path.join(output_folder, "%s_%s_%d.%02d.%02d.tif" %(Variable.replace(" ", "_"), Unit, Date_datetime.year, Date_datetime.month, Date_datetime.day))
                 Data_one = np.squeeze(Data[Dates==Date, :, :],0)
                 DC.Save_as_tiff(output_filename, Data_one, geo, proj)
          
         else:
-            output_filename = os.path.join(output_folder, "%s.tif" %(Variable.replace(" ", "_")))
+            output_filename = os.path.join(output_folder, "%s_%s.tif" %(Variable.replace(" ", "_"), Unit))
             DC.Save_as_tiff(output_filename, Data, geo, proj)  
             
 class Rasterdata_Empty:
@@ -207,17 +218,20 @@ class Rasterdata_Empty:
         proj = self.Projection
         Data = self.Data
         Variable = self.Variable
+        Unit = self.Unit
         
         print("Save %s as tiff file in %s" %(Variable, output_folder))
         
         if Dates == "Long_Term_Decade":
+            
+            import WaporTranslator.LEVEL_2.Functions as Functions
             
             Dates_dek = Functions.Get_Dekads(2009, 2009)
             
             i = 0
             for Date in Dates_dek:
                 
-                output_filename = os.path.join(output_folder, "%s_%02d.%02d.tif" %(Variable.replace(" ", "_"), Date.month, Date.day))
+                output_filename = os.path.join(output_folder, "%s_%s_%02d.%02d.tif" %(Variable.replace(" ", "_"), Unit, Date.month, Date.day))
                 Data_one = Data[i, :, :]  
                 DC.Save_as_tiff(output_filename, Data_one, geo, proj)  
                 i += 1
@@ -226,14 +240,13 @@ class Rasterdata_Empty:
             for Date in Dates:
                 
                 Date_datetime = datetime.datetime.fromordinal(Date)
-                output_filename = os.path.join(output_folder, "%s_%d.%02d.%02d.tif" %(Variable.replace(" ", "_"), Date_datetime.year, Date_datetime.month, Date_datetime.day))
+                output_filename = os.path.join(output_folder, "%s_%s_%d.%02d.%02d.tif" %(Variable.replace(" ", "_"), Unit, Date_datetime.year, Date_datetime.month, Date_datetime.day))
                 Data_one = np.squeeze(Data[Dates==Date, :, :],0)
                 DC.Save_as_tiff(output_filename, Data_one, geo, proj)
          
         else:
-            output_filename = os.path.join(output_folder, "%s.tif" %(Variable.replace(" ", "_")))
+            output_filename = os.path.join(output_folder, "%s_%s.tif" %(Variable.replace(" ", "_"), Unit))
             DC.Save_as_tiff(output_filename, Data, geo, proj)  
-                
                 
     
 def Get_Data(filename_in, Example_Data, reprojection_type):

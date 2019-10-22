@@ -8,7 +8,7 @@ The output unit is mW m^-2 sr^-1 (cm^-1)^-1.
 To get W/m2 divide the tiff file by 10^-6
 
 """
-
+import sys
 import os
 import gdal
 import bz2
@@ -31,7 +31,12 @@ def main(output_folder_L1, End_year_analyses, latlim, lonlim):
     LSASAF_bz2_format_DLSF = "HDF5_LSASAF_MSG_DIDSLF_MSG-Disk_{yyyy}{mm:02d}{dd:02d}0000.bz2"
     LSASAF_bz2_format_DSSF = "HDF5_LSASAF_MSG_DIDSSF_MSG-Disk_{yyyy}{mm:02d}{dd:02d}0000.bz2"    
     
+    i = 1
+    
     for One_Date in Dates:
+        
+        sys.stdout.write("\rProcess LANDSAF data %i/%i (%f %%)" %(i,len(Dates), i/(len(Dates)) * 100))
+        sys.stdout.flush()
         
         # Process Downward Long Wave  
         filename_in = LSASAF_bz2_format_DLSF.format(yyyy = One_Date.year, mm = One_Date.month, dd = One_Date.day)
@@ -47,6 +52,8 @@ def main(output_folder_L1, End_year_analyses, latlim, lonlim):
         else:
             print("ERROR: filename %s does not exists!!!" % filename_in)
             
+        i += 1
+        
     # remove trash folder        
     trash_folder = os.path.join(input_folder, "Trash")    
     shutil.rmtree(trash_folder)      
@@ -70,33 +77,37 @@ def Process_LSASAF(input_folder, filename_in, latlim, lonlim, Parameter = "DSLF"
     # Get date
     Date_str = filename_without_ext.split("_")[-1]
     Date = datetime.datetime.strptime(Date_str, "%Y%m%d0000")
-    
-    # unzip
-    filename_HDF5 = ''.join([filename_without_ext, '.HDF5'])
-    with open(filename_HDF5, 'wb') as new_file, bz2.BZ2File(filename_path_in, 'rb') as file:
-        for data in iter(lambda : file.read(100 * 1024), b''):
-            new_file.write(data)
-    
-    # Create Trash Bin
-    trash_folder = os.path.join(input_folder, "Trash")
-    if not os.path.exists(trash_folder):
-        os.makedirs(trash_folder)
-        
-    # Get Filename
-    filename_basename = os.path.basename(filename_path_in)
-    filename_basename_without_ext = os.path.splitext(filename_basename)[0]
-    filename_basename_tiff = ''.join([filename_basename_without_ext, '.tif'])
-    
-    # give projection to MSG disk
-    output_filename = os.path.join(trash_folder, filename_basename_tiff)
-    input_filename = ''.join(['HDF5:"', "%s" %filename_HDF5, '"://%s' %Parameter])        
-    Set_MSGdisk_Projection(input_filename, output_filename)
-    
-    # Clip array to area of interest
-    input_filename = output_filename
+
+    # Get output file
     output_format = "%s_LSASAF_MSG_{yyyy}.{mm:02}.{dd:02}.tif" %Parameter
     output_filename = os.path.join(output_folder, output_format.format(yyyy = Date.year, mm = Date.month, dd = Date.day))
-    Clip_Reproject_Tiff(input_filename, output_filename, latlim, lonlim)
+
+    if not os.path.exists(output_filename):    
+        
+        # unzip
+        filename_HDF5 = ''.join([filename_without_ext, '.HDF5'])
+        with open(filename_HDF5, 'wb') as new_file, bz2.BZ2File(filename_path_in, 'rb') as file:
+            for data in iter(lambda : file.read(100 * 1024), b''):
+                new_file.write(data)
+        
+        # Create Trash Bin
+        trash_folder = os.path.join(input_folder, "Trash")
+        if not os.path.exists(trash_folder):
+            os.makedirs(trash_folder)
+            
+        # Get Filename
+        filename_basename = os.path.basename(filename_path_in)
+        filename_basename_without_ext = os.path.splitext(filename_basename)[0]
+        filename_basename_tiff = ''.join([filename_basename_without_ext, '.tif'])
+        
+        # give projection to MSG disk
+        output_filename_first = os.path.join(trash_folder, filename_basename_tiff)
+        input_filename = ''.join(['HDF5:"', "%s" %filename_HDF5, '"://%s' %Parameter])        
+        Set_MSGdisk_Projection(input_filename, output_filename_first)
+        
+        # Clip array to area of interest
+        Clip_Reproject_Tiff(output_filename_first, output_filename, latlim, lonlim)
+        
     return()
 
 def Set_MSGdisk_Projection(input_filename, output_filename):        
@@ -104,7 +115,7 @@ def Set_MSGdisk_Projection(input_filename, output_filename):
     options_list = ['-a_srs "+proj=geos +a=6378169 +b=6356583.8 +lon_0=0 +h=35785831"',
                '-a_ullr -5570248.832537 5570248.832537 5570248.832537 -5570248.832537']
     options_string = " ".join(options_list)
-    
+    gdal.UseExceptions()
     gdal.Translate(output_filename, input_filename, options = options_string)
     return()
     

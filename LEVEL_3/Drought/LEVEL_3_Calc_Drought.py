@@ -7,104 +7,164 @@ Created on Tue Oct  1 19:06:01 2019
 
 import os
 import gdal
-import datetime
-import pandas as pd
-import calendar
 import numpy as np
+import warnings
 
-import WaporTranslator.LEVEL_2.LEVEL_2_Calc_Radiation as L2_Rad
+import WaporTranslator.LEVEL_1.Input_Data as Inputs
+import WaporTranslator.LEVEL_1.DataCube as DataCube
+import WaporTranslator.LEVEL_2.Functions as Functions
 
-import watertools.General.raster_conversions as RC
-import watertools.General.data_conversions as DC
+def main(Start_year_analyses, End_year_analyses, output_folder):  
 
-
-def Calc_Drought(output_folder_L2, Date, example_file):
-
-    # Get Date
-    Date_datetime = datetime.datetime.strptime(Date, "%Y-%m-%d")
+    # Do not show non relevant warnings
+    warnings.filterwarnings("ignore")
+    warnings.filterwarnings("ignore", category=FutureWarning)
+    warnings.filterwarnings("ignore", category=RuntimeWarning)
     
-    # Get folder L1
-    input_folder_L1 = output_folder_L2.replace("LEVEL_2", "LEVEL_1")
-
-    # Get folder L3
-    output_folder_L3 = output_folder_L2.replace("LEVEL_2", "LEVEL_3")   
-
-    # date in dekad
-    day_dekad = int("%d" %int(np.minimum(int(("%02d" %int(str(Date_datetime.day)))[0]), 2)))
-        
-    # Conversion WAPOR unit to mm/Dekade
-    if day_dekad == 2:
-        year = Date_datetime.year
-        month = Date_datetime.month
-        NOD = calendar.monthrange(year, month)[1]
-    else:
-        NOD = 10
-
-    # Create output folder for Drought
-    output_folder_Drought = os.path.join(output_folder_L3, "Drought")
-    if not os.path.exists(output_folder_Drought):
-        os.makedirs(output_folder_Drought)
-        
-    # Define output files
-    filename_out_et_deficit = os.path.join(output_folder_Drought, "ET_Deficit", "ET_Deficit%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_accumulated_rainfall_deficit = os.path.join(output_folder_Drought, "Accumulated_Rainfall_Deficit", "Accumulated_Rainfall_Deficit_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_soil_moisture_anomaly = os.path.join(output_folder_Drought, "Soil_Moisture_Anomaly", "Soil_Moisture_Anomaly_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_lake_reservoir_level_anomaly = os.path.join(output_folder_Drought, "Lake_Reservoir_Level_Anomaly", "Lake_Reservoir_Level_Anomaly_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_open_water_anomaly = os.path.join(output_folder_Drought, "Open_Water_Anomaly", "Open_Water_Anomaly_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-    filename_out_integrated_drought_alert_level = os.path.join(output_folder_Drought, "Integrated_Drought_Alert_Level", "Integrated_Drought_Alert_Level_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-
-    if not os.path.exists(filename_out_soil_moisture_anomaly):
+    # Define dates
+    Dates = Functions.Get_Dekads(Start_year_analyses, End_year_analyses)
+    
+    # Get path and formats
+    Paths = Inputs.Input_Paths()
+    Formats = Inputs.Input_Formats()
+    Conversions = Inputs.Input_Conversions()
+    
+    # Set example file
+    example_file = os.path.join(output_folder, "LEVEL_1", "MASK", "MASK.tif")
+    
+    # Open Mask
+    dest_mask = gdal.Open(example_file)
+    MASK = dest_mask.GetRasterBand(1).ReadAsArray()
+    
+    # Define output folder LEVEL 3
+    output_folder_L3 = os.path.join(output_folder, "LEVEL_3", "Drought")
+    if not os.path.exists(output_folder_L3):
+        os.makedirs(output_folder_L3)
+    
+    ################################# Dynamic maps #################################
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    Pcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_P), Formats.Cumulative_P, Dates, Conversion = Conversions.Cumulative_P, Variable = 'Pcum', Product = '', Unit = 'mm')
+    ETcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET), Formats.Cumulative_ET, Dates, Conversion = Conversions.Cumulative_ET, Variable = 'ETcum', Product = '', Unit = 'mm')
+    Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Soil_Moisture), Formats.Soil_Moisture, Dates, Conversion = Conversions.Soil_Moisture, Variable = 'Soil Moisture', Product = '', Unit = 'cm3/cm3')
+    Crop_Water_Requirement = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Crop_Water_Requirement), Formats.Crop_Water_Requirement, Dates, Conversion = Conversions.Crop_Water_Requirement, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Crop Water Requirement', Product = '', Unit = 'mm/decade')
+    Soil_Moisture_Long_Term = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Soil_Moisture_Long_Term), Formats.Soil_Moisture_Long_Term, Dates, Conversion = Conversions.Soil_Moisture_Long_Term, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Long Term Soil Moisture', Product = '', Unit = 'cm3/cm3')
    
-        # Get georeference
-        dest_ex = gdal.Open(example_file)
-        geo = dest_ex.GetGeoTransform()
-        proj = dest_ex.GetProjection()
-        
-        # define required filenames
-        fileet = os.path.join(input_folder_L1, "L2_AETI_D", "L2_AETI_D_WAPOR_DEKAD_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filecwr = os.path.join(output_folder_L2, "Crop_Water_Requirement", "Crop_Water_Requirement_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filecump = os.path.join(output_folder_L2, "Cumulative", "Precipitation", "P_cum_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))    
-        filecumet = os.path.join(output_folder_L2, "Cumulative", "Evapotranspiration", "ET_cum_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-        filesm = os.path.join(output_folder_L2, "Soil_Moisture", "Soil_Moisture_%d.%02d.%02d.tif" %(Date_datetime.year, Date_datetime.month, Date_datetime.day))
-         
-        # Open required files
-        destet = RC.reproject_dataset_example(fileet, example_file, 2)
-        destcwr = gdal.Open(filecwr)
-        destcump = gdal.Open(filecump)
-        destcumet = gdal.Open(filecumet)
-        destsm = gdal.Open(filesm)
+    ######################## Calculate days in each dekads #################################
+    Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)    
 
-        # Open Arrays
-        ET = destet.GetRasterBand(1).ReadAsArray()        
-        Crop_Water_Requirement = destcwr.GetRasterBand(1).ReadAsArray()
-        P_cumulated = destcump.GetRasterBand(1).ReadAsArray()
-        ET_cumulated = destcumet.GetRasterBand(1).ReadAsArray()
-        Soil_Moisture = destsm.GetRasterBand(1).ReadAsArray()         
+    ######################## Calculate Evapotranspiration deficit ########################
+    ET_Deficit_Data = Crop_Water_Requirement.Data - ET.Data * Days_in_Dekads[:, None, None]
 
-        # Calculate Evapotranspiration deficit
-        ET_Deficit = Crop_Water_Requirement - ET * NOD
+    # Write in DataCube
+    ET_Deficit = DataCube.Rasterdata_Empty()
+    ET_Deficit.Data = ET_Deficit_Data * MASK
+    ET_Deficit.Projection = ET.Projection
+    ET_Deficit.GeoTransform = ET.GeoTransform
+    ET_Deficit.Ordinal_time = ET.Ordinal_time
+    ET_Deficit.Size = ET_Deficit_Data.shape
+    ET_Deficit.Variable = "Evapotranspiration Deficit"
+    ET_Deficit.Unit = "mm-dekad-1"       
+
+    del ET_Deficit_Data
+    
+    ET_Deficit.Save_As_Tiff(os.path.join(output_folder_L3, "ET_Deficit"))     
+    
+    ######################## Calculate Accumulated Rainfall Deficit over Season ########################
+    Accumulated_Rainfall_Deficit_Data = Pcum.Data - ETcum.Data
+
+    # Write in DataCube
+    Accumulated_Rainfall_Deficit = DataCube.Rasterdata_Empty()
+    Accumulated_Rainfall_Deficit.Data = Accumulated_Rainfall_Deficit_Data * MASK
+    Accumulated_Rainfall_Deficit.Projection = ET.Projection
+    Accumulated_Rainfall_Deficit.GeoTransform = ET.GeoTransform
+    Accumulated_Rainfall_Deficit.Ordinal_time = ET.Ordinal_time
+    Accumulated_Rainfall_Deficit.Size = Accumulated_Rainfall_Deficit_Data.shape
+    Accumulated_Rainfall_Deficit.Variable = "Evapotranspiration Deficit"
+    Accumulated_Rainfall_Deficit.Unit = "mm"       
+
+    del Accumulated_Rainfall_Deficit_Data
+    
+    Accumulated_Rainfall_Deficit.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Rainfall_Deficit"))     
+    
+    ######################## Calculate Soil Moisture Anomaly ########################
+    Soil_Moisture_Anomaly_Data = (Soil_Moisture.Data - Soil_Moisture_Long_Term.Data)/Soil_Moisture_Long_Term.Data * 100 
+ 
+    # Write in DataCube
+    Soil_Moisture_Anomaly = DataCube.Rasterdata_Empty()
+    Soil_Moisture_Anomaly.Data = Soil_Moisture_Anomaly_Data * MASK
+    Soil_Moisture_Anomaly.Projection = ET.Projection
+    Soil_Moisture_Anomaly.GeoTransform = ET.GeoTransform
+    Soil_Moisture_Anomaly.Ordinal_time = ET.Ordinal_time
+    Soil_Moisture_Anomaly.Size = Soil_Moisture_Anomaly_Data.shape
+    Soil_Moisture_Anomaly.Variable = "Soil Moisture Anomaly"
+    Soil_Moisture_Anomaly.Unit = "Percentage"       
+
+    del Soil_Moisture_Anomaly_Data
+    
+    Soil_Moisture_Anomaly.Save_As_Tiff(os.path.join(output_folder_L3, "Soil_Moisture_Anomaly"))     
         
-        # Calculate Accumulated Rainfall Deficit over Season
-        Accumulated_Rainfall_Deficit = P_cumulated - ET_cumulated
+    ######################## Calculate Lake Reservoir Level Anomaly ########################
+    #Lake_Reservoir_Level_Anomaly = 
+    
+    ######################## Calculate Open Water Anomaly ########################
+    #Open_Water_Anomaly = 
+    
+    ######################## Calculate Integrated Drought Alert Level ########################
+    Alert_limits = Alert_dict()
+    
+    Integrated_Drought_Alert_Level_ET_Deficit = np.ones(ET.Size) * np.nan
+    Integrated_Drought_Alert_Level_P_Deficit = np.ones(ET.Size) * np.nan    
+    Integrated_Drought_Alert_Level_Soil_Anomalies = np.ones(ET.Size) * np.nan
         
-        # Calculate Soil Moisture Anomaly
-        Soil_Moisture_Anomaly = (Soil_Moisture - E68)/E68 * 100 #!!!
-        
-        # Calculate Lake Reservoir Level Anomaly
-        #Lake_Reservoir_Level_Anomaly = 
-        
-        # Calculate Open Water Anomaly
-        #Open_Water_Anomaly = 
-        
-        # Calculate Integrated Drought Alert Level
-        #Integrated_Drought_Alert_Level =
-            
-        # Save result
-        DC.Save_as_tiff(filename_out_et_deficit, ET_Deficit, geo, proj)
-        DC.Save_as_tiff(filename_out_accumulated_rainfall_deficit, Accumulated_Rainfall_Deficit, geo, proj)
-        #DC.Save_as_tiff(filename_out_soil_moisture_anomaly, Soil_Moisture_Anomaly, geo, proj)
-        #DC.Save_as_tiff(filename_out_lake_reservoir_level_anomaly, Lake_Reservoir_Level_Anomaly, geo, proj)
-        #DC.Save_as_tiff(filename_out_open_water_anomaly, Open_Water_Anomaly, geo, proj)
-        #DC.Save_as_tiff(filename_out_integrated_drought_alert_level, Integrated_Drought_Alert_Level, geo, proj)
-        
+    for values in Alert_limits['et_deficit'].items():
+        Integrated_Drought_Alert_Level_ET_Deficit = np.where(np.logical_and(ET_Deficit.Data > values[1][0], ET_Deficit.Data <= values[1][1]), values[0], Integrated_Drought_Alert_Level_ET_Deficit)
+    for values in Alert_limits['p_deficit'].items():
+        Integrated_Drought_Alert_Level_P_Deficit = np.where(np.logical_and(Accumulated_Rainfall_Deficit.Data > values[1][0], Accumulated_Rainfall_Deficit.Data <= values[1][1]), values[0], Integrated_Drought_Alert_Level_P_Deficit)
+    for values in Alert_limits['soil_anomalies'].items():
+        Integrated_Drought_Alert_Level_Soil_Anomalies = np.where(np.logical_and(Soil_Moisture_Anomaly.Data < values[1][0], Soil_Moisture_Anomaly.Data >= values[1][1]), values[0], Integrated_Drought_Alert_Level_Soil_Anomalies)
+
+    Integrated_Drought_Alert_Level_Data = np.nanmax(np.stack((Integrated_Drought_Alert_Level_ET_Deficit, Integrated_Drought_Alert_Level_P_Deficit, Integrated_Drought_Alert_Level_Soil_Anomalies)),axis = 0)    
+
+    # Write in DataCube
+    Integrated_Drought_Alert_Level = DataCube.Rasterdata_Empty()
+    Integrated_Drought_Alert_Level.Data = Integrated_Drought_Alert_Level_Data * MASK
+    Integrated_Drought_Alert_Level.Projection = ET.Projection
+    Integrated_Drought_Alert_Level.GeoTransform = ET.GeoTransform
+    Integrated_Drought_Alert_Level.Ordinal_time = ET.Ordinal_time
+    Integrated_Drought_Alert_Level.Size = Integrated_Drought_Alert_Level_Data.shape
+    Integrated_Drought_Alert_Level.Variable = "Integrated Drought Alert Level"
+    Integrated_Drought_Alert_Level.Unit = "Percentage"       
+
+    del Integrated_Drought_Alert_Level_Data
+    
+    Integrated_Drought_Alert_Level.Save_As_Tiff(os.path.join(output_folder_L3, "Integrated_Drought_Alert_Level"))   
+     
     return()
+    
+def Alert_dict(version = '1.0'):
+    
+    Alert_V1 = {
+    'et_deficit':    {1: [-100, 9999],
+               2: [-200, -100],
+               3: [-300, -200],
+               4: [-400, -300],
+               5: [-9999, -400]},
+    
+    'p_deficit':    {1: [-9999, 5],
+               2: [5, 10],
+               3: [10, 15],
+               4: [15, 20],
+               5: [20, 9999]},
+               
+    'soil_anomalies': {1: [-10, 9999],
+               2: [-20, -10],
+               3: [-30, -20],
+               4: [-40, -30],
+               5: [-50, -9999]}}
+                         
+    Alert_dict = dict()
+    Alert_dict['1.0'] = Alert_V1
+    Alert_dict['2.0'] = Alert_V1
+    
+    return Alert_dict[version]    
+    

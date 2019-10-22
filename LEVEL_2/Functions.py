@@ -17,9 +17,9 @@ from scipy.interpolate import interp1d
 import watertools.General.raster_conversions as RC
 import watertools.General.data_conversions as DC
 
-import WaporTranslator.LEVEL_2.DataCube as DataCube
-
 def Calc_Dekads_from_Daily(DataCube_in, flux_state = "flux"):
+    
+    import WaporTranslator.LEVEL_1.DataCube as DataCube
     
     # Get the timesteps of the dekads and the daily
     Time = DataCube_in.Ordinal_time
@@ -81,6 +81,8 @@ def Calc_Dekads_from_Daily(DataCube_in, flux_state = "flux"):
 
 
 def Calc_Daily_from_Dekads(DataCube_in):
+    
+    import WaporTranslator.LEVEL_1.DataCube as DataCube
     
     # Get the timesteps of the dekads and the daily
     Time = DataCube_in.Ordinal_time
