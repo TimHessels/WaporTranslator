@@ -1,0 +1,1 @@
+{"Inputs": [{"Start_year": 2009, "End_year": 2018, "Input_shapefile": "C:\\.....\\Name.shp", "Threshold_Mask": 20, "Output_folder": "C:\\.....", "API_WAPOR_KEY": "PUT_HERE_YOUR_API_KEY", "Radiation_Source" : "KNMI"}]}

@@ -398,5 +398,19 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     del Water_Productivity_Data
     
     Water_Productivity.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity"))       
-        
+    
+    '''
+    # Write in DataCube
+    Accumulated_ET = DataCube.Rasterdata_Empty()
+    Accumulated_ET.Data = Accumulated_ET_Data * MASK
+    Accumulated_ET.Projection = ET.Projection
+    Accumulated_ET.GeoTransform = ET.GeoTransform
+    Accumulated_ET.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET.Size = Accumulated_ET_Data.shape
+    Accumulated_ET.Variable = "Accumulated ET"
+    Accumulated_ET.Unit = "mm"
+    
+    Accumulated_ET.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET"))    
+    '''    
+    
     return()
