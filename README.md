@@ -166,7 +166,7 @@ The list below gives an overview of all the required modules for WaporTranslator
 | netCDF4 | netCDF4      |  conda install netCDF4 | 1.4.2 |
 | pandas | pandas      |  conda install pandas | 0.25.1 |
 | paramiko | paramiko      |  conda install paramiko | 2.6.0 |
-| pyproj | pyproj      |  conda install pyproj | 1.9.6 |
+| pyproj | pyproj      |  pip install pyproj | 2.4.0 |
 | Shapefile | pyshp      |  conda install pyshp  | 2.1.0 |
 | requests | requests      |  conda install requests | 2.22.0 |
 | scipy | scipy      |  conda install scipy | 1.3.1 |
@@ -185,7 +185,7 @@ If you get no command everything is fine, if not you will see:
 
 >ImportError: No module named ... module name ...
 
-The missing modules needs to be added manually. The missing module name (that is showing in the ImportError message of python) can be copied (the only exception is "shapefile", this module is called "pyshp" and "osgeo" is called "gdal") and installed by using one of the following 4 methods, the easiest methods are method 1 and 2 which is normally also sufficient to install all the python modules of the WaporTranslator module. If a module cannot be installed by the first method described below, the second method can be used, followed by the third and fourth. After installing one module, close and re-open an Ipython console and check if "import WaporTranslator" can be imported or to see which new module is missing. 
+The missing modules needs to be added manually. The missing module name (that is showing in the ImportError message of python) can be copied (the only exception is "shapefile", this module is called "pyshp" and "osgeo" is called "gdal") and installed by using one of the following 4 methods, the easiest methods are method 1 and 2 which is normally also sufficient to install all the python modules of the WaporTranslator module. If a module cannot be installed by the first method described below, the second method can be used, followed by the third and fourth. After installing one module, close and re-open an Ipython console and check if "import WaporTranslator" can be imported or to see which new module is missing. **Use only for the pyproj module the pip command instead of the conda command!**
 
 #### <a name="chapter5_2_2_1"></a>Method 1: conda
 
