@@ -81,7 +81,7 @@ class Rasterdata_tiffs:
                     geo = dest.GetGeoTransform()            
                     Array_end = np.ones([len(Dates), size_y, size_x]) * np.nan
                     
-                if gap_filling != None:     
+                if gap_filling != None and ~np.isnan(np.nanmean(Array)):   
                     Array[np.isnan(Array)] = -9999
                     Array = RC.gap_filling(Array, -9999, gap_filling)
                     
@@ -111,7 +111,7 @@ class Rasterdata_tiffs:
             time_or = ''
             
             # Apply gapfilling if needed
-            if gap_filling != None:     
+            if gap_filling != None and ~np.isnan(np.nanmean(Array)):     
                 Array_end[np.isnan(Array_end)] = -9999
                 Array_end = RC.gap_filling(Array_end, -9999, gap_filling)
             Array_end = Array_end * MASK

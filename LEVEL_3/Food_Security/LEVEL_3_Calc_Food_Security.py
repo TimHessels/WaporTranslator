@@ -214,7 +214,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     ################################# production gap Temporal #################################
         
-    Production_Gap_Temporal_Data = (Actual_Biomass_Production.Data - np.tile(Mean_Biomass_Production.Data, (Total_years, 1, 1)))
+    Production_Gap_Temporal_Data = np.minimum((Actual_Biomass_Production.Data - np.tile(Mean_Biomass_Production.Data, (Total_years, 1, 1))), 0)
     
     Production_Gap_Temporal = DataCube.Rasterdata_Empty()
     Production_Gap_Temporal.Data = Production_Gap_Temporal_Data * MASK
@@ -246,7 +246,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     ################################# Production gap due to soil moisture #################################
     
-    Production_Gap_Soil_Moisture_Data = np.where(Soil_Moisture_Stress.Data<0., 0., -Actual_Biomass_Production.Data * Soil_Moisture_Stress.Data) # !!! heb hier keer van gemaakt
+    Production_Gap_Soil_Moisture_Data = np.where(Soil_Moisture_Stress.Data<=0., 0., -Actual_Biomass_Production.Data * Soil_Moisture_Stress.Data) # !!! heb hier keer van gemaakt
     Production_Gap_Soil_Moisture_Data = Production_Gap_Soil_Moisture_Data.clip(-10000, 0)
     
     Production_Gap_Soil_Moisture = DataCube.Rasterdata_Empty()
@@ -372,7 +372,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     ################################# Calculate Fresh Grass Yield season #################################
     
-    Yield_Fresh_Grass_Data = 0.45 * ((Accumulated_NPP.Data)/C3_C4)/(1 - 0.6)
+    Yield_Fresh_Grass_Data = 0.45 * ((Accumulated_NPP.Data)/C3_C4)/(1 - 0.6) * Grassland.Data
     
     Yield_Fresh_Grass = DataCube.Rasterdata_Empty()
     Yield_Fresh_Grass.Data = Yield_Fresh_Grass_Data * MASK

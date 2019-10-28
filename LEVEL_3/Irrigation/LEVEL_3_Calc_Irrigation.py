@@ -50,6 +50,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Crop_Water_Requirement = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Crop_Water_Requirement), Formats.Crop_Water_Requirement, Dates, Conversion = Conversions.Crop_Water_Requirement, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Crop Water Requirement', Product = '', Unit = 'mm/decade')
     ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
     E = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.E), Formats.E, Dates, Conversion = Conversions.E, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'E', Product = 'WAPOR', Unit = 'mm/day')
+    I = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.I), Formats.I, Dates, Conversion = Conversions.I, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'I', Product = 'WAPOR', Unit = 'mm/day')
     P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.P), Formats.P, Dates, Conversion = Conversions.P, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'P', Product = 'WAPOR', Unit = 'mm/day')
     Critical_Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Critical_Soil_Moisture), Formats.Critical_Soil_Moisture, Dates, Conversion = Conversions.Critical_Soil_Moisture, Variable = 'Critical Soil Moisture', Product = 'SoilGrids', Unit = 'cm3/cm3')
     Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Soil_Moisture), Formats.Soil_Moisture, Dates, Conversion = Conversions.Soil_Moisture, Variable = 'Soil Moisture', Product = '', Unit = 'cm3/cm3')
@@ -83,10 +84,28 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     del Irrigation_Water_Requirement_Data
     
     Irrigation_Water_Requirement.Save_As_Tiff(os.path.join(output_folder_L3, "Irrigation_Water_Requirement"))    
+
+    ######################## Calculate ETblue ########################
+    ETblue_Data = np.where(ET.Data > 0.7 * P.Data, Days_in_Dekads[:, None, None] * (ET.Data - 0.7 * P.Data), 0)
+    
+    # Write in DataCube
+    ETblue = DataCube.Rasterdata_Empty()
+    ETblue.Data = ETblue_Data * MASK
+    ETblue.Projection = ET.Projection
+    ETblue.GeoTransform = ET.GeoTransform
+    ETblue.Ordinal_time = ET.Ordinal_time
+    ETblue.Size = ETblue_Data.shape
+    ETblue.Variable = "Blue Evapotranspiration"
+    ETblue.Unit = "mm-dekad-1"
+    
+    del ETblue_Data
+    
+    ETblue.Save_As_Tiff(os.path.join(output_folder_L3, "ETblue"))    
     
     ######################## Calculate Gross Irrigation Water Supply ########################
     Gross_Irrigation_Water_Supply_Data = np.maximum(0, (Net_Supply_Drainage.Data + Deep_Percolation.Data + Surface_Runoff_P.Data) * (1 + Surface_Runoff_Coefficient.Data))
- 
+    Gross_Irrigation_Water_Supply_Data = np.minimum(1/0.95 * ETblue.Data, Gross_Irrigation_Water_Supply_Data)
+    
     # Write in DataCube
     Gross_Irrigation_Water_Supply = DataCube.Rasterdata_Empty()
     Gross_Irrigation_Water_Supply.Data = Gross_Irrigation_Water_Supply_Data * MASK
@@ -134,23 +153,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     del Adequacy_Relative_Irrigation_Water_Supply_Data
     
     Adequacy_Relative_Irrigation_Water_Supply.Save_As_Tiff(os.path.join(output_folder_L3, "Adequacy_Relative_Irrigation_Water_Supply"))    
-    
-    ######################## Calculate ETblue ########################
-    ETblue_Data = np.where(ET.Data > 0.7 * P.Data, Days_in_Dekads[:, None, None] * (ET.Data - 0.7 * P.Data), 0)
-    
-    # Write in DataCube
-    ETblue = DataCube.Rasterdata_Empty()
-    ETblue.Data = ETblue_Data * MASK
-    ETblue.Projection = ET.Projection
-    ETblue.GeoTransform = ET.GeoTransform
-    ETblue.Ordinal_time = ET.Ordinal_time
-    ETblue.Size = ETblue_Data.shape
-    ETblue.Variable = "Blue Evapotranspiration"
-    ETblue.Unit = "mm-dekad-1"
-    
-    del ETblue_Data
-    
-    ETblue.Save_As_Tiff(os.path.join(output_folder_L3, "ETblue"))    
+
      
     ######################## Calculate Non Consumptive Use Due To Irrigation ########################
     Non_Consumptive_Use_Due_To_Irrigation_Data = np.maximum(0, Gross_Irrigation_Water_Supply.Data - ETblue.Data)
@@ -240,12 +243,12 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     ################################# Calculate Spatial Target Evapotranspiration #################################
     L3_AEZ_ET = dict()
     for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
-        L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ == AEZ_ID, ET.Data, np.nan), 99, axis=(1,2))
+        L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ.Data == AEZ_ID, ET.Data, np.nan), 99, axis=(1,2))
     
     ################################# Create spatial target maps #################################
     ET_Target_Spatial_Data = np.ones(Adequacy_Crop_Water_Deficit.Size) * np.nan
     for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
-        ET_Target_Spatial_Data = np.where(AEZ == AEZ_ID, L3_AEZ_ET[int(AEZ_ID)][:, None, None], ET_Target_Spatial_Data)
+        ET_Target_Spatial_Data = np.where(AEZ.Data == AEZ_ID, L3_AEZ_ET[int(AEZ_ID)][:, None, None], ET_Target_Spatial_Data)
     
     ############################# Calculate Target Evapotranspiration ############################
 
@@ -341,7 +344,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Feasible_Water_Conservation.Save_As_Tiff(os.path.join(output_folder_L3, "Feasible_Water_Conservation"))
     
     #################################### Calculate Non Beneficial Water Losses ###################################
-    Non_Beneficial_Water_Losses_Data = E.Data * Days_in_Dekads[:, None, None]
+    Non_Beneficial_Water_Losses_Data = (E.Data + I.Data) * Days_in_Dekads[:, None, None]
 
     # Write in DataCube 
     Non_Beneficial_Water_Losses = DataCube.Rasterdata_Empty()

@@ -211,7 +211,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_DOY_Data[Accumulated_DOY_Data==0] = np.nan    
     Accumulated_ET_Data = Accumulated_ET_Data_Start_S1 + Accumulated_ET_Data_Start_S2 + Accumulated_ET_Data_Per + Accumulated_ET_Data_Past
     Accumulated_ET_Data[Accumulated_ET_Data==0] = np.nan    
-    
+
+
     AquaCrop_Water_Use_Efficiency_Data = 1000 * (Accumulated_Biomass_Production.Data/(10 * Accumulated_DOY_Data * Accumulated_T_Data/Accumulated_ET0_Data))
 
     # Write in DataCube

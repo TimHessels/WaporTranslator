@@ -80,7 +80,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     DEM =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DEM), Formats.DEM, Dates = None, Conversion = Conversions.DEM, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DEM', Product = 'SRTM', Unit = 'm')
     
     ################################### Calculate LAI ############################################
-    LAI_Data = np.log((1-np.minimum(T.Data/ET0.Data, 0.99)))/(-0.69)
+    LAI_Data = np.log((1-np.minimum(T.Data/ET0.Data, 0.99)))/(-0.55)
     LAI_Data[LUdek.Data==80] = 0.0
     LAI_Data = LAI_Data.clip(0.0, 7.0)
     
@@ -99,7 +99,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     LAI.Save_As_Tiff(os.path.join(output_folder_L2, "LAI"))
     
     ############################ Calculate Root Depth ##########################################
-    Root_Depth_Data = 0.7 * 100 * np.maximum(0, -0.0326 * LAI.Data**2 + 0.4755 * LAI.Data - 0.0411)
+    Root_Depth_Data = 0.85 * 100 * np.maximum(0, -0.0326 * LAI.Data**2 + 0.4755 * LAI.Data - 0.0411)
     Root_Depth_Data = Root_Depth_Data.clip(0, 500)
     
     # Write in DataCube
@@ -365,7 +365,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     Soil_Water_Holding_Capacity.Save_As_Tiff(os.path.join(output_folder_L2, "Soil_Water_Holding_Capacity"))
     
     ################### Calculate Soil Moisture ############################################
-    Soil_Moisture_Data = Theta_Sat_Subsoil.Data * np.exp((np.minimum(Evaporative_Fraction.Data, 1.0) - 1)/0.421)
+    Soil_Moisture_Data = Theta_Sat_Subsoil.Data * np.exp((np.minimum(Evaporative_Fraction.Data, 0.9) - 1)/0.421)
     
     # Write in DataCube
     Soil_Moisture = DataCube.Rasterdata_Empty()
@@ -454,7 +454,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     ################## Calculate Soil Moisture Change ##################################  
     
-    Soil_Moisture_Change_Data = Root_Depth.Data * Days_in_Dekads[:, None, None] * (Soil_Moisture_End.Data - Soil_Moisture_Start.Data)
+    Soil_Moisture_Change_Data = 10 * Root_Depth.Data * Days_in_Dekads[:, None, None] * (Soil_Moisture_End.Data - Soil_Moisture_Start.Data)
     
     # Write in DataCube
     Soil_Moisture_Change = DataCube.Rasterdata_Empty()
@@ -508,7 +508,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     ############### Calculate Storage coefficient for surface runoff #################   
     
-    Storage_Coeff_Surface_Runoff_Data = 8 * (Sand.Data[None, :, :] * LAI.Data) * (Theta_Sat_Subsoil.Data[None, :, :] - Soil_Moisture.Data)
+    Storage_Coeff_Surface_Runoff_Data = 4 * (Sand.Data[None, :, :] * LAI.Data) * (Theta_Sat_Subsoil.Data[None, :, :] - Soil_Moisture.Data)
     
     # Write in DataCube
     Storage_Coeff_Surface_Runoff = DataCube.Rasterdata_Empty()

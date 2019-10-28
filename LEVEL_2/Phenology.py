@@ -168,7 +168,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         
         # Create Perenial map
         for dict_in_per in Seasons_dict_per_start.items():        
-        
+ 
             sys.stdout.write("\rCreate Maps Perenial of year %s %i/%i (%f %%)" %(year_nmbr, count, len(Seasons_dict_per_start.items()), count/len(Seasons_dict_per_start.items())*100))
             sys.stdout.flush()
         
@@ -201,12 +201,12 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         print("                                                                                          ")
         # Create S1 and S2 maps
         for dict_in in Seasons_dict_start.items():   
-         
+
             sys.stdout.write("\rCreate Maps Other Crops of year %s %i/%i (%f %%)" %(year_nmbr, count, len(Seasons_dict_start.items()), count/len(Seasons_dict_start.items())*100))
             sys.stdout.flush()
             
             # Check if pixel is not perenial
-            if not np.isnan(Per_Map_Start[dict_in[0] == ID_Matrix]):
+            if np.isnan(Per_Map_Start[dict_in[0] == ID_Matrix]):
              
                 Starts = dict_in[1]
                 
@@ -249,23 +249,10 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                        # Fill in array
                        Start_Map_S2[dict_in[0]== ID_Matrix] = Starts[1] - Year_DOY_Start      
                        End_Map_S2[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
-                       LU_Crop_Map[dict_in[0]== ID_Matrix] = 2
+                       LU_Crop_Map[dict_in[0] == ID_Matrix] = 2
                        
             count += 1        
         print("                                                                                         ")      
-
-        for Year in Years:
-            
-           year_ID = int(Year.year - Years[0].year)
-           Start = int(year_ID * 36)
-           End = int(Start + 36)
-           
-           T_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = T_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - T_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
-           ET_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = ET_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - ET_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
-           P_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = P_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - P_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
-           NPP_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = NPP_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - NPP_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
-           Temp_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = Temp_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - Temp_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
-           ET0_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = ET0_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - ET0_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
 
 
         # Do a Growing Degrees Days check
@@ -295,7 +282,20 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_End_%s.tif" %year_nmbr), Per_Map_End, geo, proj)          
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "CropClass","LU_CropSeason_%s.tif" %year_nmbr), LU_Crop_Map, geo, proj)      
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "CropClass","LU_CropType_%s.tif" %year_nmbr), LU_END, geo, proj)
-    
+
+    for Year in Years:
+        
+        year_ID = int(Year.year - Years[0].year)
+        Start = int(year_ID * 36)
+        End = int(Start + 36)
+       
+        T_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = T_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - T_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+        ET_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = ET_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - ET_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+        P_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = P_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - P_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+        NPP_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = NPP_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - NPP_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+        Temp_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = Temp_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - Temp_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+        ET0_end_sum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] = ET0_cum[Start:End, Grassland_pixels_year[year_ID,:,:]==1] - ET0_cum[int(np.maximum(Start-1, 0)), Grassland_pixels_year[year_ID,:,:]==1]
+
     # Get dekads time steps
     Dates_end2 = []
     for Year in Years:
@@ -430,12 +430,15 @@ def Calc_Season(Ts):
         # if T values are high but no start point or end point is found. Set start and end over the whole period       
         if np.nanmin(Ts_MW) >= Maximum_Threshold:
             Start = np.array(np.argwhere(Values==1)[0])
-            End = np.array([len(Ts_MW)])
+            End = np.array([9999])
         
         try:    
             if np.max(Start)>np.max(End):
-                End = np.append(End, np.argwhere(Values==1)[-1])
-                
+                if np.min(Values[int(np.max(Start)):])==0:
+                    End = np.append(End, np.argwhere(Values==1)[-1])
+                else:
+                    End = np.append(End, 9999)
+                     
             if np.min(End)<np.min(Start):
                 Start = np.append(np.argwhere(Values==1)[0], Start)
         except:
@@ -445,16 +448,20 @@ def Calc_Season(Ts):
             Start = np.append(np.argwhere(Values==1)[0], Start)
         
         if len(End)<len(Start):
-            End = np.append(End, np.argwhere(Values==1)[-1])
+            if np.min(Values[int(np.max(Start)):])==0:
+                End = np.append(End, np.argwhere(Values==1)[-1])
+            else:
+                End = np.append(End, 9999)
             
         
         if len(Start) > 0:
            
             # If period is longer than 1 year it is a perennial crop
-            Season_Amount_Decades = End - Start 
+            End_4_perenial = np.where(End==9999, np.argwhere(Values==1)[0], End)
+            Season_Amount_Decades = End_4_perenial - Start 
             
             # If two seasons in a row is lower than .... combine season
-            Short_Season = np.where(Season_Amount_Decades<9, 1, 0)
+            Short_Season = np.where(Season_Amount_Decades<7, 1, 0)
             dist_right = Start - np.append(Start[1:], 0)
             dist_left = np.append(0, Start[:-1]) - Start  
             
@@ -476,7 +483,7 @@ def Calc_Season(Ts):
                 Season_Amount_Decades = End - Start 
                 
                 # If two seasons in a row is lower than .... combine season
-                Short_Season = np.where(Season_Amount_Decades<9, 1, 0)
+                Short_Season = np.where(Season_Amount_Decades<7, 1, 0)
                 dist_right = Start - np.append(Start[1:], 0)
                 dist_left = np.append(0, Start[:-1]) - Start  
                 
@@ -524,7 +531,7 @@ def Calc_Season(Ts):
                
             # Find perennial crops
             Season_Amount_Decades = End - Start 
-            Long_Season = np.where(Season_Amount_Decades>30, 1, 0)
+            Long_Season = np.where(Season_Amount_Decades>36, 1, 0)
             Start_Per = Start[Long_Season == 1]
             End_Per = End[Long_Season == 1]
             End = End[Long_Season != 1]
@@ -584,9 +591,9 @@ for End_point in End:
 for Start_point in Start:
     plt.pyplot.plot(Start_point, Ts[int(Start_point)], "g", marker='o', markersize=8)
 for End_point in End_Per:
-    plt.pyplot.plot(End_point, C[int(End_point)], "y", marker='o', markersize=15)
+    plt.pyplot.plot(End_point, Ts[int(End_point)], "y", marker='o', markersize=15)
 for Start_point in Start_Per:
-    plt.pyplot.plot(Start_point, C[int(Start_point)], "y", marker='o', markersize=15)
+    plt.pyplot.plot(Start_point, Ts[int(Start_point)], "c", marker='o', markersize=15)
 
 """
 
