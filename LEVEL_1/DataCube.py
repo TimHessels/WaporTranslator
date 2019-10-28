@@ -111,7 +111,7 @@ class Rasterdata_tiffs:
             time_or = ''
             
             # Apply gapfilling if needed
-            if gap_filling != None and ~np.isnan(np.nanmean(Array)):     
+            if gap_filling != None and ~np.isnan(np.nanmean(Array_end)):     
                 Array_end[np.isnan(Array_end)] = -9999
                 Array_end = RC.gap_filling(Array_end, -9999, gap_filling)
             Array_end = Array_end * MASK
