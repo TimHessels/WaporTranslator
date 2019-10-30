@@ -20,8 +20,8 @@ dependencies:
   - lxml=4.4.1
   - pip
   - pip:
-    - pyproj=2.4.0
-    - watertools=0.0.6
-    - WaporAPI=0.0.2
+    - pyproj==2.4.0
+    - watertools==0.0.6
+    - WaporAPI==0.0.2
 prefix: C:\Users\timhe\Anaconda3\envs\env_waportranslator
 
