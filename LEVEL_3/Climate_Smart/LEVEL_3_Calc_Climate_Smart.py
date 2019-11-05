@@ -79,7 +79,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Carbon_Root_Zone_Pasture =(Soil_Organic_Carbon_Stock2.Data + Soil_Organic_Carbon_Stock3.Data) * 1000
     
     # Carbon Root Zone
-    Carbon_Root_Zone_Data = np.where(Season_Type.Data==4, Carbon_Root_Zone_Pasture[None, :, :], Carbon_Root_Zone_Cropland[None, :, :])
+    Carbon_Root_Zone_Data = np.where(Season_Type.Data==5, Carbon_Root_Zone_Pasture[None, :, :], Carbon_Root_Zone_Cropland[None, :, :])
 
     # Write in DataCube
     Carbon_Root_Zone = DataCube.Rasterdata_Empty()
@@ -103,7 +103,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Carbon_Sequestration_Pasture =10 * NPP.Data * (1 - 1.5/(1.5 + 1)) * Days_in_Dekads[:, None, None] * 0.7
     
     # Carbon Root Zone
-    Carbon_Sequestration_Data = np.where(Season_Type.Data==4, Carbon_Sequestration_Pasture, Carbon_Sequestration_Cropland)
+    Carbon_Sequestration_Data = np.where(Season_Type.Data==5, Carbon_Sequestration_Pasture, Carbon_Sequestration_Cropland)
 
     # Write in DataCube
     Carbon_Sequestration = DataCube.Rasterdata_Empty()

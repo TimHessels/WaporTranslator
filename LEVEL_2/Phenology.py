@@ -157,6 +157,8 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         End_Map_S1 = np.ones(LU_END.shape) * np.nan
         Start_Map_S2 = np.ones(LU_END.shape) * np.nan
         End_Map_S2 = np.ones(LU_END.shape) * np.nan
+        Start_Map_S3 = np.ones(LU_END.shape) * np.nan
+        End_Map_S3 = np.ones(LU_END.shape) * np.nan
         Per_Map_Start = np.ones(LU_END.shape) * np.nan
         Per_Map_End = np.ones(LU_END.shape) * np.nan        
         LU_Crop_Map = np.ones(LU_END.shape) * np.nan
@@ -193,7 +195,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                         
                         Per_Map_Start[dict_in_per[0]== ID_Matrix] = Start_per - Year_DOY_Start
                         Per_Map_End[dict_in_per[0]== ID_Matrix] = End_per - Year_DOY_Start                        
-                        LU_Crop_Map[dict_in_per[0]== ID_Matrix] = 3     
+                        LU_Crop_Map[dict_in_per[0]== ID_Matrix] = 4    
             count += 1
 
         count = 1
@@ -233,7 +235,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                        LU_Crop_Map[dict_in[0]== ID_Matrix] = 1
                        
                     # If it is a double season               
-                    if len(Starts) >= 2:    
+                    if len(Starts) > 1:    
                         
                        # Get the end value for this start period   
                        End = int(Seasons_dict_end[dict_in[0]][np.argwhere(Starts[1] == dict_in[1])][0][0])
@@ -250,6 +252,25 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                        Start_Map_S2[dict_in[0]== ID_Matrix] = Starts[1] - Year_DOY_Start      
                        End_Map_S2[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
                        LU_Crop_Map[dict_in[0] == ID_Matrix] = 2
+
+                    # If it is a triple season               
+                    if len(Starts) > 2:    
+                        
+                       # Get the end value for this start period   
+                       End = int(Seasons_dict_end[dict_in[0]][np.argwhere(Starts[2] == dict_in[1])][0][0])
+             
+                       # Set cumulative
+                       T_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = T_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                       ET_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = ET_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - ET_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                       P_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                       NPP_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                       Temp_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                       ET0_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+      
+                       # Fill in array
+                       Start_Map_S3[dict_in[0]== ID_Matrix] = Starts[2] - Year_DOY_Start      
+                       End_Map_S3[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                       LU_Crop_Map[dict_in[0] == ID_Matrix] = 3
                        
             count += 1        
         print("                                                                                         ")      
@@ -259,25 +280,33 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         GDD_CHECK = np.nanmax(Temp_end_sum, axis = 0)
         
         # Make Perenial crop from single crop
-        Per_Map_Start = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), Start_Map_S1, Per_Map_Start)
-        Per_Map_End = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), End_Map_S1, Per_Map_End)       
-        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), np.nan, Start_Map_S1)
-        End_Map_S1 = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), np.nan, End_Map_S1)
-
+        Per_Map_Start = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), Start_Map_S1, Per_Map_Start)
+        Per_Map_End = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), End_Map_S1, Per_Map_End)       
+        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), np.nan, Start_Map_S1)
+        End_Map_S1 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), np.nan, End_Map_S1)
+        Start_Map_S2 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==2), np.nan, Start_Map_S2)
+        End_Map_S2 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==2), np.nan, End_Map_S2)
+        Start_Map_S3 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==3), np.nan, Start_Map_S3)
+        End_Map_S3 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==3), np.nan, End_Map_S3)
+        
         # Make Single crop from perenial crop       
-        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), Per_Map_Start, Start_Map_S1)        
-        End_Map_S1 = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), Per_Map_End, End_Map_S1)        
-        Per_Map_Start = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), np.nan, Per_Map_Start)  
-        Per_Map_End = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), np.nan, Per_Map_End)          
+        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), Per_Map_Start, Start_Map_S1)        
+        End_Map_S1 = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), Per_Map_End, End_Map_S1)        
+        Per_Map_Start = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), np.nan, Per_Map_Start)  
+        Per_Map_End = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), np.nan, Per_Map_End)          
 
-        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK>2000,LU_Crop_Map==1), 3, LU_Crop_Map)
-        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK<2000,LU_Crop_Map==3), 1, LU_Crop_Map)
+        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), 4, LU_Crop_Map)
+        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), 1, LU_Crop_Map)
 
         # Save files
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S1", "Phenology_Start_S1_%s.tif" %year_nmbr), Start_Map_S1, geo, proj)    
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S2", "Phenology_Start_S2_%s.tif" %year_nmbr), Start_Map_S2, geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S3", "Phenology_Start_S3_%s.tif" %year_nmbr), Start_Map_S3, geo, proj)    
+
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S1", "Phenology_End_S1_%s.tif" %year_nmbr), End_Map_S1, geo, proj)    
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S2", "Phenology_End_S2_%s.tif" %year_nmbr), End_Map_S2, geo, proj)       
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S3", "Phenology_End_S3_%s.tif" %year_nmbr), End_Map_S3, geo, proj)       
+
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_Start_%s.tif" %year_nmbr), Per_Map_Start, geo, proj)  
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_End_%s.tif" %year_nmbr), Per_Map_End, geo, proj)          
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "CropClass","LU_CropSeason_%s.tif" %year_nmbr), LU_Crop_Map, geo, proj)      

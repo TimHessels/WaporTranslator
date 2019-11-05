@@ -54,10 +54,13 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     NPPcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_NPP), Formats.Cumulative_NPP, Dates, Conversion = Conversions.Cumulative_NPP, Variable = 'Cumulated NPP', Product = '', Unit = 'mm/decade')      
     Crop_S1_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_Start_S1), Formats.Season_Start_S1, list(Dates_Years), Conversion = Conversions.Season_Start_S1, Variable = 'Season 1 Start', Product = '', Unit = 'DOY')
     Crop_S2_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_Start_S2), Formats.Season_Start_S2, list(Dates_Years), Conversion = Conversions.Season_Start_S2, Variable = 'Season 2 Start', Product = '', Unit = 'DOY')
+    Crop_S3_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_Start_S3), Formats.Season_Start_S3, list(Dates_Years), Conversion = Conversions.Season_Start_S3, Variable = 'Season 3 Start', Product = '', Unit = 'DOY')
     Crop_S1_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S1), Formats.Season_End_S1, list(Dates_Years), Conversion = Conversions.Season_End_S1, Variable = 'Season 1 End', Product = '', Unit = 'DOY')
     Crop_S2_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S2), Formats.Season_End_S2, list(Dates_Years), Conversion = Conversions.Season_End_S2, Variable = 'Season 2 End', Product = '', Unit = 'DOY')
+    Crop_S3_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S3), Formats.Season_End_S3, list(Dates_Years), Conversion = Conversions.Season_End_S3, Variable = 'Season 3 End', Product = '', Unit = 'DOY')
     Per_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_Start), Formats.Perenial_Start, list(Dates_Years), Conversion = Conversions.Perenial_Start, Variable = 'Perenial Start', Product = '', Unit = 'DOY')
     Per_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_End), Formats.Perenial_End, list(Dates_Years), Conversion = Conversions.Perenial_End, Variable = 'Perenial End', Product = '', Unit = 'DOY')
+    Pcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_P), Formats.Cumulative_P, Dates, Conversion = Conversions.Cumulative_P, Variable = 'Cumulated P', Product = '', Unit = 'mm/decade')  
     ET0cum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET0), Formats.Cumulative_ET0, Dates, Conversion = Conversions.Cumulative_ET0, Variable = 'Cumulated ET0', Product = '', Unit = 'mm/decade')      
     ETcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET), Formats.Cumulative_ET, Dates, Conversion = Conversions.Cumulative_ET, Variable = 'Cumulated ET', Product = '', Unit = 'mm/decade')      
     Tcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_T), Formats.Cumulative_T, Dates, Conversion = Conversions.Cumulative_T, Variable = 'Cumulated T', Product = '', Unit = 'mm/decade')      
@@ -65,8 +68,18 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropType), Formats.CropType, list(Dates_Years), Conversion = Conversions.CropType, Variable = 'CropType', Product = '', Unit = '-')
     CropClass = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropClass), Formats.CropClass, list(Dates_Years), Conversion = Conversions.CropClass, Variable = 'CropClass', Product = '', Unit = '-')
     Accumulated_Biomass_Production = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production), Formats.Accumulated_Biomass_Production, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production, Variable = 'Accumulated Biomass Production', Product = '', Unit = 'ton/ha/season')
+    Accumulated_Biomass_Production_S1 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_S1), Formats.Accumulated_Biomass_Production_S1, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_S1, Variable = 'Accumulated Biomass Production Season 1', Product = '', Unit = 'ton/ha/season')
+    Accumulated_Biomass_Production_S2 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_S2), Formats.Accumulated_Biomass_Production_S2, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_S2, Variable = 'Accumulated Biomass Production Season 2', Product = '', Unit = 'ton/ha/season')
+    Accumulated_Biomass_Production_S3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_S3), Formats.Accumulated_Biomass_Production_S3, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_S3, Variable = 'Accumulated Biomass Production Season 3', Product = '', Unit = 'ton/ha/season')
+    Accumulated_Biomass_Production_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_Per), Formats.Accumulated_Biomass_Production_Per, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_Per, Variable = 'Accumulated Biomass Production Season Perenial', Product = '', Unit = 'ton/ha/season')
     Target_Biomass_Production = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Target_Biomass_Production), Formats.Target_Biomass_Production, Dates, Conversion = Conversions.Target_Biomass_Production, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Target Biomass Production', Product = '', Unit = 'kg/ha/d')
     Yield = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield), Formats.Yield, list(Dates_Years), Conversion = Conversions.Yield, Variable = 'Yield', Product = '', Unit = 'ton/ha')
+    Yield_S1 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S1), Formats.Yield_S1, list(Dates_Years), Conversion = Conversions.Yield_S1, Variable = 'Yield Season 1', Product = '', Unit = 'ton/ha')
+    Yield_S2 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S2), Formats.Yield_S2, list(Dates_Years), Conversion = Conversions.Yield_S2, Variable = 'Yield Season 2', Product = '', Unit = 'ton/ha')
+    Yield_S3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S3), Formats.Yield_S3, list(Dates_Years), Conversion = Conversions.Yield_S3, Variable = 'Yield Season 3', Product = '', Unit = 'ton/ha')
+    Yield_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_Per), Formats.Yield_Per, list(Dates_Years), Conversion = Conversions.Yield_Per, Variable = 'Yield Season Perenial', Product = '', Unit = 'ton/ha')
+
+
     
     ######################## Calculate days in each dekads #################################
     Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)
@@ -106,6 +119,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_DOY_Data_End = np.ones(Per_Start.Size) * np.nan
     Accumulated_ET_Data_Start = np.ones(Per_Start.Size) * np.nan
     Accumulated_ET_Data_End = np.ones(Per_Start.Size) * np.nan
+    Accumulated_P_Data_Start = np.ones(Per_Start.Size) * np.nan
+    Accumulated_P_Data_End = np.ones(Per_Start.Size) * np.nan    
     '''
     Start_Array = np.maximum(0, Per_Start.Data)
     End_Array = np.minimum(35, Per_End.Data)  
@@ -130,29 +145,40 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
             Accumulated_ET0_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = ET0cum.Data[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
             Accumulated_DOY_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = DOYcum[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
             Accumulated_ET_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = ETcum.Data[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
-
+            Accumulated_P_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = Pcum.Data[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
+ 
         for dekad in range(0,37):
             Accumulated_T_Data_End[year_diff, Per_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[int(year_diff * 36 + dekad-1), Per_End.Data[year_diff, :, :] == dekad] 
             Accumulated_ET0_Data_End[year_diff, Per_End.Data[year_diff, :, :] == dekad]= ET0cum.Data[int(year_diff * 36 + dekad-1), Per_End.Data[year_diff, :, :] == dekad] 
             Accumulated_DOY_Data_End[year_diff, Per_End.Data[year_diff, :, :] == dekad] = DOYcum[int(year_diff * 36 + dekad-1), Per_End.Data[year_diff, :, :] == dekad] 
             Accumulated_ET_Data_End[year_diff, Per_End.Data[year_diff, :, :] == dekad] = ETcum.Data[int(year_diff * 36 + dekad-1), Per_End.Data[year_diff, :, :] == dekad] 
+            Accumulated_P_Data_End[year_diff, Per_End.Data[year_diff, :, :] == dekad] = Pcum.Data[int(year_diff * 36 + dekad-1), Per_End.Data[year_diff, :, :] == dekad] 
     
     Accumulated_T_Data_Per =  Accumulated_T_Data_End - Accumulated_T_Data_Start
     Accumulated_ET0_Data_Per =  Accumulated_ET0_Data_End - Accumulated_ET0_Data_Start
     Accumulated_DOY_Data_Per =  Accumulated_DOY_Data_End - Accumulated_DOY_Data_Start
     Accumulated_ET_Data_Per =  Accumulated_ET_Data_End - Accumulated_ET_Data_Start
+    Accumulated_P_Data_Per =  Accumulated_P_Data_End - Accumulated_P_Data_Start
     
-    # For other crops (double and single) take the start and end of the seasons
+    # For other crops (triple, double and single) take the start and end of the seasons
     Accumulated_T_Data_Start_S1 = np.ones(Per_Start.Size) * np.nan
     Accumulated_T_Data_Start_S2 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_T_Data_Start_S3 = np.ones(Per_Start.Size) * np.nan
     Accumulated_ET0_Data_Start_S1 = np.ones(Per_Start.Size) * np.nan
     Accumulated_ET0_Data_Start_S2 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_ET0_Data_Start_S3 = np.ones(Per_Start.Size) * np.nan    
     Accumulated_DOY_Data_Start_S1 = np.ones(Per_Start.Size) * np.nan
     Accumulated_DOY_Data_Start_S2 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_DOY_Data_Start_S3 = np.ones(Per_Start.Size) * np.nan    
     Accumulated_DOY_Data_End_S1 = np.ones(Per_Start.Size) * np.nan
     Accumulated_DOY_Data_End_S2 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_DOY_Data_End_S3 = np.ones(Per_Start.Size) * np.nan    
     Accumulated_ET_Data_Start_S1 = np.ones(Per_Start.Size) * np.nan
     Accumulated_ET_Data_Start_S2 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_ET_Data_Start_S3 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_P_Data_Start_S1 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_P_Data_Start_S2 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_P_Data_Start_S3 = np.ones(Per_Start.Size) * np.nan
     
     if not np.isnan(np.nanmean(Crop_S1_End.Data)):
         for Date_Year in Dates_Years:
@@ -160,38 +186,62 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
             for dekad in range(0,int(np.nanmax(Crop_S2_End.Data))):
                 Accumulated_T_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = Tcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_T_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = Tcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_T_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = Tcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
+
                 Accumulated_ET0_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = ET0cum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_ET0_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = ET0cum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_ET0_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = ET0cum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
+ 
                 Accumulated_DOY_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_DOY_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_DOY_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
+
                 Accumulated_DOY_Data_End_S1[year_diff, Crop_S1_Start.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_Start.Data[year_diff, :, :] == dekad] 
                 Accumulated_DOY_Data_End_S2[year_diff, Crop_S2_Start.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_Start.Data[year_diff, :, :] == dekad] 
+                Accumulated_DOY_Data_End_S3[year_diff, Crop_S3_Start.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_Start.Data[year_diff, :, :] == dekad] 
+
                 Accumulated_ET_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = ETcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_ET_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = ETcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_ET_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = ETcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
+
+                Accumulated_P_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = Pcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_P_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = Pcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_P_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = Pcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
+
     
     Accumulated_T_Data_Start_S1[np.isnan(Accumulated_T_Data_Start_S1)] = 0
     Accumulated_T_Data_Start_S2[np.isnan(Accumulated_T_Data_Start_S2)] = 0 
+    Accumulated_T_Data_Start_S3[np.isnan(Accumulated_T_Data_Start_S3)] = 0 
     Accumulated_ET0_Data_Start_S1[np.isnan(Accumulated_ET0_Data_Start_S1)] = 0
     Accumulated_ET0_Data_Start_S2[np.isnan(Accumulated_ET0_Data_Start_S2)] = 0 
+    Accumulated_ET0_Data_Start_S3[np.isnan(Accumulated_ET0_Data_Start_S3)] = 0 
     Accumulated_DOY_Data_Start_S1[np.isnan(Accumulated_DOY_Data_Start_S1)] = 0
     Accumulated_DOY_Data_Start_S2[np.isnan(Accumulated_DOY_Data_Start_S2)] = 0 
+    Accumulated_DOY_Data_Start_S3[np.isnan(Accumulated_DOY_Data_Start_S3)] = 0 
     Accumulated_DOY_Data_End_S1[np.isnan(Accumulated_DOY_Data_End_S1)] = 0
     Accumulated_DOY_Data_End_S2[np.isnan(Accumulated_DOY_Data_End_S2)] = 0 
+    Accumulated_DOY_Data_End_S3[np.isnan(Accumulated_DOY_Data_End_S3)] = 0 
     Accumulated_ET_Data_Start_S1[np.isnan(Accumulated_ET_Data_Start_S1)] = 0
     Accumulated_ET_Data_Start_S2[np.isnan(Accumulated_ET_Data_Start_S2)] = 0 
+    Accumulated_ET_Data_Start_S3[np.isnan(Accumulated_ET_Data_Start_S3)] = 0 
+    Accumulated_P_Data_Start_S1[np.isnan(Accumulated_P_Data_Start_S1)] = 0
+    Accumulated_P_Data_Start_S2[np.isnan(Accumulated_P_Data_Start_S2)] = 0 
+    Accumulated_P_Data_Start_S3[np.isnan(Accumulated_P_Data_Start_S3)] = 0 
      
     # Calculate pasture as DOY 1 till 365
     Accumulated_T_Data_Past = np.ones(Per_Start.Size) * np.nan
     Accumulated_ET0_Data_Past = np.ones(Per_Start.Size) * np.nan    
     Accumulated_DOY_Data_Past = np.ones(Per_Start.Size) * np.nan   
     Accumulated_ET_Data_Past = np.ones(Per_Start.Size) * np.nan   
+    Accumulated_P_Data_Past = np.ones(Per_Start.Size) * np.nan       
     for Date_Year in Dates_Years:
         year_diff = int(Date_Year.year - Dates_Years[0].year)
         dekad = 35 # Always take end in pasture
-        Accumulated_T_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 4] = Tcum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 4] 
-        Accumulated_ET0_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 4] = ET0cum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 4] 
-        Accumulated_DOY_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 4] = 365
-        Accumulated_ET_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 4] = ETcum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 4] 
+        Accumulated_T_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 5] = Tcum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 5] 
+        Accumulated_ET0_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 5] = ET0cum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 5] 
+        Accumulated_DOY_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 5] = 365
+        Accumulated_ET_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 5] = ETcum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 5] 
+        Accumulated_P_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 5] = Pcum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 5] 
         
     Accumulated_T_Data_Past[np.isnan(Accumulated_T_Data_Past)] = 0
     Accumulated_T_Data_Per[np.isnan(Accumulated_T_Data_Per)] = 0
@@ -201,18 +251,69 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_DOY_Data_Per[np.isnan(Accumulated_DOY_Data_Per)] = 0
     Accumulated_ET_Data_Past[np.isnan(Accumulated_ET_Data_Past)] = 0
     Accumulated_ET_Data_Per[np.isnan(Accumulated_ET_Data_Per)] = 0   
-    
+    Accumulated_P_Data_Past[np.isnan(Accumulated_P_Data_Past)] = 0
+    Accumulated_P_Data_Per[np.isnan(Accumulated_P_Data_Per)] = 0   
+        
     # Add all seasons to one map
-    Accumulated_T_Data = Accumulated_T_Data_Start_S1 + Accumulated_T_Data_Start_S2 + Accumulated_T_Data_Per + Accumulated_T_Data_Past
+    Accumulated_T_Data = Accumulated_T_Data_Start_S1 + Accumulated_T_Data_Start_S2 + Accumulated_T_Data_Start_S3 + Accumulated_T_Data_Per + Accumulated_T_Data_Past
     Accumulated_T_Data[Accumulated_T_Data==0] = np.nan
-    Accumulated_ET0_Data = Accumulated_ET0_Data_Start_S1 + Accumulated_ET0_Data_Start_S2 + Accumulated_ET0_Data_Per + Accumulated_ET0_Data_Past
+    Accumulated_ET0_Data = Accumulated_ET0_Data_Start_S1 + Accumulated_ET0_Data_Start_S2 + Accumulated_ET0_Data_Start_S3 + Accumulated_ET0_Data_Per + Accumulated_ET0_Data_Past
     Accumulated_ET0_Data[Accumulated_ET0_Data==0] = np.nan
-    Accumulated_DOY_Data = Accumulated_DOY_Data_Start_S1 - Accumulated_DOY_Data_End_S1 + Accumulated_DOY_Data_Start_S2 - Accumulated_DOY_Data_End_S2 + Accumulated_DOY_Data_Per + Accumulated_DOY_Data_Past
+    Accumulated_DOY_Data = Accumulated_DOY_Data_Start_S1 - Accumulated_DOY_Data_End_S1 + Accumulated_DOY_Data_Start_S2 - Accumulated_DOY_Data_End_S2 + Accumulated_DOY_Data_Start_S3 - Accumulated_DOY_Data_End_S3 + Accumulated_DOY_Data_Per + Accumulated_DOY_Data_Past
     Accumulated_DOY_Data[Accumulated_DOY_Data==0] = np.nan    
-    Accumulated_ET_Data = Accumulated_ET_Data_Start_S1 + Accumulated_ET_Data_Start_S2 + Accumulated_ET_Data_Per + Accumulated_ET_Data_Past
+    Accumulated_ET_Data = Accumulated_ET_Data_Start_S1 + Accumulated_ET_Data_Start_S2 + Accumulated_ET_Data_Start_S3 + Accumulated_ET_Data_Per + Accumulated_ET_Data_Past
     Accumulated_ET_Data[Accumulated_ET_Data==0] = np.nan    
-
-
+    Accumulated_P_Data = Accumulated_P_Data_Start_S1 + Accumulated_P_Data_Start_S2 + Accumulated_P_Data_Start_S3 + Accumulated_P_Data_Per + Accumulated_P_Data_Past
+    Accumulated_P_Data[Accumulated_P_Data==0] = np.nan    
+    
+    # Add Season 1 to one map
+    Accumulated_T_Data_S1 = Accumulated_T_Data_Start_S1 
+    Accumulated_T_Data_S1[Accumulated_T_Data_S1==0] = np.nan
+    Accumulated_ET0_Data_S1 = Accumulated_ET0_Data_Start_S1
+    Accumulated_ET0_Data_S1[Accumulated_ET0_Data_S1==0] = np.nan
+    Accumulated_DOY_Data_S1 = Accumulated_DOY_Data_Start_S1 - Accumulated_DOY_Data_End_S1
+    Accumulated_DOY_Data_S1[Accumulated_DOY_Data_S1==0] = np.nan    
+    Accumulated_ET_Data_S1 = Accumulated_ET_Data_Start_S1
+    Accumulated_ET_Data_S1[Accumulated_ET_Data_S1==0] = np.nan    
+    Accumulated_P_Data_S1 = Accumulated_P_Data_Start_S1
+    Accumulated_P_Data_S1[Accumulated_P_Data_S1==0] = np.nan   
+    
+    # Add Season 2 to one map
+    Accumulated_T_Data_S2 = Accumulated_T_Data_Start_S2 
+    Accumulated_T_Data_S2[Accumulated_T_Data_S2==0] = np.nan
+    Accumulated_ET0_Data_S2 = Accumulated_ET0_Data_Start_S2
+    Accumulated_ET0_Data_S2[Accumulated_ET0_Data_S2==0] = np.nan
+    Accumulated_DOY_Data_S2 = Accumulated_DOY_Data_Start_S2 - Accumulated_DOY_Data_End_S2
+    Accumulated_DOY_Data_S2[Accumulated_DOY_Data_S2==0] = np.nan    
+    Accumulated_ET_Data_S2 = Accumulated_ET_Data_Start_S2
+    Accumulated_ET_Data_S2[Accumulated_ET_Data_S2==0] = np.nan    
+    Accumulated_P_Data_S2 = Accumulated_P_Data_Start_S2
+    Accumulated_P_Data_S2[Accumulated_P_Data_S2==0] = np.nan    
+    
+    # Add Season 3 to one map
+    Accumulated_T_Data_S3 = Accumulated_T_Data_Start_S3 
+    Accumulated_T_Data_S3[Accumulated_T_Data_S3==0] = np.nan
+    Accumulated_ET0_Data_S3 = Accumulated_ET0_Data_Start_S3
+    Accumulated_ET0_Data_S3[Accumulated_ET0_Data_S3==0] = np.nan
+    Accumulated_DOY_Data_S3 = Accumulated_DOY_Data_Start_S3 - Accumulated_DOY_Data_End_S3
+    Accumulated_DOY_Data_S3[Accumulated_DOY_Data_S3==0] = np.nan    
+    Accumulated_ET_Data_S3 = Accumulated_ET_Data_Start_S3
+    Accumulated_ET_Data_S3[Accumulated_ET_Data_S3==0] = np.nan        
+    Accumulated_P_Data_S3 = Accumulated_P_Data_Start_S3
+    Accumulated_P_Data_S3[Accumulated_P_Data_S3==0] = np.nan        
+    
+    # Add Season Perenial to one map
+    Accumulated_T_Data_Per = Accumulated_T_Data_Per 
+    Accumulated_T_Data_Per[Accumulated_T_Data_Per==0] = np.nan
+    Accumulated_ET0_Data_Per = Accumulated_ET0_Data_Per
+    Accumulated_ET0_Data_Per[Accumulated_ET0_Data_Per==0] = np.nan
+    Accumulated_DOY_Data_Per = Accumulated_DOY_Data_Per - Accumulated_DOY_Data_Per
+    Accumulated_DOY_Data_Per[Accumulated_DOY_Data_Per==0] = np.nan    
+    Accumulated_ET_Data_Per = Accumulated_ET_Data_Per
+    Accumulated_ET_Data_Per[Accumulated_ET_Data_Per==0] = np.nan     
+    Accumulated_P_Data_Per = Accumulated_P_Data_Per
+    Accumulated_P_Data_Per[Accumulated_P_Data_Per==0] = np.nan     
+    
     AquaCrop_Water_Use_Efficiency_Data = 1000 * (Accumulated_Biomass_Production.Data/(10 * Accumulated_DOY_Data * Accumulated_T_Data/Accumulated_ET0_Data))
 
     # Write in DataCube
@@ -227,7 +328,75 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     del AquaCrop_Water_Use_Efficiency_Data
     
-    AquaCrop_Water_Use_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency"))    
+    AquaCrop_Water_Use_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "All"))    
+
+    # Season 1
+    AquaCrop_Water_Use_Efficiency_Data_S1 = 1000 * (Accumulated_Biomass_Production_S1.Data/(10 * Accumulated_DOY_Data_S1 * Accumulated_T_Data_S1/Accumulated_ET0_Data_S1))
+
+    # Write in DataCube
+    AquaCrop_Water_Use_Efficiency_S1 = DataCube.Rasterdata_Empty()
+    AquaCrop_Water_Use_Efficiency_S1.Data = AquaCrop_Water_Use_Efficiency_Data_S1.clip(0,100) * MASK
+    AquaCrop_Water_Use_Efficiency_S1.Projection = ET.Projection
+    AquaCrop_Water_Use_Efficiency_S1.GeoTransform = ET.GeoTransform
+    AquaCrop_Water_Use_Efficiency_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    AquaCrop_Water_Use_Efficiency_S1.Size = AquaCrop_Water_Use_Efficiency_Data_S1.shape
+    AquaCrop_Water_Use_Efficiency_S1.Variable = "AquaCrop Water Use Efficiency Season 1"
+    AquaCrop_Water_Use_Efficiency_S1.Unit = "kg-m-2"
+    
+    del AquaCrop_Water_Use_Efficiency_Data_S1
+    
+    AquaCrop_Water_Use_Efficiency_S1.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "S1"))    
+
+   # Season 2
+    AquaCrop_Water_Use_Efficiency_Data_S2 = 1000 * (Accumulated_Biomass_Production_S2.Data/(10 * Accumulated_DOY_Data_S2 * Accumulated_T_Data_S2/Accumulated_ET0_Data_S2))
+
+    # Write in DataCube
+    AquaCrop_Water_Use_Efficiency_S2 = DataCube.Rasterdata_Empty()
+    AquaCrop_Water_Use_Efficiency_S2.Data = AquaCrop_Water_Use_Efficiency_Data_S2.clip(0,100) * MASK
+    AquaCrop_Water_Use_Efficiency_S2.Projection = ET.Projection
+    AquaCrop_Water_Use_Efficiency_S2.GeoTransform = ET.GeoTransform
+    AquaCrop_Water_Use_Efficiency_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    AquaCrop_Water_Use_Efficiency_S2.Size = AquaCrop_Water_Use_Efficiency_Data_S2.shape
+    AquaCrop_Water_Use_Efficiency_S2.Variable = "AquaCrop Water Use Efficiency Season 2"
+    AquaCrop_Water_Use_Efficiency_S2.Unit = "kg-m-2"
+    
+    del AquaCrop_Water_Use_Efficiency_Data_S2
+    
+    AquaCrop_Water_Use_Efficiency_S2.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "S2"))    
+
+   # Season 3
+    AquaCrop_Water_Use_Efficiency_Data_S3 = 1000 * (Accumulated_Biomass_Production_S3.Data/(10 * Accumulated_DOY_Data_S3 * Accumulated_T_Data_S3/Accumulated_ET0_Data_S3))
+
+    # Write in DataCube
+    AquaCrop_Water_Use_Efficiency_S3 = DataCube.Rasterdata_Empty()
+    AquaCrop_Water_Use_Efficiency_S3.Data = AquaCrop_Water_Use_Efficiency_Data_S3.clip(0,100) * MASK
+    AquaCrop_Water_Use_Efficiency_S3.Projection = ET.Projection
+    AquaCrop_Water_Use_Efficiency_S3.GeoTransform = ET.GeoTransform
+    AquaCrop_Water_Use_Efficiency_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    AquaCrop_Water_Use_Efficiency_S3.Size = AquaCrop_Water_Use_Efficiency_Data_S3.shape
+    AquaCrop_Water_Use_Efficiency_S3.Variable = "AquaCrop Water Use Efficiency Season 3"
+    AquaCrop_Water_Use_Efficiency_S3.Unit = "kg-m-2"
+    
+    del AquaCrop_Water_Use_Efficiency_Data_S3
+    
+    AquaCrop_Water_Use_Efficiency_S3.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "S3"))    
+
+   # Season Perenial
+    AquaCrop_Water_Use_Efficiency_Data_Per = 1000 * (Accumulated_Biomass_Production_Per.Data/(10 * Accumulated_DOY_Data_Per * Accumulated_T_Data_Per/Accumulated_ET0_Data_Per))
+
+    # Write in DataCube
+    AquaCrop_Water_Use_Efficiency_Per = DataCube.Rasterdata_Empty()
+    AquaCrop_Water_Use_Efficiency_Per.Data = AquaCrop_Water_Use_Efficiency_Data_Per.clip(0,100) * MASK
+    AquaCrop_Water_Use_Efficiency_Per.Projection = ET.Projection
+    AquaCrop_Water_Use_Efficiency_Per.GeoTransform = ET.GeoTransform
+    AquaCrop_Water_Use_Efficiency_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    AquaCrop_Water_Use_Efficiency_Per.Size = AquaCrop_Water_Use_Efficiency_Data_Per.shape
+    AquaCrop_Water_Use_Efficiency_Per.Variable = "AquaCrop Water Use Efficiency Season Perenial"
+    AquaCrop_Water_Use_Efficiency_Per.Unit = "kg-m-2"
+    
+    del AquaCrop_Water_Use_Efficiency_Data_Per
+    
+    AquaCrop_Water_Use_Efficiency_Per.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "Perenial"))    
 
     ######################### Calculate Gross Biomass Water Productivity - Decade #########################
     GBWP_Decade_Data = Actual_Biomass_Production.Data/(10 * ET.Data)
@@ -261,7 +430,75 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     del GBWP_Accumulated_Data
     
-    GBWP_Season.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season"))           
+    GBWP_Season.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "All"))           
+
+    # Season 1
+    GBWP_Accumulated_Data_S1 = (Accumulated_Biomass_Production_S1.Data)/(10 * Accumulated_ET_Data_S1)
+    
+    # Write in DataCube
+    GBWP_Season_S1 = DataCube.Rasterdata_Empty()
+    GBWP_Season_S1.Data = GBWP_Accumulated_Data_S1 * MASK
+    GBWP_Season_S1.Projection = ET.Projection
+    GBWP_Season_S1.GeoTransform = ET.GeoTransform
+    GBWP_Season_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    GBWP_Season_S1.Size = GBWP_Accumulated_Data_S1.shape
+    GBWP_Season_S1.Variable = "Gross Biomass Water Productivity Season 1"
+    GBWP_Season_S1.Unit = "kg-m-3"
+    
+    del GBWP_Accumulated_Data_S1
+    
+    GBWP_Season_S1.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "S1"))           
+
+    # Season 2
+    GBWP_Accumulated_Data_S2 = (Accumulated_Biomass_Production_S2.Data)/(10 * Accumulated_ET_Data_S2)
+    
+    # Write in DataCube
+    GBWP_Season_S2 = DataCube.Rasterdata_Empty()
+    GBWP_Season_S2.Data = GBWP_Accumulated_Data_S2 * MASK
+    GBWP_Season_S2.Projection = ET.Projection
+    GBWP_Season_S2.GeoTransform = ET.GeoTransform
+    GBWP_Season_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    GBWP_Season_S2.Size = GBWP_Accumulated_Data_S2.shape
+    GBWP_Season_S2.Variable = "Gross Biomass Water Productivity Season 2"
+    GBWP_Season_S2.Unit = "kg-m-3"
+    
+    del GBWP_Accumulated_Data_S2
+    
+    GBWP_Season_S2.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "S2"))         
+
+    # Season 3
+    GBWP_Accumulated_Data_S3 = (Accumulated_Biomass_Production_S3.Data)/(10 * Accumulated_ET_Data_S3)
+    
+    # Write in DataCube
+    GBWP_Season_S3 = DataCube.Rasterdata_Empty()
+    GBWP_Season_S3.Data = GBWP_Accumulated_Data_S3 * MASK
+    GBWP_Season_S3.Projection = ET.Projection
+    GBWP_Season_S3.GeoTransform = ET.GeoTransform
+    GBWP_Season_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    GBWP_Season_S3.Size = GBWP_Accumulated_Data_S3.shape
+    GBWP_Season_S3.Variable = "Gross Biomass Water Productivity Season 3"
+    GBWP_Season_S3.Unit = "kg-m-3"
+    
+    del GBWP_Accumulated_Data_S3
+    
+    GBWP_Season_S3.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "S3"))         
+
+    # Season Perenial
+    GBWP_Accumulated_Data_Per = (Accumulated_Biomass_Production_Per.Data)/(10 * Accumulated_ET_Data_Per)
+    
+    # Write in DataCube
+    GBWP_Season_Per = DataCube.Rasterdata_Empty()
+    GBWP_Season_Per.Data = GBWP_Accumulated_Data_Per * MASK
+    GBWP_Season_Per.Projection = ET.Projection
+    GBWP_Season_Per.GeoTransform = ET.GeoTransform
+    GBWP_Season_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    GBWP_Season_Per.Size = GBWP_Accumulated_Data_Per.shape
+    GBWP_Season_Per.Variable = "Gross Biomass Water Productivity Season Perenial"
+    GBWP_Season_Per.Unit = "kg-m-3"
+    
+    del GBWP_Accumulated_Data_Per
+    
+    GBWP_Season_Per.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "Perenial"))         
 
     ################################# Calculate Mean Yield Fresh Grass over every AEZ per year #################################
     L3_AEZ_ET = dict()
@@ -398,9 +635,78 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     del Water_Productivity_Data
     
-    Water_Productivity.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity"))       
+    Water_Productivity.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "All"))       
+
+    # Season 1
+    Water_Productivity_Data_S1 = (Yield_S1.Data)/(10 * Accumulated_ET_Data_S1)       
     
-    '''
+    # Write in DataCube
+    Water_Productivity_S1 = DataCube.Rasterdata_Empty()
+    Water_Productivity_S1.Data = Water_Productivity_Data_S1 * MASK
+    Water_Productivity_S1.Projection = ET.Projection
+    Water_Productivity_S1.GeoTransform = ET.GeoTransform
+    Water_Productivity_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Water_Productivity_S1.Size = Water_Productivity_Data_S1.shape
+    Water_Productivity_S1.Variable = "Water Productivity Season 1"
+    Water_Productivity_S1.Unit = "kg-m-3"
+    
+    del Water_Productivity_Data_S1
+    
+    Water_Productivity_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "S1"))      
+
+    # Season 2
+    Water_Productivity_Data_S2 = (Yield_S2.Data)/(10 * Accumulated_ET_Data_S2)       
+    
+    # Write in DataCube
+    Water_Productivity_S2 = DataCube.Rasterdata_Empty()
+    Water_Productivity_S2.Data = Water_Productivity_Data_S2 * MASK
+    Water_Productivity_S2.Projection = ET.Projection
+    Water_Productivity_S2.GeoTransform = ET.GeoTransform
+    Water_Productivity_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Water_Productivity_S2.Size = Water_Productivity_Data_S2.shape
+    Water_Productivity_S2.Variable = "Water Productivity Season 2"
+    Water_Productivity_S2.Unit = "kg-m-3"
+    
+    del Water_Productivity_Data_S2
+    
+    Water_Productivity_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "S2"))     
+
+    # Season 3
+    Water_Productivity_Data_S3 = (Yield_S3.Data)/(10 * Accumulated_ET_Data_S3)       
+    
+    # Write in DataCube
+    Water_Productivity_S3 = DataCube.Rasterdata_Empty()
+    Water_Productivity_S3.Data = Water_Productivity_Data_S3 * MASK
+    Water_Productivity_S3.Projection = ET.Projection
+    Water_Productivity_S3.GeoTransform = ET.GeoTransform
+    Water_Productivity_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Water_Productivity_S3.Size = Water_Productivity_Data_S3.shape
+    Water_Productivity_S3.Variable = "Water Productivity Season 3"
+    Water_Productivity_S3.Unit = "kg-m-3"
+    
+    del Water_Productivity_Data_S3
+    
+    Water_Productivity_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "S3"))    
+
+    # Season Perenial
+    Water_Productivity_Data_Per = (Yield_Per.Data)/(10 * Accumulated_ET_Data_Per)       
+    
+    # Write in DataCube
+    Water_Productivity_Per = DataCube.Rasterdata_Empty()
+    Water_Productivity_Per.Data = Water_Productivity_Data_Per * MASK
+    Water_Productivity_Per.Projection = ET.Projection
+    Water_Productivity_Per.GeoTransform = ET.GeoTransform
+    Water_Productivity_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Water_Productivity_Per.Size = Water_Productivity_Data_Per.shape
+    Water_Productivity_Per.Variable = "Water Productivity Season Perenial"
+    Water_Productivity_Per.Unit = "kg-m-3"
+    
+    del Water_Productivity_Data_Per
+    
+    Water_Productivity_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "Perenial"))    
+
+    ########################## Save Accumulated ET  ##########################
+
     # Write in DataCube
     Accumulated_ET = DataCube.Rasterdata_Empty()
     Accumulated_ET.Data = Accumulated_ET_Data * MASK
@@ -411,7 +717,558 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_ET.Variable = "Accumulated ET"
     Accumulated_ET.Unit = "mm"
     
-    Accumulated_ET.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET"))    
-    '''    
+    Accumulated_ET.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_ET_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_ET_S1.Data = Accumulated_ET_Data_S1 * MASK
+    Accumulated_ET_S1.Projection = ET.Projection
+    Accumulated_ET_S1.GeoTransform = ET.GeoTransform
+    Accumulated_ET_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET_S1.Size = Accumulated_ET_Data_S1.shape
+    Accumulated_ET_S1.Variable = "Accumulated ET Season 1"
+    Accumulated_ET_S1.Unit = "mm"
     
+    Accumulated_ET_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_ET_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_ET_S2.Data = Accumulated_ET_Data_S2 * MASK
+    Accumulated_ET_S2.Projection = ET.Projection
+    Accumulated_ET_S2.GeoTransform = ET.GeoTransform
+    Accumulated_ET_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET_S2.Size = Accumulated_ET_Data_S2.shape
+    Accumulated_ET_S2.Variable = "Accumulated ET Season 2"
+    Accumulated_ET_S2.Unit = "mm"
+    
+    Accumulated_ET_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_ET_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_ET_S3.Data = Accumulated_ET_Data_S3 * MASK
+    Accumulated_ET_S3.Projection = ET.Projection
+    Accumulated_ET_S3.GeoTransform = ET.GeoTransform
+    Accumulated_ET_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET_S3.Size = Accumulated_ET_Data_S3.shape
+    Accumulated_ET_S3.Variable = "Accumulated ET Season 3"
+    Accumulated_ET_S3.Unit = "mm"
+    
+    Accumulated_ET_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_ET_Per = DataCube.Rasterdata_Empty()
+    Accumulated_ET_Per.Data = Accumulated_ET_Data_Per * MASK
+    Accumulated_ET_Per.Projection = ET.Projection
+    Accumulated_ET_Per.GeoTransform = ET.GeoTransform
+    Accumulated_ET_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET_Per.Size = Accumulated_ET_Data_Per.shape
+    Accumulated_ET_Per.Variable = "Accumulated ET Season Perenial"
+    Accumulated_ET_Per.Unit = "mm"
+    
+    Accumulated_ET_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "Perenial")) 
+
+    ########################## Save Accumulated T  ##########################
+
+    # Write in DataCube
+    Accumulated_T = DataCube.Rasterdata_Empty()
+    Accumulated_T.Data = Accumulated_T_Data * MASK
+    Accumulated_T.Projection = ET.Projection
+    Accumulated_T.GeoTransform = ET.GeoTransform
+    Accumulated_T.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_T.Size = Accumulated_T_Data.shape
+    Accumulated_T.Variable = "Accumulated T"
+    Accumulated_T.Unit = "mm"
+    
+    Accumulated_T.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_T_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_T_S1.Data = Accumulated_T_Data_S1 * MASK
+    Accumulated_T_S1.Projection = ET.Projection
+    Accumulated_T_S1.GeoTransform = ET.GeoTransform
+    Accumulated_T_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_T_S1.Size = Accumulated_T_Data_S1.shape
+    Accumulated_T_S1.Variable = "Accumulated T Season 1"
+    Accumulated_T_S1.Unit = "mm"
+    
+    Accumulated_T_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_T_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_T_S2.Data = Accumulated_T_Data_S2 * MASK
+    Accumulated_T_S2.Projection = ET.Projection
+    Accumulated_T_S2.GeoTransform = ET.GeoTransform
+    Accumulated_T_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_T_S2.Size = Accumulated_T_Data_S2.shape
+    Accumulated_T_S2.Variable = "Accumulated T Season 2"
+    Accumulated_T_S2.Unit = "mm"
+    
+    Accumulated_T_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_T_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_T_S3.Data = Accumulated_T_Data_S3 * MASK
+    Accumulated_T_S3.Projection = ET.Projection
+    Accumulated_T_S3.GeoTransform = ET.GeoTransform
+    Accumulated_T_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_T_S3.Size = Accumulated_T_Data_S3.shape
+    Accumulated_T_S3.Variable = "Accumulated T Season 3"
+    Accumulated_T_S3.Unit = "mm"
+    
+    Accumulated_T_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_T_Per = DataCube.Rasterdata_Empty()
+    Accumulated_T_Per.Data = Accumulated_T_Data_Per * MASK
+    Accumulated_T_Per.Projection = ET.Projection
+    Accumulated_T_Per.GeoTransform = ET.GeoTransform
+    Accumulated_T_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_T_Per.Size = Accumulated_T_Data_Per.shape
+    Accumulated_T_Per.Variable = "Accumulated T Season Perenial"
+    Accumulated_T_Per.Unit = "mm"
+    
+    Accumulated_T_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "Perenial")) 
+
+    ########################## Save Accumulated ET0  ##########################
+
+    # Write in DataCube
+    Accumulated_ET0 = DataCube.Rasterdata_Empty()
+    Accumulated_ET0.Data = Accumulated_ET0_Data * MASK
+    Accumulated_ET0.Projection = ET.Projection
+    Accumulated_ET0.GeoTransform = ET.GeoTransform
+    Accumulated_ET0.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET0.Size = Accumulated_ET0_Data.shape
+    Accumulated_ET0.Variable = "Accumulated ET0"
+    Accumulated_ET0.Unit = "mm"
+    
+    Accumulated_ET0.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_ET0_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_S1.Data = Accumulated_ET0_Data_S1 * MASK
+    Accumulated_ET0_S1.Projection = ET.Projection
+    Accumulated_ET0_S1.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET0_S1.Size = Accumulated_ET0_Data_S1.shape
+    Accumulated_ET0_S1.Variable = "Accumulated ET0 Season 1"
+    Accumulated_ET0_S1.Unit = "mm"
+    
+    Accumulated_ET0_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_ET0_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_S2.Data = Accumulated_ET0_Data_S2 * MASK
+    Accumulated_ET0_S2.Projection = ET.Projection
+    Accumulated_ET0_S2.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET0_S2.Size = Accumulated_ET0_Data_S2.shape
+    Accumulated_ET0_S2.Variable = "Accumulated ET0 Season 2"
+    Accumulated_ET0_S2.Unit = "mm"
+    
+    Accumulated_ET0_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_ET0_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_S3.Data = Accumulated_ET0_Data_S3 * MASK
+    Accumulated_ET0_S3.Projection = ET.Projection
+    Accumulated_ET0_S3.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET0_S3.Size = Accumulated_ET0_Data_S3.shape
+    Accumulated_ET0_S3.Variable = "Accumulated ET0 Season 3"
+    Accumulated_ET0_S3.Unit = "mm"
+    
+    Accumulated_ET0_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_ET0_Per = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_Per.Data = Accumulated_ET0_Data_Per * MASK
+    Accumulated_ET0_Per.Projection = ET.Projection
+    Accumulated_ET0_Per.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_ET0_Per.Size = Accumulated_ET0_Data_Per.shape
+    Accumulated_ET0_Per.Variable = "Accumulated ET0 Season Perenial"
+    Accumulated_ET0_Per.Unit = "mm"
+    
+    Accumulated_ET0_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "Perenial")) 
+
+    ########################## Save Accumulated P  ##########################
+
+    # Write in DataCube
+    Accumulated_P = DataCube.Rasterdata_Empty()
+    Accumulated_P.Data = Accumulated_P_Data * MASK
+    Accumulated_P.Projection = ET.Projection
+    Accumulated_P.GeoTransform = ET.GeoTransform
+    Accumulated_P.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_P.Size = Accumulated_P_Data.shape
+    Accumulated_P.Variable = "Accumulated P"
+    Accumulated_P.Unit = "mm"
+    
+    Accumulated_P.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_P_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_P_S1.Data = Accumulated_P_Data_S1 * MASK
+    Accumulated_P_S1.Projection = ET.Projection
+    Accumulated_P_S1.GeoTransform = ET.GeoTransform
+    Accumulated_P_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_P_S1.Size = Accumulated_P_Data_S1.shape
+    Accumulated_P_S1.Variable = "Accumulated P Season 1"
+    Accumulated_P_S1.Unit = "mm"
+    
+    Accumulated_P_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_P_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_P_S2.Data = Accumulated_P_Data_S2 * MASK
+    Accumulated_P_S2.Projection = ET.Projection
+    Accumulated_P_S2.GeoTransform = ET.GeoTransform
+    Accumulated_P_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_P_S2.Size = Accumulated_P_Data_S2.shape
+    Accumulated_P_S2.Variable = "Accumulated P Season 2"
+    Accumulated_P_S2.Unit = "mm"
+    
+    Accumulated_P_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_P_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_P_S3.Data = Accumulated_P_Data_S3 * MASK
+    Accumulated_P_S3.Projection = ET.Projection
+    Accumulated_P_S3.GeoTransform = ET.GeoTransform
+    Accumulated_P_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_P_S3.Size = Accumulated_P_Data_S3.shape
+    Accumulated_P_S3.Variable = "Accumulated P Season 3"
+    Accumulated_P_S3.Unit = "mm"
+    
+    Accumulated_P_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_P_Per = DataCube.Rasterdata_Empty()
+    Accumulated_P_Per.Data = Accumulated_P_Data_Per * MASK
+    Accumulated_P_Per.Projection = ET.Projection
+    Accumulated_P_Per.GeoTransform = ET.GeoTransform
+    Accumulated_P_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    Accumulated_P_Per.Size = Accumulated_P_Data_Per.shape
+    Accumulated_P_Per.Variable = "Accumulated P Season Perenial"
+    Accumulated_P_Per.Unit = "mm"
+    
+    Accumulated_P_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "Perenial")) 
+
+    ######################### Add trends ##########################################################
+    
+    # Set time
+    T = np.arange(len(Dates_Years)) 
+    
+    # Calculate trend ET
+    trend_year = ((np.sum(np.where(np.isnan(Accumulated_ET.Data),0,1),axis = 0) * np.nansum(Accumulated_ET.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET_Change_In_Time_Data = trend_year / np.nanmean(Accumulated_ET.Data, axis = 0) * 100
+    
+    trend_year_S1 = ((np.sum(np.where(np.isnan(Accumulated_ET_S1.Data),0,1),axis = 0) * np.nansum(Accumulated_ET_S1.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET_S1.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET_S1.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET_Change_In_Time_Data_S1 = trend_year_S1 / np.nanmean(Accumulated_ET_S1.Data, axis = 0) * 100 
+    
+    trend_year_S2  = ((np.sum(np.where(np.isnan(Accumulated_ET_S2.Data),0,1),axis = 0) * np.nansum(Accumulated_ET_S2.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET_S2.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET_S2.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET_Change_In_Time_Data_S2 = trend_year_S2 / np.nanmean(Accumulated_ET_S2.Data, axis = 0) * 100     
+    
+    trend_year_S3 = ((np.sum(np.where(np.isnan(Accumulated_ET_S3.Data),0,1),axis = 0) * np.nansum(Accumulated_ET_S3.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET_S3.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET_S3.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET_Change_In_Time_Data_S3 = trend_year_S3 / np.nanmean(Accumulated_ET_S3.Data, axis = 0) * 100
+    
+    trend_year_Per = ((np.sum(np.where(np.isnan(Accumulated_ET_Per.Data),0,1),axis = 0) * np.nansum(Accumulated_ET_Per.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET_Per.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET_Per.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET_Change_In_Time_Data_Per = trend_year_Per / np.nanmean(Accumulated_ET_Per.Data, axis = 0) * 100
+
+    # Calculate trend T
+    trend_year = ((np.sum(np.where(np.isnan(Accumulated_T.Data),0,1),axis = 0) * np.nansum(Accumulated_T.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_T.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_T.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    T_Change_In_Time_Data = trend_year / np.nanmean(Accumulated_T.Data, axis = 0) * 100
+    
+    trend_year_S1 = ((np.sum(np.where(np.isnan(Accumulated_T_S1.Data),0,1),axis = 0) * np.nansum(Accumulated_T_S1.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_T_S1.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_T_S1.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    T_Change_In_Time_Data_S1 = trend_year_S1 / np.nanmean(Accumulated_T_S1.Data, axis = 0) * 100 
+    
+    trend_year_S2  = ((np.sum(np.where(np.isnan(Accumulated_T_S2.Data),0,1),axis = 0) * np.nansum(Accumulated_T_S2.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_T_S2.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_T_S2.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    T_Change_In_Time_Data_S2 = trend_year_S2 / np.nanmean(Accumulated_T_S2.Data, axis = 0) * 100     
+    
+    trend_year_S3 = ((np.sum(np.where(np.isnan(Accumulated_T_S3.Data),0,1),axis = 0) * np.nansum(Accumulated_T_S3.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_T_S3.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_T_S3.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    T_Change_In_Time_Data_S3 = trend_year_S3 / np.nanmean(Accumulated_T_S3.Data, axis = 0) * 100
+    
+    trend_year_Per = ((np.sum(np.where(np.isnan(Accumulated_T_Per.Data),0,1),axis = 0) * np.nansum(Accumulated_T_Per.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_T_Per.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_T_Per.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    T_Change_In_Time_Data_Per = trend_year_Per / np.nanmean(Accumulated_T_Per.Data, axis = 0) * 100
+
+    # Calculate trend ET0
+    trend_year = ((np.sum(np.where(np.isnan(Accumulated_ET0.Data),0,1),axis = 0) * np.nansum(Accumulated_ET0.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET0.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET0.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET0_Change_In_Time_Data = trend_year / np.nanmean(Accumulated_ET0.Data, axis = 0) * 100
+    
+    trend_year_S1 = ((np.sum(np.where(np.isnan(Accumulated_ET0_S1.Data),0,1),axis = 0) * np.nansum(Accumulated_ET0_S1.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET0_S1.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET0_S1.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET0_Change_In_Time_Data_S1 = trend_year_S1 / np.nanmean(Accumulated_ET0_S1.Data, axis = 0) * 100 
+    
+    trend_year_S2  = ((np.sum(np.where(np.isnan(Accumulated_ET0_S2.Data),0,1),axis = 0) * np.nansum(Accumulated_ET0_S2.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET0_S2.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET0_S2.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET0_Change_In_Time_Data_S2 = trend_year_S2 / np.nanmean(Accumulated_ET0_S2.Data, axis = 0) * 100     
+    
+    trend_year_S3 = ((np.sum(np.where(np.isnan(Accumulated_ET0_S3.Data),0,1),axis = 0) * np.nansum(Accumulated_ET0_S3.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET0_S3.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET0_S3.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET0_Change_In_Time_Data_S3 = trend_year_S3 / np.nanmean(Accumulated_ET0_S3.Data, axis = 0) * 100
+    
+    trend_year_Per = ((np.sum(np.where(np.isnan(Accumulated_ET0_Per.Data),0,1),axis = 0) * np.nansum(Accumulated_ET0_Per.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_ET0_Per.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_ET0_Per.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    ET0_Change_In_Time_Data_Per = trend_year_Per / np.nanmean(Accumulated_ET0_Per.Data, axis = 0) * 100
+
+
+    # Calculate trend P
+    trend_year = ((np.sum(np.where(np.isnan(Accumulated_P.Data),0,1),axis = 0) * np.nansum(Accumulated_P.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_P.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_P.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    P_Change_In_Time_Data = trend_year / np.nanmean(Accumulated_P.Data, axis = 0) * 100
+    
+    trend_year_S1 = ((np.sum(np.where(np.isnan(Accumulated_P_S1.Data),0,1),axis = 0) * np.nansum(Accumulated_P_S1.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_P_S1.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_P_S1.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    P_Change_In_Time_Data_S1 = trend_year_S1 / np.nanmean(Accumulated_P_S1.Data, axis = 0) * 100 
+    
+    trend_year_S2  = ((np.sum(np.where(np.isnan(Accumulated_P_S2.Data),0,1),axis = 0) * np.nansum(Accumulated_P_S2.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_P_S2.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_P_S2.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    P_Change_In_Time_Data_S2 = trend_year_S2 / np.nanmean(Accumulated_P_S2.Data, axis = 0) * 100     
+    
+    trend_year_S3 = ((np.sum(np.where(np.isnan(Accumulated_P_S3.Data),0,1),axis = 0) * np.nansum(Accumulated_P_S3.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_P_S3.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_P_S3.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    P_Change_In_Time_Data_S3 = trend_year_S3 / np.nanmean(Accumulated_P_S3.Data, axis = 0) * 100
+    
+    trend_year_Per = ((np.sum(np.where(np.isnan(Accumulated_P_Per.Data),0,1),axis = 0) * np.nansum(Accumulated_P_Per.Data * T[:,None,None], axis = 0)) - (np.nansum(Accumulated_P_Per.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(Accumulated_P_Per.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    P_Change_In_Time_Data_Per = trend_year_Per / np.nanmean(Accumulated_P_Per.Data, axis = 0) * 100
+
+    ########################## Save Accumulated ET trend ##########################
+
+    # Write in DataCube
+    Accumulated_ET_Trend = DataCube.Rasterdata_Empty()
+    Accumulated_ET_Trend.Data = ET_Change_In_Time_Data * MASK
+    Accumulated_ET_Trend.Projection = ET.Projection
+    Accumulated_ET_Trend.GeoTransform = ET.GeoTransform
+    Accumulated_ET_Trend.Ordinal_time = None
+    Accumulated_ET_Trend.Size = ET_Change_In_Time_Data.shape
+    Accumulated_ET_Trend.Variable = "Accumulated ET Trend"
+    Accumulated_ET_Trend.Unit = "Percentage-year-1"
+    
+    Accumulated_ET_Trend.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_ET_Trend_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_ET_Trend_S1.Data = ET_Change_In_Time_Data_S1 * MASK
+    Accumulated_ET_Trend_S1.Projection = ET.Projection
+    Accumulated_ET_Trend_S1.GeoTransform = ET.GeoTransform
+    Accumulated_ET_Trend_S1.Ordinal_time = None
+    Accumulated_ET_Trend_S1.Size = ET_Change_In_Time_Data_S1.shape
+    Accumulated_ET_Trend_S1.Variable = "Accumulated ET Trend Season 1"
+    Accumulated_ET_Trend_S1.Unit = "Percentage-year-1"
+    
+    Accumulated_ET_Trend_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_ET_Trend_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_ET_Trend_S2.Data = ET_Change_In_Time_Data_S2 * MASK
+    Accumulated_ET_Trend_S2.Projection = ET.Projection
+    Accumulated_ET_Trend_S2.GeoTransform = ET.GeoTransform
+    Accumulated_ET_Trend_S2.Ordinal_time = None
+    Accumulated_ET_Trend_S2.Size = ET_Change_In_Time_Data_S2.shape
+    Accumulated_ET_Trend_S2.Variable = "Accumulated ET Trend Season 2"
+    Accumulated_ET_Trend_S2.Unit = "Percentage-year-1"
+    
+    Accumulated_ET_Trend_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_ET_Trend_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_ET_Trend_S3.Data = ET_Change_In_Time_Data_S3 * MASK
+    Accumulated_ET_Trend_S3.Projection = ET.Projection
+    Accumulated_ET_Trend_S3.GeoTransform = ET.GeoTransform
+    Accumulated_ET_Trend_S3.Ordinal_time = None
+    Accumulated_ET_Trend_S3.Size = ET_Change_In_Time_Data_S3.shape
+    Accumulated_ET_Trend_S3.Variable = "Accumulated ET Trend Season 3"
+    Accumulated_ET_Trend_S3.Unit = "Percentage-year-1"
+    
+    Accumulated_ET_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_ET_Trend_Per = DataCube.Rasterdata_Empty()
+    Accumulated_ET_Trend_Per.Data = ET_Change_In_Time_Data_Per * MASK
+    Accumulated_ET_Trend_Per.Projection = ET.Projection
+    Accumulated_ET_Trend_Per.GeoTransform = ET.GeoTransform
+    Accumulated_ET_Trend_Per.Ordinal_time = None
+    Accumulated_ET_Trend_Per.Size = ET_Change_In_Time_Data_Per.shape
+    Accumulated_ET_Trend_Per.Variable = "Accumulated ET Trend Season Perenial"
+    Accumulated_ET_Trend_Per.Unit = "Percentage-year-1"
+    
+    Accumulated_ET_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "Perenial")) 
+
+    ########################## Save Accumulated T trend ##########################
+
+    # Write in DataCube
+    Accumulated_T_Trend = DataCube.Rasterdata_Empty()
+    Accumulated_T_Trend.Data = T_Change_In_Time_Data * MASK
+    Accumulated_T_Trend.Projection = ET.Projection
+    Accumulated_T_Trend.GeoTransform = ET.GeoTransform
+    Accumulated_T_Trend.Ordinal_time = None
+    Accumulated_T_Trend.Size = T_Change_In_Time_Data.shape
+    Accumulated_T_Trend.Variable = "Accumulated T Trend"
+    Accumulated_T_Trend.Unit = "Percentage-year-1"
+    
+    Accumulated_T_Trend.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_T_Trend_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_T_Trend_S1.Data = T_Change_In_Time_Data_S1 * MASK
+    Accumulated_T_Trend_S1.Projection = ET.Projection
+    Accumulated_T_Trend_S1.GeoTransform = ET.GeoTransform
+    Accumulated_T_Trend_S1.Ordinal_time = None
+    Accumulated_T_Trend_S1.Size = T_Change_In_Time_Data_S1.shape
+    Accumulated_T_Trend_S1.Variable = "Accumulated T Trend Season 1"
+    Accumulated_T_Trend_S1.Unit = "Percentage-year-1"
+    
+    Accumulated_T_Trend_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_T_Trend_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_T_Trend_S2.Data = T_Change_In_Time_Data_S2 * MASK
+    Accumulated_T_Trend_S2.Projection = ET.Projection
+    Accumulated_T_Trend_S2.GeoTransform = ET.GeoTransform
+    Accumulated_T_Trend_S2.Ordinal_time = None
+    Accumulated_T_Trend_S2.Size = T_Change_In_Time_Data_S2.shape
+    Accumulated_T_Trend_S2.Variable = "Accumulated T Trend Season 2"
+    Accumulated_T_Trend_S2.Unit = "Percentage-year-1"
+    
+    Accumulated_T_Trend_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_T_Trend_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_T_Trend_S3.Data = T_Change_In_Time_Data_S3 * MASK
+    Accumulated_T_Trend_S3.Projection = ET.Projection
+    Accumulated_T_Trend_S3.GeoTransform = ET.GeoTransform
+    Accumulated_T_Trend_S3.Ordinal_time = None
+    Accumulated_T_Trend_S3.Size = T_Change_In_Time_Data_S3.shape
+    Accumulated_T_Trend_S3.Variable = "Accumulated T Trend Season 3"
+    Accumulated_T_Trend_S3.Unit = "Percentage-year-1"
+    
+    Accumulated_T_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_T_Trend_Per = DataCube.Rasterdata_Empty()
+    Accumulated_T_Trend_Per.Data = T_Change_In_Time_Data_Per * MASK
+    Accumulated_T_Trend_Per.Projection = ET.Projection
+    Accumulated_T_Trend_Per.GeoTransform = ET.GeoTransform
+    Accumulated_T_Trend_Per.Ordinal_time = None
+    Accumulated_T_Trend_Per.Size = T_Change_In_Time_Data_Per.shape
+    Accumulated_T_Trend_Per.Variable = "Accumulated T Trend Season Perenial"
+    Accumulated_T_Trend_Per.Unit = "Percentage-year-1"
+    
+    Accumulated_T_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "Perenial")) 
+
+    ########################## Save Accumulated ET0 trend ##########################
+
+    # Write in DataCube
+    Accumulated_ET0_Trend = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_Trend.Data = ET0_Change_In_Time_Data * MASK
+    Accumulated_ET0_Trend.Projection = ET.Projection
+    Accumulated_ET0_Trend.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_Trend.Ordinal_time = None
+    Accumulated_ET0_Trend.Size = ET0_Change_In_Time_Data.shape
+    Accumulated_ET0_Trend.Variable = "Accumulated Trend ET0"
+    Accumulated_ET0_Trend.Unit = "Percentage-year-1"
+    
+    Accumulated_ET0_Trend.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_ET0_Trend_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_Trend_S1.Data = ET0_Change_In_Time_Data_S1 * MASK
+    Accumulated_ET0_Trend_S1.Projection = ET.Projection
+    Accumulated_ET0_Trend_S1.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_Trend_S1.Ordinal_time = None
+    Accumulated_ET0_Trend_S1.Size = ET0_Change_In_Time_Data_S1.shape
+    Accumulated_ET0_Trend_S1.Variable = "Accumulated ET0 Trend Season 1"
+    Accumulated_ET0_Trend_S1.Unit = "Percentage-year-1"
+    
+    Accumulated_ET0_Trend_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_ET0_Trend_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_Trend_S2.Data = ET0_Change_In_Time_Data_S2 * MASK
+    Accumulated_ET0_Trend_S2.Projection = ET.Projection
+    Accumulated_ET0_Trend_S2.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_Trend_S2.Ordinal_time = None
+    Accumulated_ET0_Trend_S2.Size = ET0_Change_In_Time_Data_S2.shape
+    Accumulated_ET0_Trend_S2.Variable = "Accumulated ET0 Trend Season 2"
+    Accumulated_ET0_Trend_S2.Unit = "Percentage-year-1"
+    
+    Accumulated_ET0_Trend_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_ET0_Trend_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_Trend_S3.Data = ET0_Change_In_Time_Data_S3 * MASK
+    Accumulated_ET0_Trend_S3.Projection = ET.Projection
+    Accumulated_ET0_Trend_S3.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_Trend_S3.Ordinal_time = None
+    Accumulated_ET0_Trend_S3.Size = ET0_Change_In_Time_Data_S3.shape
+    Accumulated_ET0_Trend_S3.Variable = "Accumulated ET0 Trend Season 3"
+    Accumulated_ET0_Trend_S3.Unit = "Percentage-year-1"
+    
+    Accumulated_ET0_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_ET0_Trend_Per = DataCube.Rasterdata_Empty()
+    Accumulated_ET0_Trend_Per.Data = ET0_Change_In_Time_Data_Per * MASK
+    Accumulated_ET0_Trend_Per.Projection = ET.Projection
+    Accumulated_ET0_Trend_Per.GeoTransform = ET.GeoTransform
+    Accumulated_ET0_Trend_Per.Ordinal_time = None
+    Accumulated_ET0_Trend_Per.Size = ET0_Change_In_Time_Data_Per.shape
+    Accumulated_ET0_Trend_Per.Variable = "Accumulated ET0 Trend Season Perenial"
+    Accumulated_ET0_Trend_Per.Unit = "Percentage-year-1"
+    
+    Accumulated_ET0_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "Perenial")) 
+
+    ########################## Save Accumulated P trend ##########################
+
+    # Write in DataCube
+    Accumulated_P_Trend = DataCube.Rasterdata_Empty()
+    Accumulated_P_Trend.Data = P_Change_In_Time_Data * MASK
+    Accumulated_P_Trend.Projection = ET.Projection
+    Accumulated_P_Trend.GeoTransform = ET.GeoTransform
+    Accumulated_P_Trend.Ordinal_time = None
+    Accumulated_P_Trend.Size = P_Change_In_Time_Data.shape
+    Accumulated_P_Trend.Variable = "Accumulated P Trend"
+    Accumulated_P_Trend.Unit = "Percentage-year-1"
+    
+    Accumulated_P_Trend.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "All"))    
+
+    # Write in DataCube Season 1
+    Accumulated_P_Trend_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_P_Trend_S1.Data = P_Change_In_Time_Data_S1 * MASK
+    Accumulated_P_Trend_S1.Projection = ET.Projection
+    Accumulated_P_Trend_S1.GeoTransform = ET.GeoTransform
+    Accumulated_P_Trend_S1.Ordinal_time = None
+    Accumulated_P_Trend_S1.Size = P_Change_In_Time_Data_S1.shape
+    Accumulated_P_Trend_S1.Variable = "Accumulated P Trend Season 1"
+    Accumulated_P_Trend_S1.Unit = "Percentage-year-1"
+    
+    Accumulated_P_Trend_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "S1"))    
+
+    # Write in DataCube Season 2
+    Accumulated_P_Trend_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_P_Trend_S2.Data = P_Change_In_Time_Data_S2 * MASK
+    Accumulated_P_Trend_S2.Projection = ET.Projection
+    Accumulated_P_Trend_S2.GeoTransform = ET.GeoTransform
+    Accumulated_P_Trend_S2.Ordinal_time = None
+    Accumulated_P_Trend_S2.Size = P_Change_In_Time_Data_S2.shape
+    Accumulated_P_Trend_S2.Variable = "Accumulated P Trend Season 2"
+    Accumulated_P_Trend_S2.Unit = "Percentage-year-1"
+    
+    Accumulated_P_Trend_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "S2"))    
+
+    # Write in DataCube Season 3
+    Accumulated_P_Trend_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_P_Trend_S3.Data = P_Change_In_Time_Data_S3 * MASK
+    Accumulated_P_Trend_S3.Projection = ET.Projection
+    Accumulated_P_Trend_S3.GeoTransform = ET.GeoTransform
+    Accumulated_P_Trend_S3.Ordinal_time = None
+    Accumulated_P_Trend_S3.Size = P_Change_In_Time_Data_S3.shape
+    Accumulated_P_Trend_S3.Variable = "Accumulated P Trend Season 3"
+    Accumulated_P_Trend_S3.Unit = "Percentage-year-1"
+    
+    Accumulated_P_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "S3"))    
+
+    # Write in DataCube Season Perenial
+    Accumulated_P_Trend_Per = DataCube.Rasterdata_Empty()
+    Accumulated_P_Trend_Per.Data = P_Change_In_Time_Data_Per * MASK
+    Accumulated_P_Trend_Per.Projection = ET.Projection
+    Accumulated_P_Trend_Per.GeoTransform = ET.GeoTransform
+    Accumulated_P_Trend_Per.Ordinal_time = None
+    Accumulated_P_Trend_Per.Size = P_Change_In_Time_Data_Per.shape
+    Accumulated_P_Trend_Per.Variable = "Accumulated P Trend Season Perenial"
+    Accumulated_P_Trend_Per.Unit = "Percentage-year-1"
+    
+    Accumulated_P_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "Perenial")) 
+
     return()

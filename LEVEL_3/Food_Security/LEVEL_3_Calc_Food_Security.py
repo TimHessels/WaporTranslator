@@ -63,6 +63,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Soil_Moisture), Formats.Soil_Moisture, Dates, Conversion = Conversions.Soil_Moisture, Variable = 'Soil Moisture', Product = '', Unit = 'cm3/cm3')
     Crop_S1_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S1), Formats.Season_End_S1, list(Dates_Years), Conversion = Conversions.Season_End_S1, Variable = 'Season 1 End', Product = '', Unit = 'DOY')
     Crop_S2_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S2), Formats.Season_End_S2, list(Dates_Years), Conversion = Conversions.Season_End_S2, Variable = 'Season 2 End', Product = '', Unit = 'DOY')
+    Crop_S3_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S3), Formats.Season_End_S3, list(Dates_Years), Conversion = Conversions.Season_End_S3, Variable = 'Season 3 End', Product = '', Unit = 'DOY')
     Per_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_Start), Formats.Perenial_Start, list(Dates_Years), Conversion = Conversions.Perenial_Start, Variable = 'Perenial Start', Product = '', Unit = 'DOY')
     Per_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_End), Formats.Perenial_End, list(Dates_Years), Conversion = Conversions.Perenial_End, Variable = 'Perenial End', Product = '', Unit = 'DOY')
     
@@ -78,7 +79,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Irrigation"))
 
     ################################# Calculate Irrigation yes/no #################################
-    Grassland_Data = np.where(CropType.Data==3, 1, np.nan)
+    Grassland_Data = np.where(CropType.Data==5, 1, np.nan)
     Grassland = DataCube.Rasterdata_Empty()
     Grassland.Data = Grassland_Data * MASK
     Grassland.Projection = Irrigation.Projection
@@ -305,6 +306,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     # For other crops (double and single) take the start and end of the seasons
     Accumulated_NPP_Data_Start_S1 = np.ones(Per_Start.Size) * np.nan
     Accumulated_NPP_Data_Start_S2 = np.ones(Per_Start.Size) * np.nan
+    Accumulated_NPP_Data_Start_S3 = np.ones(Per_Start.Size) * np.nan
     
     if not np.isnan(np.nanmean(Crop_S1_End.Data)):
         for Date_Year in Dates_Years:
@@ -312,9 +314,11 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
             for dekad in range(0,int(np.nanmax(Crop_S2_End.Data))):
                 Accumulated_NPP_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_NPP_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
-    
+                Accumulated_NPP_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
+   
     Accumulated_NPP_Data_Start_S1[np.isnan(Accumulated_NPP_Data_Start_S1)] = 0
     Accumulated_NPP_Data_Start_S2[np.isnan(Accumulated_NPP_Data_Start_S2)] = 0 
+    Accumulated_NPP_Data_Start_S3[np.isnan(Accumulated_NPP_Data_Start_S3)] = 0 
      
     # Calculate pasture
     Accumulated_NPP_Data_Past = np.ones(Per_Start.Size) * np.nan
@@ -327,7 +331,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP_Data_Per[np.isnan(Accumulated_NPP_Data_Per)] = 0
     
     # Add all seasons 
-    Accumulated_NPP_Data = Accumulated_NPP_Data_Start_S1 + Accumulated_NPP_Data_Start_S2 + Accumulated_NPP_Data_Per + Accumulated_NPP_Data_Past
+    Accumulated_NPP_Data = Accumulated_NPP_Data_Start_S1 + Accumulated_NPP_Data_Start_S2 + Accumulated_NPP_Data_Start_S3 + Accumulated_NPP_Data_Per + Accumulated_NPP_Data_Past
     Accumulated_NPP_Data[Accumulated_NPP_Data==0] = np.nan
         
     Accumulated_NPP = DataCube.Rasterdata_Empty()
@@ -338,7 +342,59 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP.Size = Accumulated_NPP_Data.shape
     Accumulated_NPP.Variable = "Accumulated NPP Season"
     Accumulated_NPP.Unit = "kg-ha-1-season-1"      
-    Accumulated_NPP.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season"))
+    Accumulated_NPP.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "All"))
+
+    # Add Season 1
+    Accumulated_NPP_Data_Start_S1[Accumulated_NPP_Data_Start_S1==0] = np.nan
+        
+    Accumulated_NPP_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_NPP_S1.Data = Accumulated_NPP_Data_Start_S1 * MASK
+    Accumulated_NPP_S1.Projection = Per_Start.Projection
+    Accumulated_NPP_S1.GeoTransform = Per_Start.GeoTransform
+    Accumulated_NPP_S1.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_NPP_S1.Size = Accumulated_NPP_Data_Start_S1.shape
+    Accumulated_NPP_S1.Variable = "Accumulated NPP Season 1"
+    Accumulated_NPP_S1.Unit = "kg-ha-1-season-1"      
+    Accumulated_NPP_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "S1"))
+
+    # Add Season 2
+    Accumulated_NPP_Data_Start_S1[Accumulated_NPP_Data_Start_S1==0] = np.nan
+        
+    Accumulated_NPP_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_NPP_S2.Data = Accumulated_NPP_Data_Start_S2 * MASK
+    Accumulated_NPP_S2.Projection = Per_Start.Projection
+    Accumulated_NPP_S2.GeoTransform = Per_Start.GeoTransform
+    Accumulated_NPP_S2.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_NPP_S2.Size = Accumulated_NPP_Data_Start_S2.shape
+    Accumulated_NPP_S2.Variable = "Accumulated NPP Season 2"
+    Accumulated_NPP_S2.Unit = "kg-ha-1-season-1"      
+    Accumulated_NPP_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "S2"))
+
+    # Add Season 3
+    Accumulated_NPP_Data_Start_S3[Accumulated_NPP_Data_Start_S3==0] = np.nan
+        
+    Accumulated_NPP_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_NPP_S3.Data = Accumulated_NPP_Data_Start_S3 * MASK
+    Accumulated_NPP_S3.Projection = Per_Start.Projection
+    Accumulated_NPP_S3.GeoTransform = Per_Start.GeoTransform
+    Accumulated_NPP_S3.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_NPP_S3.Size = Accumulated_NPP_Data_Start_S3.shape
+    Accumulated_NPP_S3.Variable = "Accumulated NPP Season 3"
+    Accumulated_NPP_S3.Unit = "kg-ha-1-season-1"      
+    Accumulated_NPP_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "S3"))
+
+    # Add Per
+    Accumulated_NPP_Data_Per[Accumulated_NPP_Data_Per==0] = np.nan
+        
+    Accumulated_NPP_Per = DataCube.Rasterdata_Empty()
+    Accumulated_NPP_Per.Data = Accumulated_NPP_Data_Per * MASK
+    Accumulated_NPP_Per.Projection = Per_Start.Projection
+    Accumulated_NPP_Per.GeoTransform = Per_Start.GeoTransform
+    Accumulated_NPP_Per.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_NPP_Per.Size = Accumulated_NPP_Data_Per.shape
+    Accumulated_NPP_Per.Variable = "Accumulated NPP Season Perenial"
+    Accumulated_NPP_Per.Unit = "kg-ha-1-season-1"      
+    Accumulated_NPP_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "Perenial"))
     
     ################################# Accumulated Biomass Production season #################################
     
@@ -352,7 +408,59 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_Biomass_Production.Size = Accumulated_Biomass_Production_Data.shape
     Accumulated_Biomass_Production.Variable = "Accumulated Biomass Production"
     Accumulated_Biomass_Production.Unit = "kg-ha-1-season-1"      
-    Accumulated_Biomass_Production.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season"))
+    Accumulated_Biomass_Production.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "All"))
+
+    # Season 1
+    Accumulated_Biomass_Production_Data_S1 = Accumulated_NPP_S1.Data/C3_C4
+    
+    Accumulated_Biomass_Production_S1 = DataCube.Rasterdata_Empty()
+    Accumulated_Biomass_Production_S1.Data = Accumulated_Biomass_Production_Data_S1 * MASK
+    Accumulated_Biomass_Production_S1.Projection = Per_Start.Projection
+    Accumulated_Biomass_Production_S1.GeoTransform = Per_Start.GeoTransform
+    Accumulated_Biomass_Production_S1.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_Biomass_Production_S1.Size = Accumulated_Biomass_Production_Data_S1.shape
+    Accumulated_Biomass_Production_S1.Variable = "Accumulated Biomass Production Season 1"
+    Accumulated_Biomass_Production_S1.Unit = "kg-ha-1-season-1"      
+    Accumulated_Biomass_Production_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "S1"))
+
+    # Season 2
+    Accumulated_Biomass_Production_Data_S2 = Accumulated_NPP_S2.Data/C3_C4
+    
+    Accumulated_Biomass_Production_S2 = DataCube.Rasterdata_Empty()
+    Accumulated_Biomass_Production_S2.Data = Accumulated_Biomass_Production_Data_S2 * MASK
+    Accumulated_Biomass_Production_S2.Projection = Per_Start.Projection
+    Accumulated_Biomass_Production_S2.GeoTransform = Per_Start.GeoTransform
+    Accumulated_Biomass_Production_S2.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_Biomass_Production_S2.Size = Accumulated_Biomass_Production_Data_S2.shape
+    Accumulated_Biomass_Production_S2.Variable = "Accumulated Biomass Production Season 2"
+    Accumulated_Biomass_Production_S2.Unit = "kg-ha-1-season-1"      
+    Accumulated_Biomass_Production_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "S2"))
+
+     # Season 3
+    Accumulated_Biomass_Production_Data_S3 = Accumulated_NPP_S3.Data/C3_C4
+    
+    Accumulated_Biomass_Production_S3 = DataCube.Rasterdata_Empty()
+    Accumulated_Biomass_Production_S3.Data = Accumulated_Biomass_Production_Data_S3 * MASK
+    Accumulated_Biomass_Production_S3.Projection = Per_Start.Projection
+    Accumulated_Biomass_Production_S3.GeoTransform = Per_Start.GeoTransform
+    Accumulated_Biomass_Production_S3.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_Biomass_Production_S3.Size = Accumulated_Biomass_Production_Data_S3.shape
+    Accumulated_Biomass_Production_S3.Variable = "Accumulated Biomass Production Season 3"
+    Accumulated_Biomass_Production_S3.Unit = "kg-ha-1-season-1"      
+    Accumulated_Biomass_Production_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "S3"))   
+
+     # Season Perenial
+    Accumulated_Biomass_Production_Data_Per = Accumulated_NPP_Per.Data/C3_C4
+    
+    Accumulated_Biomass_Production_Per = DataCube.Rasterdata_Empty()
+    Accumulated_Biomass_Production_Per.Data = Accumulated_Biomass_Production_Data_Per * MASK
+    Accumulated_Biomass_Production_Per.Projection = Per_Start.Projection
+    Accumulated_Biomass_Production_Per.GeoTransform = Per_Start.GeoTransform
+    Accumulated_Biomass_Production_Per.Ordinal_time = Per_Start.Ordinal_time
+    Accumulated_Biomass_Production_Per.Size = Accumulated_Biomass_Production_Data_Per.shape
+    Accumulated_Biomass_Production_Per.Variable = "Accumulated Biomass Production Season Perenial"
+    Accumulated_Biomass_Production_Per.Unit = "kg-ha-1-season-1"      
+    Accumulated_Biomass_Production_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "Perenial"))   
     
     ################################# Calculate Yield season #################################
     Harvest_Index = 0.35
@@ -368,7 +476,59 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield.Size = Yield_Data.shape
     Yield.Variable = "Yield Season"
     Yield.Unit = "kg-ha-1-season-1"      
-    Yield.Save_As_Tiff(os.path.join(output_folder_L3, "Yield"))
+    Yield.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "All"))
+
+    # Season 1
+    Yield_Data_S1 = Harvest_Index * ((Accumulated_NPP_S1.Data)/C3_C4)/(1 - Moisture_Index)
+    
+    Yield_S1 = DataCube.Rasterdata_Empty()
+    Yield_S1.Data = Yield_Data_S1 * MASK
+    Yield_S1.Projection = Per_Start.Projection
+    Yield_S1.GeoTransform = Per_Start.GeoTransform
+    Yield_S1.Ordinal_time = Per_Start.Ordinal_time
+    Yield_S1.Size = Yield_Data_S1.shape
+    Yield_S1.Variable = "Yield Season 1"
+    Yield_S1.Unit = "kg-ha-1-season-1"      
+    Yield_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "S1"))
+
+    # Season 2
+    Yield_Data_S2 = Harvest_Index * ((Accumulated_NPP_S2.Data)/C3_C4)/(1 - Moisture_Index)
+    
+    Yield_S2 = DataCube.Rasterdata_Empty()
+    Yield_S2.Data = Yield_Data_S2 * MASK
+    Yield_S2.Projection = Per_Start.Projection
+    Yield_S2.GeoTransform = Per_Start.GeoTransform
+    Yield_S2.Ordinal_time = Per_Start.Ordinal_time
+    Yield_S2.Size = Yield_Data_S2.shape
+    Yield_S2.Variable = "Yield Season 2"
+    Yield_S2.Unit = "kg-ha-1-season-1"      
+    Yield_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "S2"))
+
+    # Season 3
+    Yield_Data_S3 = Harvest_Index * ((Accumulated_NPP_S3.Data)/C3_C4)/(1 - Moisture_Index)
+    
+    Yield_S3 = DataCube.Rasterdata_Empty()
+    Yield_S3.Data = Yield_Data_S3 * MASK
+    Yield_S3.Projection = Per_Start.Projection
+    Yield_S3.GeoTransform = Per_Start.GeoTransform
+    Yield_S3.Ordinal_time = Per_Start.Ordinal_time
+    Yield_S3.Size = Yield_Data_S3.shape
+    Yield_S3.Variable = "Yield Season 3"
+    Yield_S3.Unit = "kg-ha-1-season-1"      
+    Yield_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "S3"))
+
+    # Season Perenial
+    Yield_Data_Per = Harvest_Index * ((Accumulated_NPP_Per.Data)/C3_C4)/(1 - Moisture_Index)
+    
+    Yield_Per = DataCube.Rasterdata_Empty()
+    Yield_Per.Data = Yield_Data_Per * MASK
+    Yield_Per.Projection = Per_Start.Projection
+    Yield_Per.GeoTransform = Per_Start.GeoTransform
+    Yield_Per.Ordinal_time = Per_Start.Ordinal_time
+    Yield_Per.Size = Yield_Data_Per.shape
+    Yield_Per.Variable = "Yield Season Perenial"
+    Yield_Per.Unit = "kg-ha-1-season-1"      
+    Yield_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "Perenial"))
     
     ################################# Calculate Fresh Grass Yield season #################################
     
@@ -544,7 +704,7 @@ def Calc_Crops(CropType, CropClass, MASK):
     Class_Data = CropClass.Data
     
     # Create Season Type map
-    Season_Type_Data = np.where(Type_Data == 3, 4, Class_Data)
+    Season_Type_Data = np.where(Type_Data == 3, 5, Class_Data)
 
     Season_Type = DataCube.Rasterdata_Empty()
     Season_Type.Data = Season_Type_Data * MASK

@@ -65,8 +65,10 @@ class Input_Paths:
     CropType = r"LEVEL_2\Phenelogy\CropClass"
     Season_Start_S1 = r"LEVEL_2\Phenelogy\Start\S1"
     Season_Start_S2 = r"LEVEL_2\Phenelogy\Start\S2"
+    Season_Start_S3 = r"LEVEL_2\Phenelogy\Start\S3"    
     Season_End_S1 = r"LEVEL_2\Phenelogy\End\S1"
     Season_End_S2 = r"LEVEL_2\Phenelogy\End\S2"	
+    Season_End_S3 = r"LEVEL_2\Phenelogy\End\S3"	
     Perenial_Start = r"LEVEL_2\Phenelogy\Perenial"
     Perenial_End = r"LEVEL_2\Phenelogy\Perenial"   
     Root_Depth = r"LEVEL_2\Root_Depth"
@@ -87,9 +89,17 @@ class Input_Paths:
     AEZ = r"LEVEL_3\Food_Security\AEZ"
     Irrigation = r"LEVEL_3\Food_Security\Irrigation_Maps_Yearly"
     Actual_Biomass_Production = r"LEVEL_3\Food_Security\Actual_Biomass_Production"
-    Accumulated_Biomass_Production = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season"
+    Accumulated_Biomass_Production = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\All"
+    Accumulated_Biomass_Production_S1 = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\S1"
+    Accumulated_Biomass_Production_S2 = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\S2"
+    Accumulated_Biomass_Production_S3 = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\S3"
+    Accumulated_Biomass_Production_Per = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\Perenial"    
     Target_Biomass_Production = r"LEVEL_3\Food_Security\Target_Biomass_Production"
-    Yield = r"LEVEL_3\Food_Security\Yield"
+    Yield = r"LEVEL_3\Food_Security\Yield\All"
+    Yield_S1 = r"LEVEL_3\Food_Security\Yield\S1"
+    Yield_S2 = r"LEVEL_3\Food_Security\Yield\S2"
+    Yield_S3 = r"LEVEL_3\Food_Security\Yield\S3"
+    Yield_Per = r"LEVEL_3\Food_Security\Yield\Perenial"
     
 class Input_Formats:
   
@@ -151,8 +161,10 @@ class Input_Formats:
     CropType = r"LU_CropType_{yyyy}.tif"	
     Season_Start_S1 = "Phenology_Start_S1_{yyyy}.tif"
     Season_Start_S2 = "Phenology_Start_S2_{yyyy}.tif"
+    Season_Start_S3 = "Phenology_Start_S3_{yyyy}.tif"    
     Season_End_S1 = "Phenology_End_S1_{yyyy}.tif"
     Season_End_S2 = "Phenology_End_S2_{yyyy}.tif"
+    Season_End_S3 = "Phenology_End_S3_{yyyy}.tif"    
     Perenial_Start = "Phenology_Per_Start_{yyyy}.tif"
     Perenial_End = "Phenology_Per_End_{yyyy}.tif"
     Root_Depth = "Root_Depth_cm_{yyyy}.{mm:02d}.{dd:02d}.tif"
@@ -174,9 +186,18 @@ class Input_Formats:
     Irrigation = "Irrigation_Yearly_-_{yyyy}.01.01.tif"
     Actual_Biomass_Production = "Actual_Biomass_Production_kg-ha-1-d-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Accumulated_Biomass_Production = "Accumulated_Biomass_Production_kg-ha-1-season-1_{yyyy}.01.01.tif" #!!! let op waar deze wordt gebruikt
+    Accumulated_Biomass_Production_S1 = "Accumulated_Biomass_Production_Season_1_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Accumulated_Biomass_Production_S2 = "Accumulated_Biomass_Production_Season_2_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Accumulated_Biomass_Production_S3 = "Accumulated_Biomass_Production_Season_3_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Accumulated_Biomass_Production_Per = "Accumulated_Biomass_Production_Season_Perenial_kg-ha-1-season-1_{yyyy}.01.01.tif"  
+
     Target_Biomass_Production = "Target_Biomass_Production_kg-ha-1-d-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Yield = "Yield_Season_kg-ha-1-season-1_{yyyy}.01.01.tif"
-	
+    Yield_S1 = "Yield_Season_1_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_S2 = "Yield_Season_2_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_S3 = "Yield_Season_3_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_Per = "Yield_Season_Perenial_kg-ha-1-season-1_{yyyy}.01.01.tif"
+		
 class Input_Conversions:    
 
 	# LEVEL 1    
@@ -237,8 +258,10 @@ class Input_Conversions:
     CropType = 1	
     Season_Start_S1 = 1
     Season_Start_S2 = 1
+    Season_Start_S3 = 1    
     Season_End_S1 = 1
     Season_End_S2 = 1
+    Season_End_S3 = 1    
     Perenial_Start = 1
     Perenial_End = 1
     Root_Depth = 1
@@ -260,5 +283,14 @@ class Input_Conversions:
     Irrigation = 1
     Actual_Biomass_Production = 1
     Accumulated_Biomass_Production = 1
+    Accumulated_Biomass_Production_S1 = 1
+    Accumulated_Biomass_Production_S2 = 1
+    Accumulated_Biomass_Production_S3 = 1
+    Accumulated_Biomass_Production_Per = 1
     Target_Biomass_Production = 1
-    Yield = 1    
+    Yield = 1   
+    Yield_S1 = 1  
+    Yield_S2 = 1  
+    Yield_S3 = 1  
+    Yield_Per = 1      
+    
