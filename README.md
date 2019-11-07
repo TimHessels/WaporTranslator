@@ -36,7 +36,7 @@ ___
 ---
 ## <a name="chapter1"></a>1. About WAPOR
 
-[WaPOR](http://www.fao.org/land-water/databases-and-software/wapor/en/) is a open accessible near real time database that use satellite information to monitor different agricultural related parameters like Evapotranspiration, Net Primary Production, and Gross Biomass Water Productivity. At the moment, version 2.0 is launched on 17th of June 2019 and covers on dekadal timescale whole Africa with a spatial resolution of 250 meters. The main riverbasins are covered on a 100m grid, and some parts even have a spatial resolution of 30m. All the dataset area available since 2009 and runs till near real time. 
+[WaPOR](http://www.fao.org/land-water/databases-and-software/wapor/en/) is an open accessible near real time database that use satellite information to monitor different agricultural related parameters like Evapotranspiration, Net Primary Production, and Gross Biomass Water Productivity. At the moment, version 2.0 has been launced on the 17th of June 2019 whole Africa with a spatial resolution of 250 meters for a dekadal timescale. The main riverbasins are covered on a 100m grid, and some parts have even a spatial resolution of 30m. All the dataset area available since 2009 and runs till near real time. 
 
 ---
 ## <a name="chapter2"></a>2. Introduction WaporTranslator
@@ -51,12 +51,14 @@ Due to the limitation in solar input, the model is now forced to include a recen
 
 ## <a name="chapter3"></a>3. Installation Anaconda
 
-There are several packages available, which include python. Recommended for the WaporTranslator is to use the python package within Anaconda. The great advantage of using the standard Anaconda package is that most of the commonly used modules are included in the package and also an IDE is included (Spyder). Alternatively, these modules can be installed separately by the user if a different package than Anaconda is preferred. A main advantage of this Anaconda package is the easy installation of the python modules that are included within the Anaconda library. The whole overview of python modules that are already installed or are included in the Anaconda library can be seen [here](https://docs.anaconda.com/anaconda/packages/py3.7_win-64/). 
+There are several packages available, which include python. Recommended for the WaporTranslator is to use the python package within Anaconda. The great advantage of using the standard Anaconda package is that most of the common used modules are included within the package and also an IDE is included (Spyder). Alternatively, these modules can be installed separately by the user if a not Anaconda is preferred.
+
+ A main advantage of this Anaconda package is the easy installation of the python modules that are included within the Anaconda library. The whole overview of python modules that are already installed or are included in the Anaconda library can be seen [here](https://docs.anaconda.com/anaconda/packages/py3.7_win-64/). 
 
 
-The Anaconda executable can be downloaded from: [https://www.anaconda.com/distribution/](https://www.anaconda.com/distribution/). It is recommended to download the **64-bits version**, because this will increase the calculation capacity enormously. However, be sure that your computer/laptop is a **64-bits computer/laptop. Otherwise, install the 32-bits version.
+The Anaconda executable can be downloaded from: [https://www.anaconda.com/distribution/](https://www.anaconda.com/distribution/). It is recommended to download the **64-bits version**, this will increase the calculation capacity enormously. However, be sure that your computer/laptop is a **64-bits computer/laptop. Otherwise, install the 32-bits version.
 
-The WaporTranslator python module is programmed in **python version 3.7** on a Windows operating systems.
+The WaporTranslator python module is programmed in **python version 3.7** on a Windows 10 operating system.
 
 ![](figs/anaconda_install.png) 
 
@@ -74,8 +76,8 @@ The GDAL package is a geoprocessing toolbox that is also included in QGIS. The e
 
 * **QGIS:** site: [https://www.qgis.org/en/site/forusers/download.html](https://www.qgis.org/en/site/forusers/download.html)
 
-To make python able to find all the properties of the different projections an required environment variable must be checked and created if needed. Search within the environment variable for the GDAL_DATA variable name. If this variable already exists, there is no need to create this variable again. If not, this variable must be created by yourself. 
-For more explanation about how to add an environment user variable go to the [Add Environment Variable](#chapter6) chapter within this document.
+To make python able to find all the properties of the different projections a required environment variable must be checked and created if needed. Search within the environment variable if the GDAL_DATA variable name exists. If this variable already exists, there is no need to create this variable again. If not, this variable must be created by yourself. 
+For more explanation about how to add an environment user variable go to the [Add Environment Variable](#chapter6) chapter within this manual.
 
 If QGIS is installed, the folder with projections information can be found somewhere here “$HOME\Program Files\QGIS x.xx\share\gdal”. create the following environment variable (**do not place a semi column at the end of the variable value**):
 
@@ -86,7 +88,7 @@ If QGIS is installed, the folder with projections information can be found somew
 ## <a name="chapter5"></a>5. Installation WaporTranslator
 
 There are two options to install the WaporTranslator. Method 1 is to use the installation file that is located in the WaporTranslator package. This will create a new python environment that can run the WaporTranslator functions. Method 2 describes how to install the tool manually. 
-Both methods will be further described step by step below:
+Both methods will be further described step by step in the remaining of this chapter:
 
 ---
 
@@ -110,7 +112,7 @@ After downloading, subtract the data and change the name from "WaporTranslator-m
 ### <a name="chapter5_1_2"></a>Step 2: Run installation file
 
 This method can only be performed if Anaconda is installed. Otherwise the installation has to be done manually as described in the [manual installation](#chapter5_2). Open the windowsOS.yml file (located in the WaporTranslator folder) in a text editor program and change the last line defining the path to the location of Anaconda on your operating system.
-The default is set on C:\Username\Anaconda3\envs\env_waportranslator, but replace the 'Username' with the location of your $HOME folder where Anaconda3 folder is located (leave Anaconda3\envs\env_waportranslator on the end of this line).
+The default is set on C:\Username\Anaconda3\envs\env_waportranslator, do not forget to replace the 'Username' with the location of your $HOME folder where Anaconda3 folder is located (leave Anaconda3\envs\env_waportranslator on the end of this line).
 
 If you forgot the $HOME folder, you can search by opening the Command Prompt and type:
 
@@ -124,7 +126,7 @@ The next step will install all the required modules for the WaporTranslator with
 
 > conda env create -f windowsOS.yml
 
-If no error is shown, the installation was succesful. If not, try Method 2 to install the specified modules manually that gave the errors during the automated process.
+If no error is shown, the installation was succesful. If not, try Method 2 to install manually the specified modules that gave the errors during the automated process.
 
 After installation, copy and paste the complete "WaporTranslator" folder within the site-packages location of the new created python environment within the Anaconda3 folder ($HOME\Anaconda3\envs\env_waportranslator\Lib\site-packages). 
 
@@ -333,7 +335,7 @@ All the three levels can be runned from the Anaconda prompt by setting up 1 JSON
 
 ![](figs/JSON_format.png) 
 
-An example can also be found in $HOME\Anaconda3\envs\env_waportranslator\Lib\site-packages\WaporTranslator\input_example.txt. 
+An example can also be found in $HOME\Anaconda3\envs\env_waportranslator\Lib\site-packages\WaporTranslator\input_example.json. 
 
 The inputs are the following:
 
@@ -495,7 +497,7 @@ Now you can also run the WaporTranslator with the "LANDSAF" as "Radiation_Source
 #### **Food Security**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| Accumulated_Biomass_Production_Season  | kg/ha/season | Season |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L345) |
+| Accumulated_Biomass_Production_Season  | kg/ha/season | Season |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L401) |
 | Accumulated_NPP_Season |  kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L283) |
 | Actual_Biomass_Production | kg/ha/day | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L140) |
 | AEZ | - | Yearly | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L127) |
@@ -509,8 +511,8 @@ Now you can also run the WaporTranslator with the "LANDSAF" as "Radiation_Source
 | Soil_Moisture_Stress | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L232) |
 | Target_Biomass_Production |kg/ha/day | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L161) |
 | Water_Unlimited_Biomass_Production | kg/ha/season  | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L266) |
-| Yield | kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L361) |
-| Yield_Fresh_Grass | kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L375) |
+| Yield | kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L465) |
+| Yield_Fresh_Grass | kg/ha/season | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Food_Security/LEVEL_3_Calc_Food_Security.py#L535) |
 
 #### **Irrigation**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
@@ -537,16 +539,24 @@ Now you can also run the WaporTranslator with the "LANDSAF" as "Radiation_Source
 #### **Water Productivity**
 | Parameter Name        | Unit           | Timestep |Link to Python Code  |
 | ------------- |:-------------| :-----| :-----| 
-| AquaCrop_Water_Use_Efficiency  | kg/m2 | Dekadal |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L215) |
-| GBWP_Decade | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L323) |
-| GBWP_Gap | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L292) |
-| GBWP_Improvement_Required | Percentage | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L310) |
-| GBWP_Season | kg/m3 | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L249) |
-| GBWP_Target | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L275) |
-| Normalized_GBWP_Max_Per_TBP | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L335) |
-| Normalized_GBWP_Min_Per_TBP | kg/m3  | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#352) |
-| T_Efficiency | mm/dekadal| Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L78) |
-| Water_Productivity | kg/m3| Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L386) |
-| Water_Productivity_Score | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L369) |
+| Accumulated_ET  | mm | Season |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L105) |
+| Accumulated_ET_Trend  | percentage/year | Static |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L956) |
+| Accumulated_ET0  | mm| Season |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L105) |
+| Accumulated_ET0_Trend  | percentage/year | Static |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L956) |
+| Accumulated_P  | mm | Season |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L105) |
+| Accumulated_P_Trend  | percentage/year | Static |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L956) |
+| Accumulated_T  | mm | Season |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L105) |
+| Accumulated_T_Trend  | percentage/year | Static |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L956) |
+| AquaCrop_Water_Use_Efficiency  | kg/m2 | Dekadal |[click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L317) |
+| GBWP_Decade | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L401) |
+| GBWP_Gap | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L529) |
+| GBWP_Improvement_Required | percentage | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L547) |
+| GBWP_Season | kg/m3 | Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L418) |
+| GBWP_Target | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L512) |
+| Normalized_GBWP_Max_Per_TBP | kg/m3 | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L564) |
+| Normalized_GBWP_Min_Per_TBP | kg/m3  | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#589) |
+| T_Efficiency | mm/dekadal| Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L88) |
+| Water_Productivity | kg/m3| Season | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L623) |
+| Water_Productivity_Score | - | Dekadal | [click here](https://github.com/TimHessels/WaporTranslator/blob/ac9c28e560f91b635bb3abda9260b3aa270a5b01/LEVEL_3/Water_Productivity/LEVEL_3_Calc_Water_Productivity.py#L607) |
 
 ---
