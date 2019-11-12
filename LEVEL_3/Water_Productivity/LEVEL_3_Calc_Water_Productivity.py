@@ -79,8 +79,6 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_S3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S3), Formats.Yield_S3, list(Dates_Years), Conversion = Conversions.Yield_S3, Variable = 'Yield Season 3', Product = '', Unit = 'ton/ha')
     Yield_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_Per), Formats.Yield_Per, list(Dates_Years), Conversion = Conversions.Yield_Per, Variable = 'Yield Season Perenial', Product = '', Unit = 'ton/ha')
 
-
-    
     ######################## Calculate days in each dekads #################################
     Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)
 
@@ -104,7 +102,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     T_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "T_Efficiency"))         
 
-    ######################### Calculate AquaCrop Water Use Efficiency ########################
+    ######################### Calculate accumulated parameters ########################
 
     # Calculate cummulative ET and ET0 over the seasons
     DOYcum = np.ones(Tcum.Size) * Days_in_Dekads[:, None, None]
@@ -313,6 +311,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_ET_Data_Per[Accumulated_ET_Data_Per==0] = np.nan     
     Accumulated_P_Data_Per = Accumulated_P_Data_Per
     Accumulated_P_Data_Per[Accumulated_P_Data_Per==0] = np.nan     
+    
+    ################## Calculate AquaCrop water use efficiency #############################
     
     AquaCrop_Water_Use_Efficiency_Data = 1000 * (Accumulated_Biomass_Production.Data/(10 * Accumulated_DOY_Data * Accumulated_T_Data/Accumulated_ET0_Data))
 

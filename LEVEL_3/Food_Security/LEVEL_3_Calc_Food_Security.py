@@ -312,7 +312,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
         for Date_Year in Dates_Years:
             year_diff = int(Date_Year.year - Dates_Years[0].year)
             for dekad in range(0,int(np.nanmax(Crop_S2_End.Data))):
-                Accumulated_NPP_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_NPP_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_NPP_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_NPP_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
    
@@ -325,7 +325,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     for Date_Year in Dates_Years:
         year_diff = int(Date_Year.year - Dates_Years[0].year)
         dekad = 35 # Always take end in pasture
-        Accumulated_NPP_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 4] = NPPcum.Data[int(year_diff * 36 + dekad), Season_Type.Data[year_diff, :, :] == 4] 
+        Accumulated_NPP_Data_Past[year_diff, Season_Type.Data[year_diff, :, :] == 5] = NPPcum.Data[int(year_diff * 36 + dekad - 1), Season_Type.Data[year_diff, :, :] == 5] 
     
     Accumulated_NPP_Data_Past[np.isnan(Accumulated_NPP_Data_Past)] = 0
     Accumulated_NPP_Data_Per[np.isnan(Accumulated_NPP_Data_Per)] = 0
@@ -358,7 +358,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "S1"))
 
     # Add Season 2
-    Accumulated_NPP_Data_Start_S1[Accumulated_NPP_Data_Start_S1==0] = np.nan
+    Accumulated_NPP_Data_Start_S2[Accumulated_NPP_Data_Start_S2==0] = np.nan
         
     Accumulated_NPP_S2 = DataCube.Rasterdata_Empty()
     Accumulated_NPP_S2.Data = Accumulated_NPP_Data_Start_S2 * MASK
