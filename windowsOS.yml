@@ -21,7 +21,7 @@ dependencies:
   - pip
   - pip:
     - pyproj==2.4.0
-    - watertools==0.0.8
+    - watertools==0.0.9
     - WaporAPI==0.0.2
 prefix: C:\Users\timhe\Anaconda3\envs\env_waportranslator
 
