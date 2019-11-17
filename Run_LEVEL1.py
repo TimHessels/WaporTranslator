@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import warnings
+import pandas as pd
 import WaporTranslator.LEVEL_1 as L1
 
 def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, Radiation_Data):
@@ -23,9 +24,6 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
     # Get latlim and lonlim and create a mask of the shapefile
     dest_AOI_MASK, latlim, lonlim = L1.LEVEL_1_AOI.main(Input_shapefile)
     
-    # Download WAPOR data
-    L1.LEVEL_1_Download_WAPOR.main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, API_WAPOR_KEY)
-    
     # Download ESACCI data
     L1.LEVEL_1_Download_ESACCI.main(output_folder_L1, latlim, lonlim)
     
@@ -35,20 +33,33 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
     # Download SRTM data
     L1.LEVEL_1_Download_SRTM.main(output_folder_L1, latlim, lonlim)
     
-    # Download GLDAS data
-    L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, cores)
+    # Define years
+    Years = pd.date_range(Start_year_analyses, End_year_analyses, "AS")
     
-    # Download MODIS data
-    L1.LEVEL_1_Download_MODIS.main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, Radiation_Data)
-    
-    # Process MSGCCP data
-    if Radiation_Data == "LANDSAF":
-        L1.LEVEL_1_Process_MSGCCP.main(output_folder_L1, End_year_analyses, latlim, lonlim)
+    for Year in Years:
         
-    elif Radiation_Data == "KNMI":
-        L1.LEVEL_1_Process_KNMI.main(output_folder_L1, End_year_analyses, latlim, lonlim, cores)
-    else:
-        print("Choose for Radiation input LANDSAF or KNMI")
+        year = Year.year
+        print("Collect data for the year %s" %year)
+        
+        # Download WAPOR data
+        L1.LEVEL_1_Download_WAPOR.main(output_folder_L1, year, year, latlim, lonlim, API_WAPOR_KEY)    
+        
+        # Download GLDAS data
+        L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores)
+        
+        # Download MODIS data
+        L1.LEVEL_1_Download_MODIS.main(output_folder_L1, year, year, latlim, lonlim, Radiation_Data)
+        
+        # Process MSGCCP data
+        if Radiation_Data == "LANDSAF":
+            if year >= 2016:
+                L1.LEVEL_1_Process_MSGCCP.main(output_folder_L1, year, latlim, lonlim)
+            
+        elif Radiation_Data == "KNMI":
+            if year >= 2017:            
+                L1.LEVEL_1_Process_KNMI.main(output_folder_L1, year, latlim, lonlim, cores)
+        else:
+            print("Choose for Radiation input LANDSAF or KNMI")
     
     # Create Mask
     L1.LEVEL_1_Create_Mask.main(output_folder_L1, dest_AOI_MASK, Threshold_Mask)

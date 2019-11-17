@@ -17,7 +17,7 @@ import watertools.General.data_conversions as DC
 def main(output_folder_L1, End_year_analyses, latlim, lonlim, cores):
 
     # Get Date range
-    Startdate = "2017-01-01"
+    Startdate = "%s-01-01" %End_year_analyses
     Enddate = "%s-12-31" %End_year_analyses
     Dates = pd.date_range(Startdate, Enddate, freq = "D")
     

@@ -181,28 +181,28 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     if not np.isnan(np.nanmean(Crop_S1_End.Data)):
         for Date_Year in Dates_Years:
             year_diff = int(Date_Year.year - Dates_Years[0].year)
-            for dekad in range(0,int(np.nanmax(Crop_S2_End.Data))):
-                Accumulated_T_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = Tcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
+            for dekad in range(0,int(np.nanmax(Crop_S3_End.Data))):
+                Accumulated_T_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = Tcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_T_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = Tcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_T_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = Tcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
 
-                Accumulated_ET0_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = ET0cum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_ET0_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = ET0cum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_ET0_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = ET0cum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_ET0_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = ET0cum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
  
-                Accumulated_DOY_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_DOY_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_DOY_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_DOY_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
 
-                Accumulated_DOY_Data_End_S1[year_diff, Crop_S1_Start.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_Start.Data[year_diff, :, :] == dekad] 
+                Accumulated_DOY_Data_End_S1[year_diff, Crop_S1_Start.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_Start.Data[year_diff, :, :] == dekad] 
                 Accumulated_DOY_Data_End_S2[year_diff, Crop_S2_Start.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_Start.Data[year_diff, :, :] == dekad] 
                 Accumulated_DOY_Data_End_S3[year_diff, Crop_S3_Start.Data[year_diff, :, :] == dekad] = DOYcum[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_Start.Data[year_diff, :, :] == dekad] 
 
-                Accumulated_ET_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = ETcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_ET_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = ETcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_ET_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = ETcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_ET_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = ETcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
 
-                Accumulated_P_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = Pcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
+                Accumulated_P_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = Pcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_P_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = Pcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_P_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = Pcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
 

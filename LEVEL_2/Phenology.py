@@ -280,23 +280,23 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         GDD_CHECK = np.nanmax(Temp_end_sum, axis = 0)
         
         # Make Perenial crop from single crop
-        Per_Map_Start = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), Start_Map_S1, Per_Map_Start)
-        Per_Map_End = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), End_Map_S1, Per_Map_End)       
-        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), np.nan, Start_Map_S1)
-        End_Map_S1 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), np.nan, End_Map_S1)
-        Start_Map_S2 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==2), np.nan, Start_Map_S2)
-        End_Map_S2 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==2), np.nan, End_Map_S2)
-        Start_Map_S3 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==3), np.nan, Start_Map_S3)
-        End_Map_S3 = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==3), np.nan, End_Map_S3)
+        Per_Map_Start = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), Start_Map_S1, Per_Map_Start)
+        Per_Map_End = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), End_Map_S1, Per_Map_End)       
+        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), np.nan, Start_Map_S1)
+        End_Map_S1 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), np.nan, End_Map_S1)
+        Start_Map_S2 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==2), np.nan, Start_Map_S2)
+        End_Map_S2 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==2), np.nan, End_Map_S2)
+        Start_Map_S3 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==3), np.nan, Start_Map_S3)
+        End_Map_S3 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==3), np.nan, End_Map_S3)
         
         # Make Single crop from perenial crop       
-        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), Per_Map_Start, Start_Map_S1)        
-        End_Map_S1 = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), Per_Map_End, End_Map_S1)        
-        Per_Map_Start = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), np.nan, Per_Map_Start)  
-        Per_Map_End = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), np.nan, Per_Map_End)          
+        Start_Map_S1 = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), Per_Map_Start, Start_Map_S1)        
+        End_Map_S1 = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), Per_Map_End, End_Map_S1)        
+        Per_Map_Start = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), np.nan, Per_Map_Start)  
+        Per_Map_End = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), np.nan, Per_Map_End)          
 
-        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK>4000,LU_Crop_Map==1), 4, LU_Crop_Map)
-        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK<4000,LU_Crop_Map==4), 1, LU_Crop_Map)
+        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), 4, LU_Crop_Map)
+        LU_Crop_Map = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), 1, LU_Crop_Map)
 
         # Save files
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S1", "Phenology_Start_S1_%s.tif" %year_nmbr), Start_Map_S1, geo, proj)    
@@ -486,7 +486,7 @@ def Calc_Season(Ts):
         if len(Start) > 0:
            
             # If period is longer than 1 year it is a perennial crop
-            End_4_perenial = np.where(End==9999, np.argwhere(Values==1)[0], End)
+            End_4_perenial = np.where(End==9999, np.argwhere(Values==1)[-1], End)
             Season_Amount_Decades = End_4_perenial - Start 
             
             # If two seasons in a row is lower than .... combine season
