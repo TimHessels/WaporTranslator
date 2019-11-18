@@ -34,7 +34,7 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
     L1.LEVEL_1_Download_SRTM.main(output_folder_L1, latlim, lonlim)
     
     # Define years
-    Years = pd.date_range(Start_year_analyses, End_year_analyses, "AS")
+    Years = pd.date_range("%d-01-01" %int(Start_year_analyses), "%d-12-31" %int(End_year_analyses), freq = "AS")
     
     for Year in Years:
         
