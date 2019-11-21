@@ -443,6 +443,9 @@ def Calc_Season(Ts):
                     else:
                         pass      
                 
+                if len(range(i, len(Ts_MW)-1)) == 0:
+                    k = int(len(Ts_MW)-1)
+                
                 # If no end is found set the end as end point
                 if End_Found == 0:
                     End = np.append(End, k)
