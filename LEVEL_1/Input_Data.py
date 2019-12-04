@@ -42,8 +42,8 @@ class Input_Paths:
 	# LEVEL 2
     Available_Before_Depletion = r"LEVEL_2\Available_Before_Depletion"
     Critical_Soil_Moisture = r"LEVEL_2\Critical_Soil_Moisture"
-    Crop_Coef_Dry_Soil = r"LEVEL_2\Crop_Coef_Dry_Soil"
-    Crop_Coef_Update = r"LEVEL_2\Crop_Coef_Update"
+    Crop_Coef_Dry_Soil = r"LEVEL_2\Kc_MAX"
+    Crop_Coef_Update = r"LEVEL_2\Kc_MAX_update"
     Crop_Water_Requirement = r"LEVEL_2\Crop_Water_Requirement"
     Cumulative_ET = r"LEVEL_2\Cumulative\Evapotranspiration"
     Cumulative_NPP = r"LEVEL_2\Cumulative\NPP"
@@ -138,8 +138,8 @@ class Input_Formats:
 	# LEVEL 2
     Available_Before_Depletion = "Available_Before_Depletion_mm_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Critical_Soil_Moisture = "Critical_Soil_Moisture_cm3-cm-3_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    Crop_Coef_Dry_Soil = "Crop_Coefficient_Dry_Soil_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    Crop_Coef_Update = "Crop_Coefficient_Update_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    Crop_Coef_Dry_Soil = "Kc_MAX_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    Crop_Coef_Update = "Kc_MAX_update_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Crop_Water_Requirement = "Crop_Water_Requirement_mm-dekad-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Cumulative_ET = "ET_cum_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Cumulative_NPP = "NPP_cum_{yyyy}.{mm:02d}.{dd:02d}.tif"

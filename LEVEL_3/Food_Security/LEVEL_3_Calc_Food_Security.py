@@ -96,7 +96,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     ################################# Calculate yearly irrigation maps #################################
     
-    Threshold = 10  # if this threshold or more decades were irrigation, the irrigation type is irrigation
+    Threshold = 3  # if this threshold or more decades were irrigation, the irrigation type is irrigation
     Irrigation_year_Data = np.ones([len(Dates_Years), Irrigation.Size[1], Irrigation.Size[2]]) * np.nan
     
     for Date_Year in Dates_Years:
@@ -264,7 +264,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     ################################# Water Unlimited Biomass Production #################################
     
-    Water_Unlimited_Biomass_Production_Data = (Actual_Biomass_Production.Data - Production_Gap_Soil_Moisture.Data)/Days_in_Dekads[:, None, None]
+    Water_Unlimited_Biomass_Production_Data = (Actual_Biomass_Production.Data - Production_Gap_Soil_Moisture.Data)
     
     Water_Unlimited_Biomass_Production = DataCube.Rasterdata_Empty()
     Water_Unlimited_Biomass_Production.Data = Water_Unlimited_Biomass_Production_Data * MASK

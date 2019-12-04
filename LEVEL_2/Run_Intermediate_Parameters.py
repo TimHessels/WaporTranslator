@@ -145,12 +145,12 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     Crop_Coef_Dry_Soil.GeoTransform = ET.GeoTransform
     Crop_Coef_Dry_Soil.Ordinal_time = ET.Ordinal_time
     Crop_Coef_Dry_Soil.Size = Crop_Coef_Dry_Soil_Data.shape
-    Crop_Coef_Dry_Soil.Variable = "Crop Coefficient Dry Soil"
+    Crop_Coef_Dry_Soil.Variable = "Kc MAX"
     Crop_Coef_Dry_Soil.Unit = "-"
     
     del Crop_Coef_Dry_Soil_Data
     
-    Crop_Coef_Dry_Soil.Save_As_Tiff(os.path.join(output_folder_L2, "Crop_Coef_Dry_Soil"))
+    Crop_Coef_Dry_Soil.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX"))
  
     #################### Convert into daily datasets ############################################
     Albedo_Daily = Functions.Calc_Daily_from_Dekads(Albedo)
@@ -206,7 +206,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
         Net_Radiation_Data_Daily =(1 - Albedo_Daily.Data[np.isin(Albedo_Daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :])*KNMI_daily.Data - Net_Longwave
 
         ###################### Calculate ET0 de Bruin Daily #####################################
-        ET0_deBruin_Daily_Data = (Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :]/(Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :] + Psy_Constant[None, :, :])) * ((1 - 0.23) * KNMI_daily.Data - Net_Longwave_Slob) + 20
+        ET0_deBruin_Daily_Data = ((Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :]/(Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :] + Psy_Constant[None, :, :])) * ((1 - 0.23) * KNMI_daily.Data - Net_Longwave_Slob) + 20)/28.4
 
         # Write in DataCube
         ET0_deBruin_Daily = DataCube.Rasterdata_Empty()
@@ -220,7 +220,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
         
         # change from daily to decads
         ET0_deBruin = Functions.Calc_Dekads_from_Daily(ET0_deBruin_Daily, flux_state = "flux")
-        ET0_deBruin.Unit = "mm-month-1"
+        ET0_deBruin.Unit = "mm-dekad-1"
         del ET0_deBruin_Daily_Data
         
         ET0_deBruin.Save_As_Tiff(os.path.join(output_folder_L2, "ET0_deBruin"))
@@ -331,7 +331,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     Theta_FC_Subsoil.Save_As_Tiff(os.path.join(output_folder_L2, "Theta_FC_Subsoil"))
     
     ################### Calculate Theta Wilting Point Subsoil ##############################
-    Theta_WP_Subsoil_Data = 1.7 * Theta_FC_Subsoil.Data**4
+    Theta_WP_Subsoil_Data = 3.0575 * Theta_FC_Subsoil.Data**4.5227
     
     # Write in DataCube
     Theta_WP_Subsoil = DataCube.Rasterdata_Empty()
@@ -406,7 +406,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     ######################## Calculate Critical Soil Moisture ########################
     
     # Calculate Critical Soil Moisture
-    Critical_Soil_Moisture_Data = Theta_WP_Subsoil.Data[None,:,:] + (Theta_FC_Subsoil.Data[None,:,:] - Theta_WP_Subsoil.Data[None,:,:]) * (0.65+0.04*(5 - Crop_Water_Requirement.Data/Days_in_Dekads[:, None, None]))
+    Critical_Soil_Moisture_Data = Theta_WP_Subsoil.Data[None,:,:] + (Theta_FC_Subsoil.Data[None,:,:] - Theta_WP_Subsoil.Data[None,:,:]) * (0.47+0.04*(5 - Crop_Water_Requirement.Data/Days_in_Dekads[:, None, None]))
     
     # Write in DataCube
     Critical_Soil_Moisture = DataCube.Rasterdata_Empty()
@@ -573,12 +573,12 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     Crop_Coef_Update.GeoTransform = LAI.GeoTransform
     Crop_Coef_Update.Ordinal_time = LAI.Ordinal_time
     Crop_Coef_Update.Size = Crop_Coef_Update_Data.shape
-    Crop_Coef_Update.Variable = "Crop Coefficient Update"
+    Crop_Coef_Update.Variable = "Kc MAX update"
     Crop_Coef_Update.Unit = "-"
     
     del Crop_Coef_Update_Data
     
-    Crop_Coef_Update.Save_As_Tiff(os.path.join(output_folder_L2, "Crop_Coef_Update"))
+    Crop_Coef_Update.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX_update"))
     
     ################# Calculate 10 year Mean Net Radiation, per Pixel ########################
     
@@ -654,7 +654,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     ################## Calculate Available Water Before Depletion ##########################
     
-    Available_Before_Depletion_Data = 0.8 * (0.125 - Theta_WP_Subsoil.Data[None, :, :]) * 10 * Root_Depth.Data
+    Available_Before_Depletion_Data = 0.8 * (Theta_FC_Subsoil.Data[None, :, :] - 0.12) * 10 * Root_Depth.Data
     
     # Write in DataCube
     Available_Before_Depletion = DataCube.Rasterdata_Empty()
