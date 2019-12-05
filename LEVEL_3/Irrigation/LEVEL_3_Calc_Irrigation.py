@@ -361,9 +361,13 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Non_Beneficial_Water_Losses.Save_As_Tiff(os.path.join(output_folder_L3, "Non_Beneficial_Water_Losses"))    
     
     ##################################### Calculate Equity ####################################
-    Soil_Moisture_Irrigated = Soil_Moisture.Data * Irrigation.Data
+    threshold_irrigated = 3
+    
+    Irrigation_MASK_Data = np.where(Irrigation.Data>threshold_irrigated, 1, np.nan)
+    
+    Soil_Moisture_Irrigated = Soil_Moisture.Data * Irrigation_MASK_Data
     Equity_Soil_Moisture_Data = np.nanstd(Soil_Moisture_Irrigated, axis = (1,2))/np.nanmean(Soil_Moisture_Irrigated, axis = (1,2))
-    Equity_Soil_Moisture_Data_Map = np.where(Irrigation.Data == 1, Equity_Soil_Moisture_Data[:, None, None], np.nan)
+    Equity_Soil_Moisture_Data_Map = np.where(Irrigation_MASK_Data == 1, Equity_Soil_Moisture_Data[:, None, None], np.nan)
  
     # Write in DataCube
     Equity_Soil_Moisture = DataCube.Rasterdata_Empty()

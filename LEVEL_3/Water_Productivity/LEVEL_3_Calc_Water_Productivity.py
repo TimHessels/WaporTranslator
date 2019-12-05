@@ -58,32 +58,32 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Crop_S1_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S1), Formats.Season_End_S1, list(Dates_Years), Conversion = Conversions.Season_End_S1, Variable = 'Season 1 End', Product = '', Unit = 'DOY')
     Crop_S2_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S2), Formats.Season_End_S2, list(Dates_Years), Conversion = Conversions.Season_End_S2, Variable = 'Season 2 End', Product = '', Unit = 'DOY')
     Crop_S3_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S3), Formats.Season_End_S3, list(Dates_Years), Conversion = Conversions.Season_End_S3, Variable = 'Season 3 End', Product = '', Unit = 'DOY')
-    Per_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_Start), Formats.Perenial_Start, list(Dates_Years), Conversion = Conversions.Perenial_Start, Variable = 'Perenial Start', Product = '', Unit = 'DOY')
-    Per_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_End), Formats.Perenial_End, list(Dates_Years), Conversion = Conversions.Perenial_End, Variable = 'Perenial End', Product = '', Unit = 'DOY')
+    Per_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perennial_Start), Formats.Perennial_Start, list(Dates_Years), Conversion = Conversions.Perennial_Start, Variable = 'Perennial Start', Product = '', Unit = 'DOY')
+    Per_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perennial_End), Formats.Perennial_End, list(Dates_Years), Conversion = Conversions.Perennial_End, Variable = 'Perennial End', Product = '', Unit = 'DOY')
     Pcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_P), Formats.Cumulative_P, Dates, Conversion = Conversions.Cumulative_P, Variable = 'Cumulated P', Product = '', Unit = 'mm/decade')  
     ET0cum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET0), Formats.Cumulative_ET0, Dates, Conversion = Conversions.Cumulative_ET0, Variable = 'Cumulated ET0', Product = '', Unit = 'mm/decade')      
     ETcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET), Formats.Cumulative_ET, Dates, Conversion = Conversions.Cumulative_ET, Variable = 'Cumulated ET', Product = '', Unit = 'mm/decade')      
     Tcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_T), Formats.Cumulative_T, Dates, Conversion = Conversions.Cumulative_T, Variable = 'Cumulated T', Product = '', Unit = 'mm/decade')      
     AEZ = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.AEZ), Formats.AEZ, Dates, Conversion = Conversions.AEZ, Variable = 'Surface Runoff Coefficient', Product = '', Unit = '-')  
-    CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropType), Formats.CropType, list(Dates_Years), Conversion = Conversions.CropType, Variable = 'CropType', Product = '', Unit = '-')
-    CropClass = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropClass), Formats.CropClass, list(Dates_Years), Conversion = Conversions.CropClass, Variable = 'CropClass', Product = '', Unit = '-')
+    CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, list(Dates_Years), Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
+    CropSeason = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropSeason), Formats.CropSeason, list(Dates_Years), Conversion = Conversions.CropSeason, Variable = 'CropSeason', Product = '', Unit = '-')
     Accumulated_Biomass_Production = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production), Formats.Accumulated_Biomass_Production, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production, Variable = 'Accumulated Biomass Production', Product = '', Unit = 'ton/ha/season')
     Accumulated_Biomass_Production_S1 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_S1), Formats.Accumulated_Biomass_Production_S1, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_S1, Variable = 'Accumulated Biomass Production Season 1', Product = '', Unit = 'ton/ha/season')
     Accumulated_Biomass_Production_S2 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_S2), Formats.Accumulated_Biomass_Production_S2, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_S2, Variable = 'Accumulated Biomass Production Season 2', Product = '', Unit = 'ton/ha/season')
     Accumulated_Biomass_Production_S3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_S3), Formats.Accumulated_Biomass_Production_S3, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_S3, Variable = 'Accumulated Biomass Production Season 3', Product = '', Unit = 'ton/ha/season')
-    Accumulated_Biomass_Production_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_Per), Formats.Accumulated_Biomass_Production_Per, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_Per, Variable = 'Accumulated Biomass Production Season Perenial', Product = '', Unit = 'ton/ha/season')
+    Accumulated_Biomass_Production_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_Per), Formats.Accumulated_Biomass_Production_Per, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_Per, Variable = 'Accumulated Biomass Production Season Perennial', Product = '', Unit = 'ton/ha/season')
     Target_Biomass_Production = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Target_Biomass_Production), Formats.Target_Biomass_Production, Dates, Conversion = Conversions.Target_Biomass_Production, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Target Biomass Production', Product = '', Unit = 'kg/ha/d')
     Yield = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield), Formats.Yield, list(Dates_Years), Conversion = Conversions.Yield, Variable = 'Yield', Product = '', Unit = 'ton/ha')
     Yield_S1 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S1), Formats.Yield_S1, list(Dates_Years), Conversion = Conversions.Yield_S1, Variable = 'Yield Season 1', Product = '', Unit = 'ton/ha')
     Yield_S2 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S2), Formats.Yield_S2, list(Dates_Years), Conversion = Conversions.Yield_S2, Variable = 'Yield Season 2', Product = '', Unit = 'ton/ha')
     Yield_S3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S3), Formats.Yield_S3, list(Dates_Years), Conversion = Conversions.Yield_S3, Variable = 'Yield Season 3', Product = '', Unit = 'ton/ha')
-    Yield_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_Per), Formats.Yield_Per, list(Dates_Years), Conversion = Conversions.Yield_Per, Variable = 'Yield Season Perenial', Product = '', Unit = 'ton/ha')
+    Yield_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_Per), Formats.Yield_Per, list(Dates_Years), Conversion = Conversions.Yield_Per, Variable = 'Yield Season Perennial', Product = '', Unit = 'ton/ha')
 
     ######################## Calculate days in each dekads #################################
     Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)
 
     ################################# Calculate Crop Season and LU #################################
-    Season_Type = L3_Food.Calc_Crops(CropType, CropClass, MASK)
+    Season_Type = L3_Food.Calc_Crops(CropType, CropSeason, MASK)
 
     ######################## Calculate Transpiration Efficiency ########################
     T_Efficiency_Data = Actual_Biomass_Production.Data/(T.Data * 10)
@@ -102,13 +102,13 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     T_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "T_Efficiency"))         
 
-    ######################### Calculate accumulated parameters ########################
+    ######################### Calculate accumulated parameters #######################
 
     # Calculate cummulative ET and ET0 over the seasons
     DOYcum = np.ones(Tcum.Size) * Days_in_Dekads[:, None, None]
     DOYcum = DOYcum.cumsum(axis = 0)    
     
-    # For perenial crop clip the season at start and end year
+    # For Perennial crop clip the season at start and end year
     Accumulated_T_Data_Start = np.ones(Per_Start.Size) * np.nan
     Accumulated_T_Data_End = np.ones(Per_Start.Size) * np.nan
     Accumulated_ET0_Data_Start = np.ones(Per_Start.Size) * np.nan
@@ -300,7 +300,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_P_Data_S3 = Accumulated_P_Data_Start_S3
     Accumulated_P_Data_S3[Accumulated_P_Data_S3==0] = np.nan        
     
-    # Add Season Perenial to one map
+    # Add Season Perennial to one map
     Accumulated_T_Data_Per = Accumulated_T_Data_Per 
     Accumulated_T_Data_Per[Accumulated_T_Data_Per==0] = np.nan
     Accumulated_ET0_Data_Per = Accumulated_ET0_Data_Per
@@ -381,7 +381,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     AquaCrop_Water_Use_Efficiency_S3.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "S3"))    
 
-   # Season Perenial
+   # Season Perennial
     AquaCrop_Water_Use_Efficiency_Data_Per = 1000 * (Accumulated_Biomass_Production_Per.Data/(10 * Accumulated_DOY_Data_Per * Accumulated_T_Data_Per/Accumulated_ET0_Data_Per))
 
     # Write in DataCube
@@ -391,12 +391,12 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     AquaCrop_Water_Use_Efficiency_Per.GeoTransform = ET.GeoTransform
     AquaCrop_Water_Use_Efficiency_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     AquaCrop_Water_Use_Efficiency_Per.Size = AquaCrop_Water_Use_Efficiency_Data_Per.shape
-    AquaCrop_Water_Use_Efficiency_Per.Variable = "AquaCrop Water Use Efficiency Season Perenial"
+    AquaCrop_Water_Use_Efficiency_Per.Variable = "AquaCrop Water Use Efficiency Season Perennial"
     AquaCrop_Water_Use_Efficiency_Per.Unit = "kg-m-2"
     
     del AquaCrop_Water_Use_Efficiency_Data_Per
     
-    AquaCrop_Water_Use_Efficiency_Per.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "Perenial"))    
+    AquaCrop_Water_Use_Efficiency_Per.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "Perennial"))    
 
     ######################### Calculate Gross Biomass Water Productivity - Decade #########################
     GBWP_Decade_Data = Actual_Biomass_Production.Data/(10 * ET.Data)
@@ -483,7 +483,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     GBWP_Season_S3.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "S3"))         
 
-    # Season Perenial
+    # Season Perennial
     GBWP_Accumulated_Data_Per = (Accumulated_Biomass_Production_Per.Data)/(10 * Accumulated_ET_Data_Per)
     
     # Write in DataCube
@@ -493,12 +493,97 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     GBWP_Season_Per.GeoTransform = ET.GeoTransform
     GBWP_Season_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     GBWP_Season_Per.Size = GBWP_Accumulated_Data_Per.shape
-    GBWP_Season_Per.Variable = "Gross Biomass Water Productivity Season Perenial"
+    GBWP_Season_Per.Variable = "Gross Biomass Water Productivity Season Perennial"
     GBWP_Season_Per.Unit = "kg-m-3"
     
     del GBWP_Accumulated_Data_Per
     
-    GBWP_Season_Per.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "Perenial"))         
+    GBWP_Season_Per.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Season", "Perennial"))         
+
+    ######################### Calculate amount of days season - Accumulated #########################
+    DOY_Accumulated_Data = Accumulated_DOY_Data_S1 + Accumulated_DOY_Data_S2 + Accumulated_DOY_Data_S3 + Accumulated_DOY_Data_Per
+    
+    # Write in DataCube
+    DOY_Accumulated = DataCube.Rasterdata_Empty()
+    DOY_Accumulated.Data = DOY_Accumulated_Data * MASK
+    DOY_Accumulated.Projection = ET.Projection
+    DOY_Accumulated.GeoTransform = ET.GeoTransform
+    DOY_Accumulated.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    DOY_Accumulated.Size = DOY_Accumulated_Data.shape
+    DOY_Accumulated.Variable = "Amount Of Days Season"
+    DOY_Accumulated.Unit = "days"
+    
+    del DOY_Accumulated_Data
+    
+    DOY_Accumulated.Save_As_Tiff(os.path.join(output_folder_L3, "Days_Season", "All"))           
+
+    # Season 1
+    DOY_Accumulated_Data_S1 = Accumulated_DOY_Data_S1
+    
+    # Write in DataCube
+    DOY_Accumulated_S1 = DataCube.Rasterdata_Empty()
+    DOY_Accumulated_S1.Data = DOY_Accumulated_Data_S1 * MASK
+    DOY_Accumulated_S1.Projection = ET.Projection
+    DOY_Accumulated_S1.GeoTransform = ET.GeoTransform
+    DOY_Accumulated_S1.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    DOY_Accumulated_S1.Size = DOY_Accumulated_Data_S1.shape
+    DOY_Accumulated_S1.Variable = "Amount Of Days Season 1"
+    DOY_Accumulated_S1.Unit = "days"
+    
+    del DOY_Accumulated_Data_S1
+    
+    DOY_Accumulated_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Days_Season", "S1"))           
+
+    # Season 2
+    DOY_Accumulated_Data_S2 = Accumulated_DOY_Data_S2
+    
+    # Write in DataCube
+    DOY_Accumulated_S2 = DataCube.Rasterdata_Empty()
+    DOY_Accumulated_S2.Data = DOY_Accumulated_Data_S2 * MASK
+    DOY_Accumulated_S2.Projection = ET.Projection
+    DOY_Accumulated_S2.GeoTransform = ET.GeoTransform
+    DOY_Accumulated_S2.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    DOY_Accumulated_S2.Size = DOY_Accumulated_Data_S2.shape
+    DOY_Accumulated_S2.Variable = "Amount Of Days Season 2"
+    DOY_Accumulated_S2.Unit = "days"
+    
+    del DOY_Accumulated_Data_S2
+    
+    DOY_Accumulated_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Days_Season", "S2"))           
+   
+    # Season 3
+    DOY_Accumulated_Data_S3 = Accumulated_DOY_Data_S3
+    
+    # Write in DataCube
+    DOY_Accumulated_S3 = DataCube.Rasterdata_Empty()
+    DOY_Accumulated_S3.Data = DOY_Accumulated_Data_S3 * MASK
+    DOY_Accumulated_S3.Projection = ET.Projection
+    DOY_Accumulated_S3.GeoTransform = ET.GeoTransform
+    DOY_Accumulated_S3.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    DOY_Accumulated_S3.Size = DOY_Accumulated_Data_S3.shape
+    DOY_Accumulated_S3.Variable = "Amount Of Days Season 3"
+    DOY_Accumulated_S3.Unit = "days"
+    
+    del DOY_Accumulated_Data_S3
+    
+    DOY_Accumulated_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Days_Season", "S3"))           
+
+    # Season Perennial
+    DOY_Accumulated_Data_Per = Accumulated_DOY_Data_Per
+    
+    # Write in DataCube
+    DOY_Accumulated_Per = DataCube.Rasterdata_Empty()
+    DOY_Accumulated_Per.Data = DOY_Accumulated_Data_Per * MASK
+    DOY_Accumulated_Per.Projection = ET.Projection
+    DOY_Accumulated_Per.GeoTransform = ET.GeoTransform
+    DOY_Accumulated_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
+    DOY_Accumulated_Per.Size = DOY_Accumulated_Data_Per.shape
+    DOY_Accumulated_Per.Variable = "Amount Of Days Season Perennial"
+    DOY_Accumulated_Per.Unit = "days"
+    
+    del DOY_Accumulated_Data_Per
+    
+    DOY_Accumulated_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Days_Season", "Perennial"))         
 
     ################################# Calculate Mean Yield Fresh Grass over every AEZ per year #################################
     L3_AEZ_ET = dict()
@@ -688,7 +773,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Water_Productivity_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "S3"))    
 
-    # Season Perenial
+    # Season Perennial
     Water_Productivity_Data_Per = (Yield_Per.Data)/(10 * Accumulated_ET_Data_Per)       
     
     # Write in DataCube
@@ -698,12 +783,12 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Water_Productivity_Per.GeoTransform = ET.GeoTransform
     Water_Productivity_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Water_Productivity_Per.Size = Water_Productivity_Data_Per.shape
-    Water_Productivity_Per.Variable = "Water Productivity Season Perenial"
+    Water_Productivity_Per.Variable = "Water Productivity Season Perennial"
     Water_Productivity_Per.Unit = "kg-m-3"
     
     del Water_Productivity_Data_Per
     
-    Water_Productivity_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "Perenial"))    
+    Water_Productivity_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Productivity", "Perennial"))    
 
     ########################## Save Accumulated ET  ##########################
 
@@ -755,17 +840,17 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_ET_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_ET_Per = DataCube.Rasterdata_Empty()
     Accumulated_ET_Per.Data = Accumulated_ET_Data_Per * MASK
     Accumulated_ET_Per.Projection = ET.Projection
     Accumulated_ET_Per.GeoTransform = ET.GeoTransform
     Accumulated_ET_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Accumulated_ET_Per.Size = Accumulated_ET_Data_Per.shape
-    Accumulated_ET_Per.Variable = "Accumulated ET Season Perenial"
+    Accumulated_ET_Per.Variable = "Accumulated ET Season Perennial"
     Accumulated_ET_Per.Unit = "mm"
     
-    Accumulated_ET_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "Perenial")) 
+    Accumulated_ET_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET", "Perennial")) 
 
     ########################## Save Accumulated T  ##########################
 
@@ -817,17 +902,17 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_T_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_T_Per = DataCube.Rasterdata_Empty()
     Accumulated_T_Per.Data = Accumulated_T_Data_Per * MASK
     Accumulated_T_Per.Projection = ET.Projection
     Accumulated_T_Per.GeoTransform = ET.GeoTransform
     Accumulated_T_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Accumulated_T_Per.Size = Accumulated_T_Data_Per.shape
-    Accumulated_T_Per.Variable = "Accumulated T Season Perenial"
+    Accumulated_T_Per.Variable = "Accumulated T Season Perennial"
     Accumulated_T_Per.Unit = "mm"
     
-    Accumulated_T_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "Perenial")) 
+    Accumulated_T_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T", "Perennial")) 
 
     ########################## Save Accumulated ET0  ##########################
 
@@ -879,17 +964,17 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_ET0_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_ET0_Per = DataCube.Rasterdata_Empty()
     Accumulated_ET0_Per.Data = Accumulated_ET0_Data_Per * MASK
     Accumulated_ET0_Per.Projection = ET.Projection
     Accumulated_ET0_Per.GeoTransform = ET.GeoTransform
     Accumulated_ET0_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Accumulated_ET0_Per.Size = Accumulated_ET0_Data_Per.shape
-    Accumulated_ET0_Per.Variable = "Accumulated ET0 Season Perenial"
+    Accumulated_ET0_Per.Variable = "Accumulated ET0 Season Perennial"
     Accumulated_ET0_Per.Unit = "mm"
     
-    Accumulated_ET0_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "Perenial")) 
+    Accumulated_ET0_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0", "Perennial")) 
 
     ########################## Save Accumulated P  ##########################
 
@@ -941,17 +1026,17 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_P_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_P_Per = DataCube.Rasterdata_Empty()
     Accumulated_P_Per.Data = Accumulated_P_Data_Per * MASK
     Accumulated_P_Per.Projection = ET.Projection
     Accumulated_P_Per.GeoTransform = ET.GeoTransform
     Accumulated_P_Per.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Accumulated_P_Per.Size = Accumulated_P_Data_Per.shape
-    Accumulated_P_Per.Variable = "Accumulated P Season Perenial"
+    Accumulated_P_Per.Variable = "Accumulated P Season Perennial"
     Accumulated_P_Per.Unit = "mm"
     
-    Accumulated_P_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "Perenial")) 
+    Accumulated_P_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P", "Perennial")) 
 
     ######################### Add trends ##########################################################
     
@@ -1073,17 +1158,17 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_ET_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_ET_Trend_Per = DataCube.Rasterdata_Empty()
     Accumulated_ET_Trend_Per.Data = ET_Change_In_Time_Data_Per * MASK
     Accumulated_ET_Trend_Per.Projection = ET.Projection
     Accumulated_ET_Trend_Per.GeoTransform = ET.GeoTransform
     Accumulated_ET_Trend_Per.Ordinal_time = None
     Accumulated_ET_Trend_Per.Size = ET_Change_In_Time_Data_Per.shape
-    Accumulated_ET_Trend_Per.Variable = "Accumulated ET Trend Season Perenial"
+    Accumulated_ET_Trend_Per.Variable = "Accumulated ET Trend Season Perennial"
     Accumulated_ET_Trend_Per.Unit = "Percentage-year-1"
     
-    Accumulated_ET_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "Perenial")) 
+    Accumulated_ET_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET_Trend", "Perennial")) 
 
     ########################## Save Accumulated T trend ##########################
 
@@ -1135,17 +1220,17 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_T_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_T_Trend_Per = DataCube.Rasterdata_Empty()
     Accumulated_T_Trend_Per.Data = T_Change_In_Time_Data_Per * MASK
     Accumulated_T_Trend_Per.Projection = ET.Projection
     Accumulated_T_Trend_Per.GeoTransform = ET.GeoTransform
     Accumulated_T_Trend_Per.Ordinal_time = None
     Accumulated_T_Trend_Per.Size = T_Change_In_Time_Data_Per.shape
-    Accumulated_T_Trend_Per.Variable = "Accumulated T Trend Season Perenial"
+    Accumulated_T_Trend_Per.Variable = "Accumulated T Trend Season Perennial"
     Accumulated_T_Trend_Per.Unit = "Percentage-year-1"
     
-    Accumulated_T_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "Perenial")) 
+    Accumulated_T_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_T_Trend", "Perennial")) 
 
     ########################## Save Accumulated ET0 trend ##########################
 
@@ -1197,17 +1282,17 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_ET0_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_ET0_Trend_Per = DataCube.Rasterdata_Empty()
     Accumulated_ET0_Trend_Per.Data = ET0_Change_In_Time_Data_Per * MASK
     Accumulated_ET0_Trend_Per.Projection = ET.Projection
     Accumulated_ET0_Trend_Per.GeoTransform = ET.GeoTransform
     Accumulated_ET0_Trend_Per.Ordinal_time = None
     Accumulated_ET0_Trend_Per.Size = ET0_Change_In_Time_Data_Per.shape
-    Accumulated_ET0_Trend_Per.Variable = "Accumulated ET0 Trend Season Perenial"
+    Accumulated_ET0_Trend_Per.Variable = "Accumulated ET0 Trend Season Perennial"
     Accumulated_ET0_Trend_Per.Unit = "Percentage-year-1"
     
-    Accumulated_ET0_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "Perenial")) 
+    Accumulated_ET0_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_ET0_Trend", "Perennial")) 
 
     ########################## Save Accumulated P trend ##########################
 
@@ -1259,16 +1344,16 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     Accumulated_P_Trend_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "S3"))    
 
-    # Write in DataCube Season Perenial
+    # Write in DataCube Season Perennial
     Accumulated_P_Trend_Per = DataCube.Rasterdata_Empty()
     Accumulated_P_Trend_Per.Data = P_Change_In_Time_Data_Per * MASK
     Accumulated_P_Trend_Per.Projection = ET.Projection
     Accumulated_P_Trend_Per.GeoTransform = ET.GeoTransform
     Accumulated_P_Trend_Per.Ordinal_time = None
     Accumulated_P_Trend_Per.Size = P_Change_In_Time_Data_Per.shape
-    Accumulated_P_Trend_Per.Variable = "Accumulated P Trend Season Perenial"
+    Accumulated_P_Trend_Per.Variable = "Accumulated P Trend Season Perennial"
     Accumulated_P_Trend_Per.Unit = "Percentage-year-1"
     
-    Accumulated_P_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "Perenial")) 
+    Accumulated_P_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "Perennial")) 
 
     return()

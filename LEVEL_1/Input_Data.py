@@ -42,15 +42,15 @@ class Input_Paths:
 	# LEVEL 2
     Available_Before_Depletion = r"LEVEL_2\Available_Before_Depletion"
     Critical_Soil_Moisture = r"LEVEL_2\Critical_Soil_Moisture"
-    Crop_Coef_Dry_Soil = r"LEVEL_2\Kc_MAX"
-    Crop_Coef_Update = r"LEVEL_2\Kc_MAX_update"
+    Kc_MAX = r"LEVEL_2\Kc_MAX"
+    Kc_MAX_Update = r"LEVEL_2\Kc_MAX_update"
     Crop_Water_Requirement = r"LEVEL_2\Crop_Water_Requirement"
-    Cumulative_ET = r"LEVEL_2\Cumulative\Evapotranspiration"
-    Cumulative_NPP = r"LEVEL_2\Cumulative\NPP"
-    Cumulative_P = r"LEVEL_2\Cumulative\Precipitation"
-    Cumulative_Temp = r"LEVEL_2\Cumulative\Temperature"
-    Cumulative_T = r"LEVEL_2\Cumulative\Transpiration"
-    Cumulative_ET0 = r"LEVEL_2\Cumulative\ET0"    
+    Cumulative_ET = r"LEVEL_2\Temp\Cumulative\Evapotranspiration"
+    Cumulative_NPP = r"LEVEL_2\Temp\Cumulative\NPP"
+    Cumulative_P = r"LEVEL_2\Temp\Cumulative\Precipitation"
+    Cumulative_Temp = r"LEVEL_2\Temp\Cumulative\Temperature"
+    Cumulative_T = r"LEVEL_2\Temp\Cumulative\Transpiration"
+    Cumulative_ET0 = r"LEVEL_2\Temp\Cumulative\ET0"    
     Deep_Percolation = r"LEVEL_2\Deep_Percolation"
     EF = r"LEVEL_2\Evaporative_Fraction"
     EF_long_term = r"LEVEL_2\Evaporative_Fraction_Long_Term"
@@ -60,22 +60,21 @@ class Input_Paths:
     LU_END = r"LEVEL_2\LU_END"
     Net_Radiation = r"LEVEL_2\Net_Radiation"
     Net_Radiation_Long_Term = r"LEVEL_2\Net_Radiation_Long_Term"
-    Net_Supply_Drainage = r"LEVEL_2\Net_Supply_Drainage"
-    CropClass = r"LEVEL_2\Phenelogy\CropClass"
-    CropType = r"LEVEL_2\Phenelogy\CropClass"
-    Season_Start_S1 = r"LEVEL_2\Phenelogy\Start\S1"
-    Season_Start_S2 = r"LEVEL_2\Phenelogy\Start\S2"
-    Season_Start_S3 = r"LEVEL_2\Phenelogy\Start\S3"    
-    Season_End_S1 = r"LEVEL_2\Phenelogy\End\S1"
-    Season_End_S2 = r"LEVEL_2\Phenelogy\End\S2"	
-    Season_End_S3 = r"LEVEL_2\Phenelogy\End\S3"	
-    Perenial_Start = r"LEVEL_2\Phenelogy\Perenial"
-    Perenial_End = r"LEVEL_2\Phenelogy\Perenial"   
+    Net_Supply_Drainage = r"LEVEL_2\Temp\Net_Supply_Drainage"
+    CropSeason = r"LEVEL_2\Phenology\CropSeason"
+    Season_Start_S1 = r"LEVEL_2\Phenology\Start\S1"
+    Season_Start_S2 = r"LEVEL_2\Phenology\Start\S2"
+    Season_Start_S3 = r"LEVEL_2\Phenology\Start\S3"    
+    Season_End_S1 = r"LEVEL_2\Phenology\End\S1"
+    Season_End_S2 = r"LEVEL_2\Phenology\End\S2"	
+    Season_End_S3 = r"LEVEL_2\Phenology\End\S3"	
+    Perennial_Start = r"LEVEL_2\Phenology\Perennial"
+    Perennial_End = r"LEVEL_2\Phenology\Perennial"   
     Root_Depth = r"LEVEL_2\Root_Depth"
     Soil_Moisture = r"LEVEL_2\Soil_Moisture"
     Soil_Moisture_Change = r"LEVEL_2\Soil_Moisture_Change"
-    Soil_Moisture_Start = r"LEVEL_2\Soil_Moisture_Start"
-    Soil_Moisture_End = r"LEVEL_2\Soil_Moisture_End"
+    Soil_Moisture_Start = r"LEVEL_2\Temp\Soil_Moisture_Start"
+    Soil_Moisture_End = r"LEVEL_2\Temp\Soil_Moisture_End"
     Soil_Moisture_Long_Term = r"LEVEL_2\Soil_Moisture_Long_Term"
     Soil_Water_Holding_Capacity = r"LEVEL_2\Soil_Water_Holding_Capacity"
     Storage_Coefficient_Surface_Runoff = r"LEVEL_2\Storage_Coeff_Surface_Runoff"
@@ -93,13 +92,13 @@ class Input_Paths:
     Accumulated_Biomass_Production_S1 = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\S1"
     Accumulated_Biomass_Production_S2 = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\S2"
     Accumulated_Biomass_Production_S3 = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\S3"
-    Accumulated_Biomass_Production_Per = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\Perenial"    
-    Target_Biomass_Production = r"LEVEL_3\Food_Security\Target_Biomass_Production"
+    Accumulated_Biomass_Production_Per = r"LEVEL_3\Food_Security\Accumulated_Biomass_Production_Season\Perennial"    
+    Target_Biomass_Production = r"LEVEL_3\Food_Security\Temp\Target_Biomass_Production"
     Yield = r"LEVEL_3\Food_Security\Yield\All"
     Yield_S1 = r"LEVEL_3\Food_Security\Yield\S1"
     Yield_S2 = r"LEVEL_3\Food_Security\Yield\S2"
     Yield_S3 = r"LEVEL_3\Food_Security\Yield\S3"
-    Yield_Per = r"LEVEL_3\Food_Security\Yield\Perenial"
+    Yield_Per = r"LEVEL_3\Food_Security\Yield\Perennial"
     
 class Input_Formats:
   
@@ -138,8 +137,8 @@ class Input_Formats:
 	# LEVEL 2
     Available_Before_Depletion = "Available_Before_Depletion_mm_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Critical_Soil_Moisture = "Critical_Soil_Moisture_cm3-cm-3_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    Crop_Coef_Dry_Soil = "Kc_MAX_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    Crop_Coef_Update = "Kc_MAX_update_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    Kc_MAX = "Kc_MAX_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    Kc_MAX_Update = "Kc_MAX_update_-_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Crop_Water_Requirement = "Crop_Water_Requirement_mm-dekad-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Cumulative_ET = "ET_cum_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Cumulative_NPP = "NPP_cum_{yyyy}.{mm:02d}.{dd:02d}.tif"
@@ -157,16 +156,15 @@ class Input_Formats:
     Net_Radiation = "Net_Radiation_W-m-2_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Net_Radiation_Long_Term = "Long_Term_Net_Radiation_W-m-2_{mm:02d}.{dd:02d}.tif"
     Net_Supply_Drainage = "Net_Supply_Drainage_mm-dekad-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    CropClass = "LU_CropSeason_{yyyy}.tif"
-    CropType = r"LU_CropType_{yyyy}.tif"	
-    Season_Start_S1 = "Phenology_Start_S1_{yyyy}.tif"
-    Season_Start_S2 = "Phenology_Start_S2_{yyyy}.tif"
-    Season_Start_S3 = "Phenology_Start_S3_{yyyy}.tif"    
-    Season_End_S1 = "Phenology_End_S1_{yyyy}.tif"
-    Season_End_S2 = "Phenology_End_S2_{yyyy}.tif"
-    Season_End_S3 = "Phenology_End_S3_{yyyy}.tif"    
-    Perenial_Start = "Phenology_Per_Start_{yyyy}.tif"
-    Perenial_End = "Phenology_Per_End_{yyyy}.tif"
+    CropSeason = "LU_CropSeason_{yyyy}.tif"
+    Season_Start_S1 = "S1_Start_{yyyy}.tif"
+    Season_Start_S2 = "S2_Start_{yyyy}.tif"
+    Season_Start_S3 = "S3_Start_{yyyy}.tif"    
+    Season_End_S1 = "S1_End_{yyyy}.tif"
+    Season_End_S2 = "S2_End_{yyyy}.tif"
+    Season_End_S3 = "S3_End_{yyyy}.tif"    
+    Perennial_Start = "Perennial_Start_{yyyy}.tif"
+    Perennial_End = "Perennial_End_{yyyy}.tif"
     Root_Depth = "Root_Depth_cm_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Soil_Moisture = "Soil_Moisture_cm3-cm-3_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Soil_Moisture_Change = "Change_Soil_Moisture_mm-dekad-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
@@ -189,14 +187,14 @@ class Input_Formats:
     Accumulated_Biomass_Production_S1 = "Accumulated_Biomass_Production_Season_1_kg-ha-1-season-1_{yyyy}.01.01.tif"
     Accumulated_Biomass_Production_S2 = "Accumulated_Biomass_Production_Season_2_kg-ha-1-season-1_{yyyy}.01.01.tif"
     Accumulated_Biomass_Production_S3 = "Accumulated_Biomass_Production_Season_3_kg-ha-1-season-1_{yyyy}.01.01.tif"
-    Accumulated_Biomass_Production_Per = "Accumulated_Biomass_Production_Season_Perenial_kg-ha-1-season-1_{yyyy}.01.01.tif"  
+    Accumulated_Biomass_Production_Per = "Accumulated_Biomass_Production_Season_Perennial_kg-ha-1-season-1_{yyyy}.01.01.tif"  
 
     Target_Biomass_Production = "Target_Biomass_Production_kg-ha-1-d-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Yield = "Yield_Season_kg-ha-1-season-1_{yyyy}.01.01.tif"
     Yield_S1 = "Yield_Season_1_kg-ha-1-season-1_{yyyy}.01.01.tif"
     Yield_S2 = "Yield_Season_2_kg-ha-1-season-1_{yyyy}.01.01.tif"
     Yield_S3 = "Yield_Season_3_kg-ha-1-season-1_{yyyy}.01.01.tif"
-    Yield_Per = "Yield_Season_Perenial_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_Per = "Yield_Season_Perennial_kg-ha-1-season-1_{yyyy}.01.01.tif"
 		
 class Input_Conversions:    
 
@@ -235,8 +233,8 @@ class Input_Conversions:
  	# LEVEL 2
     Available_Before_Depletion = 1
     Critical_Soil_Moisture = 1
-    Crop_Coef_Dry_Soil = 1
-    Crop_Coef_Update = 1
+    Kc_MAX = 1
+    Kc_MAX_Update = 1
     Crop_Water_Requirement = 1
     Cumulative_ET = 1
     Cumulative_NPP = 1
@@ -254,16 +252,15 @@ class Input_Conversions:
     Net_Radiation = 1
     Net_Radiation_Long_Term = 1
     Net_Supply_Drainage = 1
-    CropClass = 1
-    CropType = 1	
+    CropSeason = 1
     Season_Start_S1 = 1
     Season_Start_S2 = 1
     Season_Start_S3 = 1    
     Season_End_S1 = 1
     Season_End_S2 = 1
     Season_End_S3 = 1    
-    Perenial_Start = 1
-    Perenial_End = 1
+    Perennial_Start = 1
+    Perennial_End = 1
     Root_Depth = 1
     Soil_Moisture = 1
     Soil_Moisture_Change = 1

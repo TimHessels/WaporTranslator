@@ -79,7 +79,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_Rainfall_Deficit.GeoTransform = ET.GeoTransform
     Accumulated_Rainfall_Deficit.Ordinal_time = ET.Ordinal_time
     Accumulated_Rainfall_Deficit.Size = Accumulated_Rainfall_Deficit_Data.shape
-    Accumulated_Rainfall_Deficit.Variable = "Evapotranspiration Deficit"
+    Accumulated_Rainfall_Deficit.Variable = "Accumulated Rainfall Deficit"
     Accumulated_Rainfall_Deficit.Unit = "mm"       
 
     del Accumulated_Rainfall_Deficit_Data

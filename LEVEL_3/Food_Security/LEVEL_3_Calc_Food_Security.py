@@ -49,8 +49,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
         os.makedirs(output_folder_L3)
     
     ################################# Dynamic maps #################################
-    CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropType), Formats.CropType, list(Dates_Years), Conversion = Conversions.CropType, Variable = 'CropType', Product = '', Unit = '-')
-    CropClass = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropClass), Formats.CropClass, list(Dates_Years), Conversion = Conversions.CropClass, Variable = 'CropClass', Product = '', Unit = '-')
+    CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, list(Dates_Years), Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
+    CropSeason = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropSeason), Formats.CropSeason, list(Dates_Years), Conversion = Conversions.CropSeason, Variable = 'CropSeason', Product = '', Unit = '-')
     ET0 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET0), Formats.ET0, Dates, Conversion = Conversions.ET0, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET0', Product = 'WAPOR', Unit = 'mm/day')
     ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
     P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.P), Formats.P, Dates, Conversion = Conversions.P, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'P', Product = 'WAPOR', Unit = 'mm/day')
@@ -64,8 +64,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Crop_S1_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S1), Formats.Season_End_S1, list(Dates_Years), Conversion = Conversions.Season_End_S1, Variable = 'Season 1 End', Product = '', Unit = 'DOY')
     Crop_S2_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S2), Formats.Season_End_S2, list(Dates_Years), Conversion = Conversions.Season_End_S2, Variable = 'Season 2 End', Product = '', Unit = 'DOY')
     Crop_S3_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_End_S3), Formats.Season_End_S3, list(Dates_Years), Conversion = Conversions.Season_End_S3, Variable = 'Season 3 End', Product = '', Unit = 'DOY')
-    Per_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_Start), Formats.Perenial_Start, list(Dates_Years), Conversion = Conversions.Perenial_Start, Variable = 'Perenial Start', Product = '', Unit = 'DOY')
-    Per_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perenial_End), Formats.Perenial_End, list(Dates_Years), Conversion = Conversions.Perenial_End, Variable = 'Perenial End', Product = '', Unit = 'DOY')
+    Per_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perennial_Start), Formats.Perennial_Start, list(Dates_Years), Conversion = Conversions.Perennial_Start, Variable = 'Perennial Start', Product = '', Unit = 'DOY')
+    Per_End = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Perennial_End), Formats.Perennial_End, list(Dates_Years), Conversion = Conversions.Perennial_End, Variable = 'Perennial End', Product = '', Unit = 'DOY')
     
     ################################# Static maps #################################
     Clay =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Clay), Formats.Clay.format(level=6), Dates = None, Conversion = Conversions.Clay, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Clay', Product = 'SoilGrids', Unit = 'Percentage')
@@ -79,7 +79,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Irrigation"))
 
     ################################# Calculate Irrigation yes/no #################################
-    Grassland_Data = np.where(CropType.Data==5, 1, np.nan)
+    Grassland_Data = np.where(CropType.Data==3, 1, np.nan)
     Grassland = DataCube.Rasterdata_Empty()
     Grassland.Data = Grassland_Data * MASK
     Grassland.Projection = Irrigation.Projection
@@ -96,13 +96,12 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     ################################# Calculate yearly irrigation maps #################################
     
-    Threshold = 3  # if this threshold or more decades were irrigation, the irrigation type is irrigation
     Irrigation_year_Data = np.ones([len(Dates_Years), Irrigation.Size[1], Irrigation.Size[2]]) * np.nan
     
     for Date_Year in Dates_Years:
         Start = (Date_Year.year - Dates_Years[0].year) * 36
         End = Start + 36
-        Irrigation_year_Data[Dates_Years == Date_Year, :, :] = np.where(np.nansum(Irrigation.Data[Start:End, :, :], axis = 0)>=Threshold, 1, 0)
+        Irrigation_year_Data[Dates_Years == Date_Year, :, :] = np.nansum(Irrigation.Data[Start:End, :, :], axis = 0)
     
     Irrigation_Yearly = DataCube.Rasterdata_Empty()
     Irrigation_Yearly.Data = Irrigation_year_Data * MASK
@@ -122,7 +121,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Slope = Calc_Slope(DEM, MASK)
     
     ################################# Calculate Crop Season and LU #################################
-    Season_Type = Calc_Crops(CropType, CropClass, MASK)
+    Season_Type = Calc_Crops(CropType, CropSeason, MASK)
     
     ################################# Created AEZ numbers #################################
     AEZ = Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Type, MASK)
@@ -171,7 +170,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Target_Biomass_Production.Size = NPP_target_Data.shape
     Target_Biomass_Production.Variable = "Target Biomass Production"
     Target_Biomass_Production.Unit = "kg-ha-1-d-1"      
-    Target_Biomass_Production.Save_As_Tiff(os.path.join(output_folder_L3, "Target_Biomass_Production"))
+    Target_Biomass_Production.Save_As_Tiff(os.path.join(output_folder_L3, "Temp", "Target_Biomass_Production"))
     
     del NPP_target_Data
     
@@ -229,6 +228,22 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     del Production_Gap_Temporal_Data
     
+    ##################################### Biomass anomalies ###################################
+        
+    Biomass_Anomalies_Data = Actual_Biomass_Production.Data - np.tile(Mean_Biomass_Production.Data, (Total_years, 1, 1))
+    
+    Biomass_Anomalies = DataCube.Rasterdata_Empty()
+    Biomass_Anomalies.Data = Biomass_Anomalies_Data * MASK
+    Biomass_Anomalies.Projection = NPP.Projection
+    Biomass_Anomalies.GeoTransform = NPP.GeoTransform
+    Biomass_Anomalies.Ordinal_time = NPP.Ordinal_time
+    Biomass_Anomalies.Size = Biomass_Anomalies_Data.shape
+    Biomass_Anomalies.Variable = "Biomass Anomalies"
+    Biomass_Anomalies.Unit = "kg-ha-1-d-1"      
+    Biomass_Anomalies.Save_As_Tiff(os.path.join(output_folder_L3, "Biomass_Anomalies"))
+    
+    del Biomass_Anomalies_Data
+    
    ################################# Soil Moisture stress #################################
     Soil_Moisture_Stress_Data = np.maximum(0.0,(Critical_Soil_Moisture.Data-Soil_Moisture.Data)/(Critical_Soil_Moisture.Data-Theta_WP_Subsoil.Data[None, :, :]))
 
@@ -274,13 +289,13 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Water_Unlimited_Biomass_Production.Size = Water_Unlimited_Biomass_Production_Data.shape
     Water_Unlimited_Biomass_Production.Variable = "Water Unlimited Biomass Production"
     Water_Unlimited_Biomass_Production.Unit = "kg-ha-1-d-1"      
-    Water_Unlimited_Biomass_Production.Save_As_Tiff(os.path.join(output_folder_L3, "Water_Unlimited_Biomass_Production"))
+    Water_Unlimited_Biomass_Production.Save_As_Tiff(os.path.join(output_folder_L3, "Temp", "Water_Unlimited_Biomass_Production"))
     
     del Water_Unlimited_Biomass_Production_Data
     
     ################################# Accumulated NPP season #################################
     
-    # For perenial crop clip the season at start and end year
+    # For perennial crop clip the season at start and end year
     Accumulated_NPP_Data_Start = np.ones(Per_Start.Size) * np.nan
     Accumulated_NPP_Data_End = np.ones(Per_Start.Size) * np.nan
     '''
@@ -342,7 +357,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP.Size = Accumulated_NPP_Data.shape
     Accumulated_NPP.Variable = "Accumulated NPP Season"
     Accumulated_NPP.Unit = "kg-ha-1-season-1"      
-    Accumulated_NPP.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "All"))
+    Accumulated_NPP.Save_As_Tiff(os.path.join(output_folder_L3, "Temp", "Accumulated_NPP_Season", "All"))
 
     # Add Season 1
     Accumulated_NPP_Data_Start_S1[Accumulated_NPP_Data_Start_S1==0] = np.nan
@@ -355,7 +370,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP_S1.Size = Accumulated_NPP_Data_Start_S1.shape
     Accumulated_NPP_S1.Variable = "Accumulated NPP Season 1"
     Accumulated_NPP_S1.Unit = "kg-ha-1-season-1"      
-    Accumulated_NPP_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "S1"))
+    Accumulated_NPP_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Temp", "Accumulated_NPP_Season", "S1"))
 
     # Add Season 2
     Accumulated_NPP_Data_Start_S2[Accumulated_NPP_Data_Start_S2==0] = np.nan
@@ -368,7 +383,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP_S2.Size = Accumulated_NPP_Data_Start_S2.shape
     Accumulated_NPP_S2.Variable = "Accumulated NPP Season 2"
     Accumulated_NPP_S2.Unit = "kg-ha-1-season-1"      
-    Accumulated_NPP_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "S2"))
+    Accumulated_NPP_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Temp", "Accumulated_NPP_Season", "S2"))
 
     # Add Season 3
     Accumulated_NPP_Data_Start_S3[Accumulated_NPP_Data_Start_S3==0] = np.nan
@@ -381,7 +396,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP_S3.Size = Accumulated_NPP_Data_Start_S3.shape
     Accumulated_NPP_S3.Variable = "Accumulated NPP Season 3"
     Accumulated_NPP_S3.Unit = "kg-ha-1-season-1"      
-    Accumulated_NPP_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "S3"))
+    Accumulated_NPP_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Temp", "Accumulated_NPP_Season", "S3"))
 
     # Add Per
     Accumulated_NPP_Data_Per[Accumulated_NPP_Data_Per==0] = np.nan
@@ -392,9 +407,9 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_NPP_Per.GeoTransform = Per_Start.GeoTransform
     Accumulated_NPP_Per.Ordinal_time = Per_Start.Ordinal_time
     Accumulated_NPP_Per.Size = Accumulated_NPP_Data_Per.shape
-    Accumulated_NPP_Per.Variable = "Accumulated NPP Season Perenial"
+    Accumulated_NPP_Per.Variable = "Accumulated NPP Season Perennial"
     Accumulated_NPP_Per.Unit = "kg-ha-1-season-1"      
-    Accumulated_NPP_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_NPP_Season", "Perenial"))
+    Accumulated_NPP_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Temp", "Accumulated_NPP_Season", "Perennial"))
     
     ################################# Accumulated Biomass Production season #################################
     
@@ -449,7 +464,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_Biomass_Production_S3.Unit = "kg-ha-1-season-1"      
     Accumulated_Biomass_Production_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "S3"))   
 
-     # Season Perenial
+     # Season Perennial
     Accumulated_Biomass_Production_Data_Per = Accumulated_NPP_Per.Data/C3_C4
     
     Accumulated_Biomass_Production_Per = DataCube.Rasterdata_Empty()
@@ -458,9 +473,9 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_Biomass_Production_Per.GeoTransform = Per_Start.GeoTransform
     Accumulated_Biomass_Production_Per.Ordinal_time = Per_Start.Ordinal_time
     Accumulated_Biomass_Production_Per.Size = Accumulated_Biomass_Production_Data_Per.shape
-    Accumulated_Biomass_Production_Per.Variable = "Accumulated Biomass Production Season Perenial"
+    Accumulated_Biomass_Production_Per.Variable = "Accumulated Biomass Production Season Perennial"
     Accumulated_Biomass_Production_Per.Unit = "kg-ha-1-season-1"      
-    Accumulated_Biomass_Production_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "Perenial"))   
+    Accumulated_Biomass_Production_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "Perennial"))   
     
     ################################# Calculate Yield season #################################
     Harvest_Index = 0.35
@@ -517,7 +532,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_S3.Unit = "kg-ha-1-season-1"      
     Yield_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "S3"))
 
-    # Season Perenial
+    # Season Perennial
     Yield_Data_Per = Harvest_Index * ((Accumulated_NPP_Per.Data)/C3_C4)/(1 - Moisture_Index)
     
     Yield_Per = DataCube.Rasterdata_Empty()
@@ -526,9 +541,9 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_Per.GeoTransform = Per_Start.GeoTransform
     Yield_Per.Ordinal_time = Per_Start.Ordinal_time
     Yield_Per.Size = Yield_Data_Per.shape
-    Yield_Per.Variable = "Yield Season Perenial"
+    Yield_Per.Variable = "Yield Season Perennial"
     Yield_Per.Unit = "kg-ha-1-season-1"      
-    Yield_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "Perenial"))
+    Yield_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "Perennial"))
     
     ################################# Calculate Fresh Grass Yield season #################################
     

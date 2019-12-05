@@ -65,28 +65,30 @@ class Rasterdata_tiffs:
             size_z = len(Dates)
 
             for Date in Dates:
-                
-                sys.stdout.write("\rLoading Data %s %i/%i (%f %%)" %(Variable, i, len(Dates), i/(len(Dates)) * 100))
-                sys.stdout.flush()
-    
-                # Create input filename
-                filename_in = os.path.join(input_folder, input_format.format(yyyy = Date.year, mm = Date.month, dd = Date.day))
-                
-                dest, Array, proj, geo = Get_Data(filename_in, Example_Data, reprojection_type)
-                
-                if Date == Dates[0]:
-                    size_x = dest.RasterXSize
-                    size_y = dest.RasterYSize
-                    proj = dest.GetProjection()
-                    geo = dest.GetGeoTransform()            
-                    Array_end = np.ones([len(Dates), size_y, size_x]) * np.nan
+                try:
+                    sys.stdout.write("\rLoading Data %s %i/%i (%f %%)" %(Variable, i, len(Dates), i/(len(Dates)) * 100))
+                    sys.stdout.flush()
+        
+                    # Create input filename
+                    filename_in = os.path.join(input_folder, input_format.format(yyyy = Date.year, mm = Date.month, dd = Date.day))
                     
-                if gap_filling != None and ~np.isnan(np.nanmean(Array)):   
-                    Array[np.isnan(Array)] = -9999
-                    Array = RC.gap_filling(Array, -9999, gap_filling)
+                    dest, Array, proj, geo = Get_Data(filename_in, Example_Data, reprojection_type)
                     
-                Array_end[time_or==Date.toordinal(), :, : ] = Array * Conversion * MASK
-                i += 1
+                    if Date == Dates[0]:
+                        size_x = dest.RasterXSize
+                        size_y = dest.RasterYSize
+                        proj = dest.GetProjection()
+                        geo = dest.GetGeoTransform()            
+                        Array_end = np.ones([len(Dates), size_y, size_x]) * np.nan
+                        
+                    if gap_filling != None and ~np.isnan(np.nanmean(Array)):   
+                        Array[np.isnan(Array)] = -9999
+                        Array = RC.gap_filling(Array, -9999, gap_filling)
+                        
+                    Array_end[time_or==Date.toordinal(), :, : ] = Array * Conversion * MASK
+                    i += 1
+                except:
+                    print("Was not able to collect %s %s" %(Variable, Date))
                 
             shape = [size_z, size_y, size_x]
                         
@@ -163,10 +165,14 @@ class Rasterdata_tiffs:
             i = 0
             for Date in Dates_dek:
                 
-                output_filename = os.path.join(output_folder, "%s_%s_%02d.%02d.tif" %(Variable.replace(" ", "_"), Unit, Date.month, Date.day))
-                Data_one = Data[i, :, :]  
-                DC.Save_as_tiff(output_filename, Data_one, geo, proj)  
-                i += 1
+                try:
+                    output_filename = os.path.join(output_folder, "%s_%s_%02d.%02d.tif" %(Variable.replace(" ", "_"), Unit, Date.month, Date.day))
+                    Data_one = Data[i, :, :]  
+                    DC.Save_as_tiff(output_filename, Data_one, geo, proj)  
+                    i += 1
+                    
+                except:
+                    print("Was not able to collect %s %s" %(Variable, Date))
                         
         elif np.any(Dates != None):
             for Date in Dates:

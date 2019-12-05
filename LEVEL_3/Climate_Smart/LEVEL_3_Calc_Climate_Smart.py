@@ -45,8 +45,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     ################################# Dynamic maps #################################
     ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
     NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.NPP), Formats.NPP, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'NPP', Product = 'WAPOR', Unit = 'g/m2/d')
-    CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropType), Formats.CropType, Dates, Conversion = Conversions.CropType, Variable = 'CropType', Product = '', Unit = '-')
-    CropClass = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropClass), Formats.CropClass, Dates, Conversion = Conversions.CropClass, Variable = 'CropClass', Product = '', Unit = '-')
+    CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, Dates, Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
+    CropSeason = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropSeason), Formats.CropSeason, Dates, Conversion = Conversions.CropSeason, Variable = 'CropSeason', Product = '', Unit = '-')
     Fractional_Vegetation_Cover = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Fractional_Vegetation_Cover), Formats.Fractional_Vegetation_Cover, Dates, Conversion = Conversions.Fractional_Vegetation_Cover, Variable = 'Fractional Vegetation Cover', Product = '', Unit = '-')
     Deep_Percolation = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Deep_Percolation), Formats.Deep_Percolation, Dates, Conversion = Conversions.Deep_Percolation, Variable = 'Deep Percolation', Product = '', Unit = 'mm/decade')
     Surface_Runoff_P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Surface_Runoff_P), Formats.Surface_Runoff_P, Dates, Conversion = Conversions.Surface_Runoff_P, Variable = 'Surface Runoff Precipitation', Product = '', Unit = 'mm/decade')
@@ -69,7 +69,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)
     
     ################################# Calculate Crop Season and LU #################################
-    Season_Type = L3_Food.Calc_Crops(CropType, CropClass, MASK)
+    Season_Type = L3_Food.Calc_Crops(CropType, CropSeason, MASK)
     
     ################################# Calculate Carbon Root Zone  #################################
     # Calculate Carbon Root Zone Cropland       

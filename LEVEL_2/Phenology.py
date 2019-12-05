@@ -85,7 +85,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         # Save LU map
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "LU_END", "LU_%s.tif" %Year_int), LU_END, geo, proj)  
         
-        # find posible perenial pixels
+        # find posible Perennial pixels
         Phenology_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(np.logical_or(LU_END==1, LU_END==2), 1, np.nan)[None, :, :]  
         Grassland_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(LU_END==3, 1, np.nan)[None, :, :]  
 
@@ -168,10 +168,10 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         Year_DOY_End = Year_DOY_Start + 36
         count = 1
         
-        # Create Perenial map
+        # Create Perennial map
         for dict_in_per in Seasons_dict_per_start.items():        
  
-            sys.stdout.write("\rCreate Maps Perenial of year %s %i/%i (%f %%)" %(year_nmbr, count, len(Seasons_dict_per_start.items()), count/len(Seasons_dict_per_start.items())*100))
+            sys.stdout.write("\rCreate Maps Perennial of year %s %i/%i (%f %%)" %(year_nmbr, count, len(Seasons_dict_per_start.items()), count/len(Seasons_dict_per_start.items())*100))
             sys.stdout.flush()
         
             Starts_per = dict_in_per[1]
@@ -207,7 +207,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
             sys.stdout.write("\rCreate Maps Other Crops of year %s %i/%i (%f %%)" %(year_nmbr, count, len(Seasons_dict_start.items()), count/len(Seasons_dict_start.items())*100))
             sys.stdout.flush()
             
-            # Check if pixel is not perenial
+            # Check if pixel is not Perennial
             if np.isnan(Per_Map_Start[dict_in[0] == ID_Matrix]):
              
                 Starts = dict_in[1]
@@ -279,7 +279,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         # Do a Growing Degrees Days check
         GDD_CHECK = np.nanmax(Temp_end_sum, axis = 0)
         
-        # Make Perenial crop from single crop
+        # Make Perennial crop from single crop
         Per_Map_Start = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), Start_Map_S1, Per_Map_Start)
         Per_Map_End = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), End_Map_S1, Per_Map_End)       
         Start_Map_S1 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), np.nan, Start_Map_S1)
@@ -289,7 +289,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         Start_Map_S3 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==3), np.nan, Start_Map_S3)
         End_Map_S3 = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==3), np.nan, End_Map_S3)
         
-        # Make Single crop from perenial crop       
+        # Make Single crop from Perennial crop       
         Start_Map_S1 = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), Per_Map_Start, Start_Map_S1)        
         End_Map_S1 = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), Per_Map_End, End_Map_S1)        
         Per_Map_Start = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), np.nan, Per_Map_Start)  
@@ -299,18 +299,17 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         LU_Crop_Map = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), 1, LU_Crop_Map)
 
         # Save files
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S1", "Phenology_Start_S1_%s.tif" %year_nmbr), Start_Map_S1, geo, proj)    
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S2", "Phenology_Start_S2_%s.tif" %year_nmbr), Start_Map_S2, geo, proj)    
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Start", "S3", "Phenology_Start_S3_%s.tif" %year_nmbr), Start_Map_S3, geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "Start", "S1", "S1_Start_%s.tif" %year_nmbr), Start_Map_S1, geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "Start", "S2", "S2_Start_%s.tif" %year_nmbr), Start_Map_S2, geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "Start", "S3", "S3_Start_%s.tif" %year_nmbr), Start_Map_S3, geo, proj)    
 
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S1", "Phenology_End_S1_%s.tif" %year_nmbr), End_Map_S1, geo, proj)    
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S2", "Phenology_End_S2_%s.tif" %year_nmbr), End_Map_S2, geo, proj)       
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "End", "S3", "Phenology_End_S3_%s.tif" %year_nmbr), End_Map_S3, geo, proj)       
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "End", "S1", "S1_End_%s.tif" %year_nmbr), End_Map_S1, geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "End", "S2", "S2_End_%s.tif" %year_nmbr), End_Map_S2, geo, proj)       
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "End", "S3", "S3_End_%s.tif" %year_nmbr), End_Map_S3, geo, proj)       
 
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_Start_%s.tif" %year_nmbr), Per_Map_Start, geo, proj)  
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "Perenial", "Phenology_Per_End_%s.tif" %year_nmbr), Per_Map_End, geo, proj)          
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "CropClass","LU_CropSeason_%s.tif" %year_nmbr), LU_Crop_Map, geo, proj)      
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenelogy", "CropClass","LU_CropType_%s.tif" %year_nmbr), LU_END, geo, proj)
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "Perennial", "Perennial_Start_%s.tif" %year_nmbr), Per_Map_Start, geo, proj)  
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "Perennial", "Perennial_End_%s.tif" %year_nmbr), Per_Map_End, geo, proj)          
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "CropSeason","LU_CropSeason_%s.tif" %year_nmbr), LU_Crop_Map, geo, proj)      
 
     for Year in Years:
         
@@ -362,12 +361,12 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
         Date_cum = Dates_end2[int(i)]
         
         # Save files
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "Transpiration", "T_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), T_end_sum[i,:,:], geo, proj)    
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "Evapotranspiration", "ET_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), ET_end_sum[i,:,:], geo, proj)    
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "Precipitation", "P_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), P_end_sum[i,:,:], geo, proj)    
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "NPP", "NPP_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), NPP_end_sum[i,:,:], geo, proj)       
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "Temperature", "Temp_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), Temp_end_sum[i,:,:], geo, proj)  
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Cumulative", "ET0", "ET0_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), ET0_end_sum[i,:,:], geo, proj)  
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Temp", "Cumulative", "Transpiration", "T_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), T_end_sum[i,:,:], geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Temp", "Cumulative", "Evapotranspiration", "ET_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), ET_end_sum[i,:,:], geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Temp", "Cumulative", "Precipitation", "P_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), P_end_sum[i,:,:], geo, proj)    
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Temp", "Cumulative", "NPP", "NPP_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), NPP_end_sum[i,:,:], geo, proj)       
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Temp", "Cumulative", "Temperature", "Temp_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), Temp_end_sum[i,:,:], geo, proj)  
+        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Temp", "Cumulative", "ET0", "ET0_cum_%d.%02d.%02d.tif" %(Date_cum.year, Date_cum.month, Date_cum.day)), ET0_end_sum[i,:,:], geo, proj)  
        
     return()
     
@@ -489,8 +488,8 @@ def Calc_Season(Ts):
         if len(Start) > 0:
            
             # If period is longer than 1 year it is a perennial crop
-            End_4_perenial = np.where(End==9999, np.argwhere(Values==1)[-1], End)
-            Season_Amount_Decades = End_4_perenial - Start 
+            End_4_Perennial = np.where(End==9999, np.argwhere(Values==1)[-1], End)
+            Season_Amount_Decades = End_4_Perennial - Start 
             
             # If two seasons in a row is lower than .... combine season
             Short_Season = np.where(Season_Amount_Decades<7, 1, 0)

@@ -134,23 +134,23 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     Fract_vegt.Save_As_Tiff(os.path.join(output_folder_L2, "Fractional_Vegetation_Cover"))
     
-    ##################### Calculate Dry Soil Crop Coefficient ####################################
-    Crop_Coef_Dry_Soil_Data = np.minimum(1.4 ,0.95 * Fract_vegt.Data + 0.2)
-    Crop_Coef_Dry_Soil_Data = Crop_Coef_Dry_Soil_Data.clip(0, 500)
+    ########################## Calculate maximum Kc ####################################
+    Kc_MAX_Data = np.minimum(1.4 ,0.95 * Fract_vegt.Data + 0.2)
+    Kc_MAX_Data = Kc_MAX_Data.clip(0, 500)
     
     # Write in DataCube
-    Crop_Coef_Dry_Soil = DataCube.Rasterdata_Empty()
-    Crop_Coef_Dry_Soil.Data = Crop_Coef_Dry_Soil_Data * MASK
-    Crop_Coef_Dry_Soil.Projection = ET.Projection
-    Crop_Coef_Dry_Soil.GeoTransform = ET.GeoTransform
-    Crop_Coef_Dry_Soil.Ordinal_time = ET.Ordinal_time
-    Crop_Coef_Dry_Soil.Size = Crop_Coef_Dry_Soil_Data.shape
-    Crop_Coef_Dry_Soil.Variable = "Kc MAX"
-    Crop_Coef_Dry_Soil.Unit = "-"
+    Kc_MAX = DataCube.Rasterdata_Empty()
+    Kc_MAX.Data = Kc_MAX_Data * MASK
+    Kc_MAX.Projection = ET.Projection
+    Kc_MAX.GeoTransform = ET.GeoTransform
+    Kc_MAX.Ordinal_time = ET.Ordinal_time
+    Kc_MAX.Size = Kc_MAX_Data.shape
+    Kc_MAX.Variable = "Kc MAX"
+    Kc_MAX.Unit = "-"
     
-    del Crop_Coef_Dry_Soil_Data
+    del Kc_MAX_Data
     
-    Crop_Coef_Dry_Soil.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX"))
+    Kc_MAX.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX"))
  
     #################### Convert into daily datasets ############################################
     Albedo_Daily = Functions.Calc_Daily_from_Dekads(Albedo)
@@ -449,8 +449,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     del Soil_Moisture_End_Data, Soil_Moisture_Start_Data
     
-    Soil_Moisture_Start.Save_As_Tiff(os.path.join(output_folder_L2, "Soil_Moisture_Start"))
-    Soil_Moisture_End.Save_As_Tiff(os.path.join(output_folder_L2, "Soil_Moisture_End"))
+    Soil_Moisture_Start.Save_As_Tiff(os.path.join(output_folder_L2, "Temp", "Soil_Moisture_Start"))
+    Soil_Moisture_End.Save_As_Tiff(os.path.join(output_folder_L2, "Temp", "Soil_Moisture_End"))
     
     ################## Calculate Soil Moisture Change ##################################  
     
@@ -486,7 +486,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     del Net_Supply_Drainage_Data
     
-    Net_Supply_Drainage.Save_As_Tiff(os.path.join(output_folder_L2, "Net_Supply_Drainage"))
+    Net_Supply_Drainage.Save_As_Tiff(os.path.join(output_folder_L2, "Temp", "Net_Supply_Drainage"))
     
     #################### Calculate Deep Percolation ###################################    
     
@@ -562,23 +562,23 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     Surface_Runoff_Coefficient.Save_As_Tiff(os.path.join(output_folder_L2, "Surface_Runoff_Coefficient"))
     
-    ######################## Calculate updated crop coefficient ######################
+    ######################## Calculate updated maximum kc ######################
     
-    Crop_Coef_Update_Data = Crop_Water_Requirement.Data/(Days_in_Dekads[:, None, None] * ET0.Data)
+    Kc_MAX_update_Data = Crop_Water_Requirement.Data/(Days_in_Dekads[:, None, None] * ET0.Data)
     
     # Write in DataCube
-    Crop_Coef_Update = DataCube.Rasterdata_Empty()
-    Crop_Coef_Update.Data = Crop_Coef_Update_Data * MASK
-    Crop_Coef_Update.Projection = LAI.Projection
-    Crop_Coef_Update.GeoTransform = LAI.GeoTransform
-    Crop_Coef_Update.Ordinal_time = LAI.Ordinal_time
-    Crop_Coef_Update.Size = Crop_Coef_Update_Data.shape
-    Crop_Coef_Update.Variable = "Kc MAX update"
-    Crop_Coef_Update.Unit = "-"
+    Kc_MAX_update = DataCube.Rasterdata_Empty()
+    Kc_MAX_update.Data = Kc_MAX_update_Data * MASK
+    Kc_MAX_update.Projection = LAI.Projection
+    Kc_MAX_update.GeoTransform = LAI.GeoTransform
+    Kc_MAX_update.Ordinal_time = LAI.Ordinal_time
+    Kc_MAX_update.Size = Kc_MAX_update_Data.shape
+    Kc_MAX_update.Variable = "Kc MAX update"
+    Kc_MAX_update.Unit = "-"
     
-    del Crop_Coef_Update_Data
+    del Kc_MAX_update_Data
     
-    Crop_Coef_Update.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX_update"))
+    Kc_MAX_update.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX_update"))
     
     ################# Calculate 10 year Mean Net Radiation, per Pixel ########################
     
