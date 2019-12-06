@@ -222,7 +222,7 @@ class Input_Conversions:
     Clay = 1                        #%
     Sand = 1                        #%
     Silt = 1                        #%
-    PH10 = 1
+    PH10 = 0.1
     SOCC = 1                               
     SOCS = 1                           
 
