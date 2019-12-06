@@ -14,7 +14,13 @@ import WaporTranslator.LEVEL_1.Input_Data as Inputs
 import WaporTranslator.LEVEL_1.DataCube as DataCube
 import WaporTranslator.LEVEL_2.Functions as Functions
 
-def main(Start_year_analyses, End_year_analyses, output_folder):  
+def main(inputs):  
+
+    # Set Variables
+    Start_year_analyses = inputs["Start_year"]
+    End_year_analyses = inputs["End_year"]
+    output_folder = inputs["Output_folder"]  
+    WAPOR_LVL = inputs["WAPOR_LEVEL"]   
 
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
@@ -42,7 +48,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
         os.makedirs(output_folder_L3)
     
     ################################# Dynamic maps #################################
-    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
     Pcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_P), Formats.Cumulative_P, Dates, Conversion = Conversions.Cumulative_P, Variable = 'Pcum', Product = '', Unit = 'mm')
     ETcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET), Formats.Cumulative_ET, Dates, Conversion = Conversions.Cumulative_ET, Variable = 'ETcum', Product = '', Unit = 'mm')
     Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Soil_Moisture), Formats.Soil_Moisture, Dates, Conversion = Conversions.Soil_Moisture, Variable = 'Soil Moisture', Product = '', Unit = 'cm3/cm3')

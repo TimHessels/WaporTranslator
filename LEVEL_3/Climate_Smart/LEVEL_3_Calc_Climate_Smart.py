@@ -10,7 +10,13 @@ import gdal
 import warnings
 import numpy as np
 
-def main(Start_year_analyses, End_year_analyses, output_folder):
+def main(inputs):  
+
+    # Set Variables
+    Start_year_analyses = inputs["Start_year"]
+    End_year_analyses = inputs["End_year"]
+    output_folder = inputs["Output_folder"]  
+    WAPOR_LVL = inputs["WAPOR_LEVEL"]   
 
     import WaporTranslator.LEVEL_1.Input_Data as Inputs
     import WaporTranslator.LEVEL_1.DataCube as DataCube
@@ -43,8 +49,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
         os.makedirs(output_folder_L3)
     
     ################################# Dynamic maps #################################
-    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
-    NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.NPP), Formats.NPP, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'NPP', Product = 'WAPOR', Unit = 'g/m2/d')
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.NPP) %WAPOR_LVL), str(Formats.NPP) %WAPOR_LVL, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'NPP', Product = 'WAPOR', Unit = 'g/m2/d')
     CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, Dates, Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
     CropSeason = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropSeason), Formats.CropSeason, Dates, Conversion = Conversions.CropSeason, Variable = 'CropSeason', Product = '', Unit = '-')
     Fractional_Vegetation_Cover = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Fractional_Vegetation_Cover), Formats.Fractional_Vegetation_Cover, Dates, Conversion = Conversions.Fractional_Vegetation_Cover, Variable = 'Fractional Vegetation Cover', Product = '', Unit = '-')

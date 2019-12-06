@@ -7,18 +7,13 @@ Created on Wed Sep 18 17:10:42 2019
 
 import os
 import sys
-import gdal
 import datetime
 import numpy as np
 import pandas as pd
-import calendar
-import watertools.General.raster_conversions as RC
 import watertools.General.data_conversions as DC
 
-def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU, example_file, Days_in_Dekads):
+def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads):
 
-    import WaporTranslator.LEVEL_1.Input_Data as Inputs
-    
     # Define start and enddate
     Startdate = "%s-01-01" %Start_year_analyses
     Enddate = "%s-12-31" %End_year_analyses
@@ -29,14 +24,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     
     # Get the years 
     Years = pd.date_range(Startdate, Enddate, freq = "AS")
-
-    # Get path and formats
-    Paths = Inputs.Input_Paths()
-    Formats = Inputs.Input_Formats()
-        
-    # Open ESACCI
-    input_file_LU_ESACCI = os.path.join(output_folder, Paths.LU_ESA, Formats.LU_ESA)
-    
+           
     # Create the output folder for the tiff files
     Output_Folder_L2 = os.path.join(output_folder, "LEVEL_2")
     
@@ -44,51 +32,6 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     if not os.path.exists(Output_Folder_L2):
         os.makedirs(Output_Folder_L2)
     
-    # Converting LU maps into one LU map
-    # open dictionary WAPOR 
-    WAPOR_Conversions_dict = WAPOR_Conversions()
-    # open dictionary ESACCI
-    ESACCI_Conversions_dict = ESACCI_Conversions()
-    
-    Phenology_pixels_year = np.ones(T.Size) * np.nan
-    Grassland_pixels_year = np.ones(T.Size) * np.nan
-    
-    # Loop over the years
-    for Year in Years:
-        
-        Year_start = int(Years[0].year)
-        Year_int = int(Year.year)
-        
-        geo = LU.GeoTransform
-        proj = LU.Projection   
-         
-        destLUESACCI = RC.reproject_dataset_example(input_file_LU_ESACCI, example_file)
-        LU_ESACCI = destLUESACCI.GetRasterBand(1).ReadAsArray()
-        
-        # Create LUmap
-        LU_Map_WAPOR = np.ones([LU.Size[1], LU.Size[2]]) * np.nan
-        LU_Map_ESACCI = np.ones([LU.Size[1], LU.Size[2]]) * np.nan
-        
-        for number in WAPOR_Conversions_dict.items():
-        
-            LU_Map_WAPOR = np.where(LU.Data[int((Year_int - Year_start)),: ,:] == number[0], number[1], LU_Map_WAPOR)
-            
-        for number in ESACCI_Conversions_dict.items():
-        
-            LU_Map_ESACCI = np.where(LU_ESACCI == number[0], number[1], LU_Map_ESACCI)      
-        
-        # Combine LU maps
-        # 1 = rainfed, 2 = irrigated, 3 = Pasture
-        LU_END = np.where(np.logical_and(LU_Map_WAPOR == 1, LU_Map_ESACCI == 1), 1, np.nan)    
-        LU_END = np.where(LU_Map_WAPOR > 1, LU_Map_WAPOR, LU_END)
-          
-        # Save LU map
-        DC.Save_as_tiff(os.path.join(Output_Folder_L2, "LU_END", "LU_%s.tif" %Year_int), LU_END, geo, proj)  
-        
-        # find posible Perennial pixels
-        Phenology_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(np.logical_or(LU_END==1, LU_END==2), 1, np.nan)[None, :, :]  
-        Grassland_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(LU_END==3, 1, np.nan)[None, :, :]  
-
     # calculate cumulative  
     T_cum = np.where(np.isnan(T.Data), 0, T.Data * Days_in_Dekads[:, None, None])
     T_cum = T_cum.cumsum(axis = 0)
@@ -107,6 +50,10 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     Seasons_dict_end = dict()
     Seasons_dict_per_start = dict()
     Seasons_dict_per_end = dict()
+    
+    # Example projection
+    geo = ET.GeoTransform
+    proj = ET.Projection   
     
     pixel = 1
     
@@ -145,23 +92,25 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     ET0_end_sum = np.ones(P_cum.shape) * np.nan
      
     # create IDs for the Array to reconstruct the array from the dict later
-    y,x = np.indices((LU_END.shape[0], LU_END.shape[1]))
-    ID_Matrix = np.int32(np.ravel_multi_index(np.vstack((y.ravel(),x.ravel())),(LU_END.shape[0], LU_END.shape[1]),mode='clip').reshape(x.shape)) + 1
+    y,x = np.indices((LU_END.Size[1], LU_END.Size[2]))
+    ID_Matrix = np.int32(np.ravel_multi_index(np.vstack((y.ravel(),x.ravel())),(LU_END.Size[1], LU_END.Size[2]),mode='clip').reshape(x.shape)) + 1
     
     for Year in Years:
         
         year_nmbr = Year.year  
         
+        LU_END_now = LU_END.Data[year_nmbr - Start_year_analyses, :, :]
+        
         # Create empty output maps
-        Start_Map_S1 = np.ones(LU_END.shape) * np.nan
-        End_Map_S1 = np.ones(LU_END.shape) * np.nan
-        Start_Map_S2 = np.ones(LU_END.shape) * np.nan
-        End_Map_S2 = np.ones(LU_END.shape) * np.nan
-        Start_Map_S3 = np.ones(LU_END.shape) * np.nan
-        End_Map_S3 = np.ones(LU_END.shape) * np.nan
-        Per_Map_Start = np.ones(LU_END.shape) * np.nan
-        Per_Map_End = np.ones(LU_END.shape) * np.nan        
-        LU_Crop_Map = np.ones(LU_END.shape) * np.nan
+        Start_Map_S1 = np.ones(LU_END_now.shape) * np.nan
+        End_Map_S1 = np.ones(LU_END_now.shape) * np.nan
+        Start_Map_S2 = np.ones(LU_END_now.shape) * np.nan
+        End_Map_S2 = np.ones(LU_END_now.shape) * np.nan
+        Start_Map_S3 = np.ones(LU_END_now.shape) * np.nan
+        End_Map_S3 = np.ones(LU_END_now.shape) * np.nan
+        Per_Map_Start = np.ones(LU_END_now.shape) * np.nan
+        Per_Map_End = np.ones(LU_END_now.shape) * np.nan        
+        LU_Crop_Map = np.ones(LU_END_now.shape) * np.nan
     
         # Select begin and end of the year for the array
         Year_DOY_Start = (year_nmbr - Years[0].year) * 36
@@ -374,6 +323,7 @@ def Calc_Season(Ts):
     
     # Create a moving window of the Transpiration
     Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]) + np.append(Ts[-2:], Ts[:-2]) + np.append(Ts[2:], Ts[0:2]))/5
+    #Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]))/3
     
     # Get the minimum and maximum Transpiration over the period
     Minimum_T = np.nanpercentile(Ts_MW,5)
@@ -388,9 +338,9 @@ def Calc_Season(Ts):
     
     # In the end I have set the threshold values on 1.5 and 1.0
     #Maximum_Threshold = np.minimum(Threshold_LVL * (Maximum_T + Minimum_T) / 2 + Minimum_T, Threshold_LVL_min)
-    Maximum_Threshold = 2.8
+    Maximum_Threshold = 3
     #Threshold_stop = np.maximum(0.2 * Maximum_Threshold + Minimum_T, 0.3 * Maximum_Threshold)
-    Threshold_stop = 2.8
+    Threshold_stop = 1.5
     
     # Set the start point
     Start = []
@@ -401,12 +351,18 @@ def Calc_Season(Ts):
     # Find the non nan values
     Values = np.where(np.isnan(Ts_MW), 0, 1)
     
+    # Difference values
+    Ts_MW_Diff = np.append(0, np.where(Ts_MW[1:] - Ts_MW[:-1] < 0, -1, 1))
+    DIFFS = (Ts_MW_Diff + np.append(Ts_MW_Diff[1:], 0) + np.append(0, Ts_MW_Diff[:-1]) + np.append([0,0], Ts_MW_Diff[:-2]) + np.append(Ts_MW_Diff[2:], [0,0]))
+
     # Check over the days
     if (Maximum_Threshold > 1.2 and Maximum_T > Maximum_Threshold):
+        
+        
         for i in range(0, len(Ts_MW)):
             
             # Find start of a period
-            if (Ts_MW[i]>Maximum_Threshold and Season_on == 0) and (np.nanmax(Endmax) < i):
+            if (DIFFS[i]>=Maximum_Threshold and Season_on == 0) and (np.nanmax(Endmax) < i):
                 #print("start ", i)
                 
                 # Set start of period paramters
@@ -425,7 +381,7 @@ def Calc_Season(Ts):
                         pass
                     
             # Find end of a period (only when a start is detected)    
-            if (Ts_MW[i]<Maximum_Threshold and Season_on == 1):          
+            if (DIFFS[i]<=-Maximum_Threshold and Season_on == 1):          
           
                 # Set end of period parameters
                 Season_on = 0
@@ -457,7 +413,7 @@ def Calc_Season(Ts):
             # If a start was not found but there is a end, set start to begin           
             if (Start_Found == 0 and len(Start) == 0 and len(End) > 0):
                 Start = np.append(np.argwhere(Values==1)[0], Start)
- 
+
         # if T values are high but no start point or end point is found. Set start and end over the whole period       
         if np.nanmin(Ts_MW) >= Maximum_Threshold:
             Start = np.array(np.argwhere(Values==1)[0])
@@ -575,39 +531,6 @@ def Calc_Season(Ts):
         End_Per = []
         
     return(Start, End, Start_Per, End_Per)
-
-
-def WAPOR_Conversions(version = '1.0'):
-    
-    converter = {
-         41: 1,
-         43: 1,
-         42: 2,
-         30: 3}
-
-    WAPOR_Conversions =dict()
-    WAPOR_Conversions['1.0'] = converter
-
-    return WAPOR_Conversions[version]
-
-def ESACCI_Conversions(version = '1.0'):
-    
-    converter = {
-         10: 1,
-         #30: 1,
-         20: 2,
-         130: 3}
-
-    ESACCI_Conversions =dict()
-    ESACCI_Conversions['1.0'] = converter
-
-    return ESACCI_Conversions[version]
-
-
-
-
-
-
 
 
 

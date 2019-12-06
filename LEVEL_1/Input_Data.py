@@ -5,17 +5,17 @@ author: Tim Martijn Hessels
 Created on Mon Oct  7 12:45:54 2019
 """
 
-class Input_Paths:
+class Input_Paths():
     
 	# LEVEL 1
-    ET = r"LEVEL_1\L2_AETI_D"
-    E = r"LEVEL_1\L2_E_D"
-    T = r"LEVEL_1\L2_T_D"
-    I = r"LEVEL_1\L2_I_D"   
+    ET = r"LEVEL_1\L%d_AETI_D" 
+    E = r"LEVEL_1\L%d_E_D"
+    T = r"LEVEL_1\L%d_T_D" 
+    I = r"LEVEL_1\L%d_I_D" 
     P = r"LEVEL_1\L1_PCP_D" 
     ET0 = r"LEVEL_1\L1_RET_D"
-    NPP = r"LEVEL_1\L2_NPP_D"
-    LU = r"LEVEL_1\L2_LCC_A"
+    NPP = r"LEVEL_1\L%d_NPP_D" 
+    LU = r"LEVEL_1\L%d_LCC_A" 
     
     LU_ESA = r"LEVEL_1\ESACCI\LU"
     
@@ -103,14 +103,14 @@ class Input_Paths:
 class Input_Formats:
   
 	# LEVEL 1  
-    ET = "L2_AETI_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"    
-    E = "L2_E_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    T = "L2_T_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    I = "L2_I_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif" 
+    ET = "L%d_AETI_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"    
+    E = "L%d_E_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    T = "L%d_T_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    I = "L%d_I_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     P = "L1_PCP_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"  
     ET0 = "L1_RET_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    NPP = "L2_NPP_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    LU = "L2_LCC_A_WAPOR_YEAR_{yyyy}.01.01.tif" 
+    NPP = "L%d_NPP_D_WAPOR_DEKAD_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    LU = "L%d_LCC_A_WAPOR_YEAR_{yyyy}.01.01.tif" 
   
     LU_ESA = r"LU_ESACCI.tif"
     
@@ -183,7 +183,7 @@ class Input_Formats:
     AEZ = "Agro_Ecological_Zonation_AEZ_{yyyy}.01.01.tif"
     Irrigation = "Irrigation_Yearly_-_{yyyy}.01.01.tif"
     Actual_Biomass_Production = "Actual_Biomass_Production_kg-ha-1-d-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    Accumulated_Biomass_Production = "Accumulated_Biomass_Production_kg-ha-1-season-1_{yyyy}.01.01.tif" #!!! let op waar deze wordt gebruikt
+    Accumulated_Biomass_Production = "Accumulated_Biomass_Production_kg-ha-1-season-1_{yyyy}.01.01.tif" 
     Accumulated_Biomass_Production_S1 = "Accumulated_Biomass_Production_Season_1_kg-ha-1-season-1_{yyyy}.01.01.tif"
     Accumulated_Biomass_Production_S2 = "Accumulated_Biomass_Production_Season_2_kg-ha-1-season-1_{yyyy}.01.01.tif"
     Accumulated_Biomass_Production_S3 = "Accumulated_Biomass_Production_Season_3_kg-ha-1-season-1_{yyyy}.01.01.tif"
@@ -191,10 +191,10 @@ class Input_Formats:
 
     Target_Biomass_Production = "Target_Biomass_Production_kg-ha-1-d-1_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Yield = "Yield_Season_kg-ha-1-season-1_{yyyy}.01.01.tif"
-    Yield_S1 = "Yield_Season_1_kg-ha-1-season-1_{yyyy}.01.01.tif"
-    Yield_S2 = "Yield_Season_2_kg-ha-1-season-1_{yyyy}.01.01.tif"
-    Yield_S3 = "Yield_Season_3_kg-ha-1-season-1_{yyyy}.01.01.tif"
-    Yield_Per = "Yield_Season_Perennial_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_S1 = "Yield_%s_Season_1_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_S2 = "Yield_%s_Season_2_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_S3 = "Yield_%s_Season_3_kg-ha-1-season-1_{yyyy}.01.01.tif"
+    Yield_Per = "Yield_%s_Season_Per_kg-ha-1-season-1_{yyyy}.01.01.tif"
 		
 class Input_Conversions:    
 

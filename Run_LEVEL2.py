@@ -11,10 +11,10 @@ import warnings
 
 import WaporTranslator.LEVEL_2 as L2
 
-def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
+def main(inputs):
 
     # run WaporTranslator intermediate parameters (all of LEVEL2)
-    L2.Run_Intermediate_Parameters.main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data)
+    L2.Run_Intermediate_Parameters.main(inputs)
     
     return()
 
@@ -29,14 +29,5 @@ if __name__== "__main__":
     obj = json.loads(datastore)  
     inputs = obj["Inputs"][0]
     
-    # Set Variables
-    Start_year_analyses = inputs["Start_year"]
-    End_year_analyses = inputs["End_year"]
-    output_folder = inputs["Output_folder"]  
-    try:
-        Radiation_Data = inputs["Radiation_Source"]   
-    except:
-        Radiation_Data = "KNMI"   
-        
     # run code
-    main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data)
+    main(inputs)

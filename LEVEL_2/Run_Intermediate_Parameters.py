@@ -11,8 +11,25 @@ import datetime
 import numpy as np
 import pandas as pd
 
-def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
-    
+import watertools.General.raster_conversions as RC
+import watertools.General.data_conversions as DC
+
+def main(inputs):
+
+    # Set Variables
+    Start_year_analyses = inputs["Start_year"]
+    End_year_analyses = inputs["End_year"]
+    output_folder = inputs["Output_folder"]  
+    WAPOR_LVL = inputs["WAPOR_LEVEL"]      
+    try:
+        Radiation_Data = inputs["Radiation_Source"]   
+    except:
+        Radiation_Data = "KNMI"   
+    try:
+        Albedo_Data = inputs["Albedo_Source"]   
+    except:
+        Albedo_Data = "MODIS"    
+        
     import WaporTranslator.LEVEL_1.Input_Data as Inputs
     import WaporTranslator.LEVEL_1.DataCube as DataCube
     import WaporTranslator.LEVEL_2 as L2
@@ -53,15 +70,43 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     MASK = dest_mask.GetRasterBand(1).ReadAsArray()
     
     # Load inputs for LEVEL 2
-    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
-    T = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.T), Formats.T, Dates, Conversion = Conversions.T, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'T', Product = 'WAPOR', Unit = 'mm/day')
-    I = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.I), Formats.I, Dates, Conversion = Conversions.I, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'I', Product = 'WAPOR', Unit = 'mm/day')
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    T = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.T) %WAPOR_LVL), str(Formats.T) %WAPOR_LVL, Dates, Conversion = Conversions.T, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'T', Product = 'WAPOR', Unit = 'mm/day')
+    I = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.I) %WAPOR_LVL), str(Formats.I) %WAPOR_LVL, Dates, Conversion = Conversions.I, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'I', Product = 'WAPOR', Unit = 'mm/day')
     P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.P), Formats.P, Dates, Conversion = Conversions.P, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'P', Product = 'WAPOR', Unit = 'mm/day')
     ET0 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET0), Formats.ET0, Dates, Conversion = Conversions.ET0, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET0', Product = 'WAPOR', Unit = 'mm/day')
-    LU = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU), Formats.LU, Dates_yearly, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
-    LUdek = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU), Formats.LU, Dates, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
-    NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.NPP), Formats.NPP, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, Variable = 'NPP', Product = 'WAPOR', Unit = 'kg/ha/day')
-    Albedo = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Albedo), Formats.Albedo, Dates_Net_Radiation, Conversion = Conversions.Albedo, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Albedo', Product = 'MODIS', Unit = '-')
+    LU = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.LU) %WAPOR_LVL), str(Formats.LU) %WAPOR_LVL, Dates_yearly, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
+    LUdek = DataCube.Rasterdata_tiffs(os.path.join(output_folder,str(Paths.LU) %WAPOR_LVL), str(Formats.LU) %WAPOR_LVL, Dates, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
+    NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.NPP) %WAPOR_LVL), str(Formats.NPP) %WAPOR_LVL, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, Variable = 'NPP', Product = 'WAPOR', Unit = 'kg/ha/day')
+
+    ################################## Calculate LU map ##########################################
+    
+    Phenology_pixels_year, Grassland_pixels_year = Create_LU_MAP(output_folder, Dates_yearly, LU, LUdek, Paths.LU_ESA, Formats.LU_ESA, example_file)
+    LU_END = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, list(Dates_yearly), Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
+
+    ################################## Get ALBEDO data ############################################
+
+    if Albedo_Data == "MODIS":
+        Albedo = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Albedo), Formats.Albedo, Dates_Net_Radiation, Conversion = Conversions.Albedo, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Albedo', Product = 'MODIS', Unit = '-')
+    else:
+        Albedo_Array = np.ones([len(Dates_Net_Radiation), ET.Size[1], ET.Size[2]])* 0.17
+        
+        for Dates_albedo in Dates_Net_Radiation:
+            Year_now = Dates_albedo.year
+            LU_Now = LU_END.Data[Year_now-Start_year_analyses,:,:]
+            Albedo_Array_now = np.ones([ET.Size[1], ET.Size[2]])* 0.17
+            Albedo_Array_now = np.where(LU_Now==1, 0.20, Albedo_Array_now)
+            Albedo_Array_now= np.where(LU_Now==3, 0.23, Albedo_Array_now)             
+            Albedo_Array[Year_now-Start_year_analyses,:,:] = Albedo_Array_now
+  
+        Albedo = DataCube.Rasterdata_Empty()
+        Albedo.Data = Albedo_Array * MASK
+        Albedo.Projection = ET.Projection
+        Albedo.GeoTransform = ET.GeoTransform
+        Albedo.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Net_Radiation)))
+        Albedo.Size = Albedo_Array.shape
+        Albedo.Variable = "Albedo"
+        Albedo.Unit = "-"
     
     # Open daily
     if Radiation_Data == "LANDSAF":
@@ -387,7 +432,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     ######################## Calculate Crop Water Requirement ########################
     
-    Crop_Water_Requirement_Data = np.squeeze(np.maximum(Days_in_Dekads[:, None, None] * ET.Data, Crop_Coef_Dry_Soil.Data[None, :, :] * ET0.Data * Days_in_Dekads[:, None, None]), axis = 0)
+    Crop_Water_Requirement_Data = np.squeeze(np.maximum(Days_in_Dekads[:, None, None] * ET.Data, Kc_MAX.Data[None, :, :] * ET0.Data * Days_in_Dekads[:, None, None]), axis = 0)
     
     # Write in DataCube
     Crop_Water_Requirement = DataCube.Rasterdata_Empty()
@@ -672,6 +717,88 @@ def main(Start_year_analyses, End_year_analyses, output_folder, Radiation_Data):
     
     ############################### Calculate Phenelogy ####################################
     
-    L2.Phenology.Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU, example_file, Days_in_Dekads)
+    L2.Phenology.Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads)
 
     return()    
+    
+def Create_LU_MAP(output_folder, Dates_yearly, LU, LUdek, Paths_LU_ESA, Formats_LU_ESA, example_file):
+    
+    # Create output folder LVL2
+    output_folder_L2 = os.path.join(output_folder, "LEVEL_2")
+    
+    # Open ESACCI
+    input_file_LU_ESACCI = os.path.join(output_folder, Paths_LU_ESA, Formats_LU_ESA)
+    
+    # Converting LU maps into one LU map
+    # open dictionary WAPOR 
+    WAPOR_Conversions_dict = WAPOR_Conversions()
+    # open dictionary ESACCI
+    ESACCI_Conversions_dict = ESACCI_Conversions()
+    
+    Phenology_pixels_year = np.ones(LUdek.Size) * np.nan
+    Grassland_pixels_year = np.ones(LUdek.Size) * np.nan
+    
+    # Loop over the years
+    for Year in Dates_yearly:
+        
+        Year_start = int(Dates_yearly[0].year)
+        Year_int = int(Year.year)
+        
+        geo = LU.GeoTransform
+        proj = LU.Projection   
+         
+        destLUESACCI = RC.reproject_dataset_example(input_file_LU_ESACCI, example_file)
+        LU_ESACCI = destLUESACCI.GetRasterBand(1).ReadAsArray()
+        
+        # Create LUmap
+        LU_Map_WAPOR = np.ones([LU.Size[1], LU.Size[2]]) * np.nan
+        LU_Map_ESACCI = np.ones([LU.Size[1], LU.Size[2]]) * np.nan
+        
+        for number in WAPOR_Conversions_dict.items():
+        
+            LU_Map_WAPOR = np.where(LU.Data[int((Year_int - Year_start)),: ,:] == number[0], number[1], LU_Map_WAPOR)
+            
+        for number in ESACCI_Conversions_dict.items():
+        
+            LU_Map_ESACCI = np.where(LU_ESACCI == number[0], number[1], LU_Map_ESACCI)      
+        
+        # Combine LU maps
+        # 1 = rainfed, 2 = irrigated, 3 = Pasture
+        LU_END = np.where(np.logical_and(LU_Map_WAPOR == 1, LU_Map_ESACCI == 1), 1, np.nan)    
+        LU_END = np.where(LU_Map_WAPOR > 1, LU_Map_WAPOR, LU_END)
+          
+        # Save LU map
+        DC.Save_as_tiff(os.path.join(output_folder_L2, "LU_END", "LU_%s.tif" %Year_int), LU_END, geo, proj)  
+        
+        # find posible Perennial pixels
+        Phenology_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(np.logical_or(LU_END==1, LU_END==2), 1, np.nan)[None, :, :]  
+        Grassland_pixels_year[int((Year_int - Year_start) * 36):int((Year_int - Year_start) * 36)+36,: ,:] = np.where(LU_END==3, 1, np.nan)[None, :, :]  
+    
+    return(Phenology_pixels_year, Grassland_pixels_year)
+        
+def WAPOR_Conversions(version = '1.0'):
+    
+    converter = {
+         41: 1,
+         43: 1,
+         42: 2,
+         30: 3}
+
+    WAPOR_Conversions =dict()
+    WAPOR_Conversions['1.0'] = converter
+
+    return WAPOR_Conversions[version]
+
+def ESACCI_Conversions(version = '1.0'):
+    
+    converter = {
+         10: 1,
+         #30: 1,
+         20: 2,
+         130: 3}
+
+    ESACCI_Conversions =dict()
+    ESACCI_Conversions['1.0'] = converter
+
+    return ESACCI_Conversions[version]
+

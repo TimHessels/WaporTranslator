@@ -1,1 +1,22 @@
-{"Inputs": [{"Start_year": 2009, "End_year": 2018, "Input_shapefile": "C:\\.....\\Name.shp", "Threshold_Mask": 20, "Output_folder": "C:\\.....", "API_WAPOR_KEY": "PUT_HERE_YOUR_API_KEY", "Radiation_Source" : "KNMI"}]}
+{"Inputs": [{"Start_year": 2009, 
+             "End_year": 2018,
+			 "Input_shapefile": "C:\\.....\\Name.shp", 
+			 "Threshold_Mask": 20, 
+			 "Output_folder": "C:\\.....", 
+			 "API_WAPOR_KEY": "PUT_HERE_YOUR_API_KEY", 
+			 "WAPOR_LEVEL": 2,
+			 "Albedo_Source": "MODIS",
+			 "Radiation_Source" : "KNMI",
+			 "Yield_info_S1": {"Croptype": "Rice", 
+			                   "Harvest_Index": 0.40,
+							   "Moisture_Index": 0.15},
+			 "Yield_info_S2": {"Croptype": "Rice", 
+			                   "Harvest_Index": 0.42,
+							   "Moisture_Index": 0.14},
+			 "Yield_info_S3": {"Croptype": "Rice", 
+			                   "Harvest_Index": 0.40,
+							   "Moisture_Index": 0.15},
+			 "Yield_info_Per": {"Croptype": "Rice", 
+			                   "Harvest_Index": 0.45,
+							   "Moisture_Index": 0.13}              							   
+			 }]}

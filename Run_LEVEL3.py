@@ -10,22 +10,22 @@ import warnings
 
 import WaporTranslator.LEVEL_3 as L3
 
-def main(Start_year_analyses, End_year_analyses, output_folder):
+def main(inputs):
 
     # Calculate Food Security Module
-    L3.Food_Security.LEVEL_3_Calc_Food_Security.main(Start_year_analyses, End_year_analyses, output_folder)
+    L3.Food_Security.LEVEL_3_Calc_Food_Security.main(inputs)
     
     # Calculate Irrigation Management Module
-    L3.Irrigation.LEVEL_3_Calc_Irrigation.main(Start_year_analyses, End_year_analyses, output_folder)
+    L3.Irrigation.LEVEL_3_Calc_Irrigation.main(inputs)
     
     # Calculate Water Productivity Module
-    L3.Water_Productivity.LEVEL_3_Calc_Water_Productivity.main(Start_year_analyses, End_year_analyses, output_folder)
+    L3.Water_Productivity.LEVEL_3_Calc_Water_Productivity.main(inputs)
     
     # Calculate Drought Module
-    L3.Drought.LEVEL_3_Calc_Drought.main(Start_year_analyses, End_year_analyses, output_folder)
+    L3.Drought.LEVEL_3_Calc_Drought.main(inputs)
     
     # Calculate Climate Smart Module
-    L3.Climate_Smart.LEVEL_3_Calc_Climate_Smart.main(Start_year_analyses, End_year_analyses, output_folder)
+    L3.Climate_Smart.LEVEL_3_Calc_Climate_Smart.main(inputs)
 
 if __name__== "__main__":
     
@@ -38,10 +38,5 @@ if __name__== "__main__":
     obj = json.loads(datastore)  
     inputs = obj["Inputs"][0]
     
-    # Set Variables
-    Start_year_analyses = inputs["Start_year"]
-    End_year_analyses = inputs["End_year"]
-    output_folder = inputs["Output_folder"]  
-    
     # run code
-    main(Start_year_analyses, End_year_analyses, output_folder)
+    main(inputs)

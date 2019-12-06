@@ -15,8 +15,14 @@ import WaporTranslator.LEVEL_1.Input_Data as Inputs
 import WaporTranslator.LEVEL_1.DataCube as DataCube
 import WaporTranslator.LEVEL_2.Functions as Functions
 
-def main(Start_year_analyses, End_year_analyses, output_folder):
+def main(inputs):  
 
+    # Set Variables
+    Start_year_analyses = inputs["Start_year"]
+    End_year_analyses = inputs["End_year"]
+    output_folder = inputs["Output_folder"]  
+    WAPOR_LVL = inputs["WAPOR_LEVEL"]   
+    
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
     warnings.filterwarnings("ignore", category=FutureWarning)
@@ -48,9 +54,9 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     
     ################################# Dynamic maps #################################
     Crop_Water_Requirement = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Crop_Water_Requirement), Formats.Crop_Water_Requirement, Dates, Conversion = Conversions.Crop_Water_Requirement, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Crop Water Requirement', Product = '', Unit = 'mm/decade')
-    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
-    E = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.E), Formats.E, Dates, Conversion = Conversions.E, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'E', Product = 'WAPOR', Unit = 'mm/day')
-    I = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.I), Formats.I, Dates, Conversion = Conversions.I, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'I', Product = 'WAPOR', Unit = 'mm/day')
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    E = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.E) %WAPOR_LVL), str(Formats.E) %WAPOR_LVL, Dates, Conversion = Conversions.E, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'E', Product = 'WAPOR', Unit = 'mm/day')
+    I = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.I) %WAPOR_LVL), str(Formats.I) %WAPOR_LVL, Dates, Conversion = Conversions.I, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'I', Product = 'WAPOR', Unit = 'mm/day')
     P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.P), Formats.P, Dates, Conversion = Conversions.P, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'P', Product = 'WAPOR', Unit = 'mm/day')
     Critical_Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Critical_Soil_Moisture), Formats.Critical_Soil_Moisture, Dates, Conversion = Conversions.Critical_Soil_Moisture, Variable = 'Critical Soil Moisture', Product = 'SoilGrids', Unit = 'cm3/cm3')
     Soil_Moisture = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Soil_Moisture), Formats.Soil_Moisture, Dates, Conversion = Conversions.Soil_Moisture, Variable = 'Soil Moisture', Product = '', Unit = 'cm3/cm3')

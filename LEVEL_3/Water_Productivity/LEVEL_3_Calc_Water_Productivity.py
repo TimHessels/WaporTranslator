@@ -10,8 +10,18 @@ import warnings
 import pandas as pd
 import numpy as np
 
-def main(Start_year_analyses, End_year_analyses, output_folder):
+def main(inputs):  
 
+    # Set Variables
+    Start_year_analyses = inputs["Start_year"]
+    End_year_analyses = inputs["End_year"]
+    output_folder = inputs["Output_folder"]  
+    WAPOR_LVL = inputs["WAPOR_LEVEL"]   
+    Yield_info_S1 = inputs["Yield_info_S1"]       
+    Yield_info_S2 = inputs["Yield_info_S2"]       
+    Yield_info_S3 = inputs["Yield_info_S3"]       
+    Yield_info_Per = inputs["Yield_info_Per"]   
+    
     import WaporTranslator.LEVEL_1.Input_Data as Inputs
     import WaporTranslator.LEVEL_1.DataCube as DataCube
     import WaporTranslator.LEVEL_2.Functions as Functions
@@ -47,8 +57,8 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
         os.makedirs(output_folder_L3)
  
     ################################# Dynamic maps #################################
-    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
-    T = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.T), Formats.T, Dates, Conversion = Conversions.T, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'T', Product = 'WAPOR', Unit = 'mm/day')
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    T = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.T) %WAPOR_LVL), str(Formats.T) %WAPOR_LVL, Dates, Conversion = Conversions.T, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'T', Product = 'WAPOR', Unit = 'mm/day')
     ET0 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET0), Formats.ET0, Dates, Conversion = Conversions.ET0, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET0', Product = 'WAPOR', Unit = 'mm/day')
     Actual_Biomass_Production = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Actual_Biomass_Production), Formats.Actual_Biomass_Production, Dates, Conversion = Conversions.Actual_Biomass_Production, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Actual Biomass Production', Product = '', Unit = 'kg/ha/d')
     NPPcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_NPP), Formats.Cumulative_NPP, Dates, Conversion = Conversions.Cumulative_NPP, Variable = 'Cumulated NPP', Product = '', Unit = 'mm/decade')      
@@ -74,10 +84,10 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_Biomass_Production_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Accumulated_Biomass_Production_Per), Formats.Accumulated_Biomass_Production_Per, list(Dates_Years), Conversion = Conversions.Accumulated_Biomass_Production_Per, Variable = 'Accumulated Biomass Production Season Perennial', Product = '', Unit = 'ton/ha/season')
     Target_Biomass_Production = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Target_Biomass_Production), Formats.Target_Biomass_Production, Dates, Conversion = Conversions.Target_Biomass_Production, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Target Biomass Production', Product = '', Unit = 'kg/ha/d')
     Yield = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield), Formats.Yield, list(Dates_Years), Conversion = Conversions.Yield, Variable = 'Yield', Product = '', Unit = 'ton/ha')
-    Yield_S1 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S1), Formats.Yield_S1, list(Dates_Years), Conversion = Conversions.Yield_S1, Variable = 'Yield Season 1', Product = '', Unit = 'ton/ha')
-    Yield_S2 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S2), Formats.Yield_S2, list(Dates_Years), Conversion = Conversions.Yield_S2, Variable = 'Yield Season 2', Product = '', Unit = 'ton/ha')
-    Yield_S3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S3), Formats.Yield_S3, list(Dates_Years), Conversion = Conversions.Yield_S3, Variable = 'Yield Season 3', Product = '', Unit = 'ton/ha')
-    Yield_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_Per), Formats.Yield_Per, list(Dates_Years), Conversion = Conversions.Yield_Per, Variable = 'Yield Season Perennial', Product = '', Unit = 'ton/ha')
+    Yield_S1 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S1), str(Formats.Yield_S1) %Yield_info_S1["Croptype"], list(Dates_Years), Conversion = Conversions.Yield_S1, Variable = 'Yield Season 1', Product = '', Unit = 'ton/ha')
+    Yield_S2 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S2), str(Formats.Yield_S2) %Yield_info_S2["Croptype"], list(Dates_Years), Conversion = Conversions.Yield_S2, Variable = 'Yield Season 2', Product = '', Unit = 'ton/ha')
+    Yield_S3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_S3), str(Formats.Yield_S3) %Yield_info_S3["Croptype"], list(Dates_Years), Conversion = Conversions.Yield_S3, Variable = 'Yield Season 3', Product = '', Unit = 'ton/ha')
+    Yield_Per = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Yield_Per), str(Formats.Yield_Per) %Yield_info_Per["Croptype"], list(Dates_Years), Conversion = Conversions.Yield_Per, Variable = 'Yield Season Perennial', Product = '', Unit = 'ton/ha')
 
     ######################## Calculate days in each dekads #################################
     Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)

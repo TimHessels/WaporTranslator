@@ -11,7 +11,7 @@ import warnings
 import pandas as pd
 import WaporTranslator.LEVEL_1 as L1
 
-def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, Radiation_Data):
+def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data):
     
     # Create output folder for LEVEL 1 data
     output_folder_L1 = os.path.join(output_folder, "LEVEL_1")
@@ -42,13 +42,14 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
         print("Collect data for the year %s" %year)
         
         # Download WAPOR data
-        L1.LEVEL_1_Download_WAPOR.main(output_folder_L1, year, year, latlim, lonlim, API_WAPOR_KEY)    
+        L1.LEVEL_1_Download_WAPOR.main(output_folder_L1, year, year, latlim, lonlim, WAPOR_LVL, API_WAPOR_KEY)    
         
         # Download GLDAS data
         L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores)
         
         # Download MODIS data
-        L1.LEVEL_1_Download_MODIS.main(output_folder_L1, year, year, latlim, lonlim, Radiation_Data)
+        if Albedo_Data == "MODIS":
+            L1.LEVEL_1_Download_MODIS.main(output_folder_L1, year, year, latlim, lonlim, Radiation_Data)
         
         # Process MSGCCP data
         if Radiation_Data == "LANDSAF":
@@ -82,10 +83,15 @@ if __name__== "__main__":
     Threshold_Mask = inputs["Threshold_Mask"]
     output_folder = inputs["Output_folder"]
     API_WAPOR_KEY = inputs["API_WAPOR_KEY"]    
+    WAPOR_LVL = inputs["WAPOR_LEVEL"]  
     try:
         Radiation_Data = inputs["Radiation_Source"]   
     except:
-        Radiation_Data = "KNMI"
+        Radiation_Data = "KNMI"     
+    try:
+        Albedo_Data = inputs["Albedo_Source"]   
+    except:
+        Albedo_Data = "MODIS"        
     
     # run code
-    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, Radiation_Data)
+    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data)

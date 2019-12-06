@@ -17,8 +17,18 @@ import WaporTranslator.LEVEL_2.Functions as Functions
 
 import watertools.General.raster_conversions as RC
 
-def main(Start_year_analyses, End_year_analyses, output_folder):  
+def main(inputs):  
 
+    # Set Variables
+    Start_year_analyses = inputs["Start_year"]
+    End_year_analyses = inputs["End_year"]
+    output_folder = inputs["Output_folder"]  
+    WAPOR_LVL = inputs["WAPOR_LEVEL"]   
+    Yield_info_S1 = inputs["Yield_info_S1"]       
+    Yield_info_S2 = inputs["Yield_info_S2"]       
+    Yield_info_S3 = inputs["Yield_info_S3"]       
+    Yield_info_Per = inputs["Yield_info_Per"]   
+    
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
     warnings.filterwarnings("ignore", category=FutureWarning)
@@ -52,9 +62,9 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     CropType = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, list(Dates_Years), Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
     CropSeason = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.CropSeason), Formats.CropSeason, list(Dates_Years), Conversion = Conversions.CropSeason, Variable = 'CropSeason', Product = '', Unit = '-')
     ET0 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET0), Formats.ET0, Dates, Conversion = Conversions.ET0, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET0', Product = 'WAPOR', Unit = 'mm/day')
-    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET), Formats.ET, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
+    ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
     P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.P), Formats.P, Dates, Conversion = Conversions.P, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'P', Product = 'WAPOR', Unit = 'mm/day')
-    NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.NPP), Formats.NPP, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, Variable = 'NPP', Product = 'WAPOR', Unit = 'kg/ha/day')
+    NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.NPP) %WAPOR_LVL), str(Formats.NPP) %WAPOR_LVL, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, Variable = 'NPP', Product = 'WAPOR', Unit = 'kg/ha/day')
     Pcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_P), Formats.Cumulative_P, Dates, Conversion = Conversions.Cumulative_P, Variable = 'Pcum', Product = '', Unit = 'mm')
     ETcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_ET), Formats.Cumulative_ET, Dates, Conversion = Conversions.Cumulative_ET, Variable = 'ETcum', Product = '', Unit = 'mm')
     NPPcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_NPP), Formats.Cumulative_NPP, Dates, Conversion = Conversions.Cumulative_NPP, Variable = 'NPPcum', Product = '', Unit = 'kg/ha')
@@ -478,23 +488,16 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Accumulated_Biomass_Production_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_Biomass_Production_Season", "Perennial"))   
     
     ################################# Calculate Yield season #################################
-    Harvest_Index = 0.35
-    Moisture_Index = 0.15
-        
-    Yield_Data = Harvest_Index * ((Accumulated_NPP.Data)/C3_C4)/(1 - Moisture_Index)
-    
-    Yield = DataCube.Rasterdata_Empty()
-    Yield.Data = Yield_Data * MASK
-    Yield.Projection = Per_Start.Projection
-    Yield.GeoTransform = Per_Start.GeoTransform
-    Yield.Ordinal_time = Per_Start.Ordinal_time
-    Yield.Size = Yield_Data.shape
-    Yield.Variable = "Yield Season"
-    Yield.Unit = "kg-ha-1-season-1"      
-    Yield.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "All"))
 
     # Season 1
-    Yield_Data_S1 = Harvest_Index * ((Accumulated_NPP_S1.Data)/C3_C4)/(1 - Moisture_Index)
+    if Yield_info_S1["Croptype"] != "":
+        Moisture_Index_S1 = Yield_info_S1["Moisture_Index"]
+        Harvest_Index_S1 = Yield_info_S1["Harvest_Index"]      
+    else:
+        Moisture_Index_S1 = np.nan
+        Harvest_Index_S1 = np.nan
+        
+    Yield_Data_S1 = Harvest_Index_S1 * ((Accumulated_NPP_S1.Data)/C3_C4)/(1 - Moisture_Index_S1)
     
     Yield_S1 = DataCube.Rasterdata_Empty()
     Yield_S1.Data = Yield_Data_S1 * MASK
@@ -502,12 +505,19 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_S1.GeoTransform = Per_Start.GeoTransform
     Yield_S1.Ordinal_time = Per_Start.Ordinal_time
     Yield_S1.Size = Yield_Data_S1.shape
-    Yield_S1.Variable = "Yield Season 1"
+    Yield_S1.Variable = "Yield %s Season 1" %Yield_info_S1["Croptype"]
     Yield_S1.Unit = "kg-ha-1-season-1"      
     Yield_S1.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "S1"))
 
     # Season 2
-    Yield_Data_S2 = Harvest_Index * ((Accumulated_NPP_S2.Data)/C3_C4)/(1 - Moisture_Index)
+    if Yield_info_S2["Croptype"] != "":
+        Moisture_Index_S2 = Yield_info_S2["Moisture_Index"]
+        Harvest_Index_S2 = Yield_info_S2["Harvest_Index"]      
+    else:
+        Moisture_Index_S2 = np.nan
+        Harvest_Index_S2 = np.nan    
+    
+    Yield_Data_S2 = Harvest_Index_S2 * ((Accumulated_NPP_S2.Data)/C3_C4)/(1 - Moisture_Index_S2)
     
     Yield_S2 = DataCube.Rasterdata_Empty()
     Yield_S2.Data = Yield_Data_S2 * MASK
@@ -515,12 +525,19 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_S2.GeoTransform = Per_Start.GeoTransform
     Yield_S2.Ordinal_time = Per_Start.Ordinal_time
     Yield_S2.Size = Yield_Data_S2.shape
-    Yield_S2.Variable = "Yield Season 2"
+    Yield_S2.Variable = "Yield %s Season 2" %Yield_info_S2["Croptype"]
     Yield_S2.Unit = "kg-ha-1-season-1"      
     Yield_S2.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "S2"))
 
     # Season 3
-    Yield_Data_S3 = Harvest_Index * ((Accumulated_NPP_S3.Data)/C3_C4)/(1 - Moisture_Index)
+    if Yield_info_S3["Croptype"] != "":
+        Moisture_Index_S3 = Yield_info_S3["Moisture_Index"]
+        Harvest_Index_S3 = Yield_info_S3["Harvest_Index"]      
+    else:
+        Moisture_Index_S3 = np.nan
+        Harvest_Index_S3 = np.nan        
+    
+    Yield_Data_S3 = Harvest_Index_S3 * ((Accumulated_NPP_S3.Data)/C3_C4)/(1 - Moisture_Index_S3)
     
     Yield_S3 = DataCube.Rasterdata_Empty()
     Yield_S3.Data = Yield_Data_S3 * MASK
@@ -528,12 +545,19 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_S3.GeoTransform = Per_Start.GeoTransform
     Yield_S3.Ordinal_time = Per_Start.Ordinal_time
     Yield_S3.Size = Yield_Data_S3.shape
-    Yield_S3.Variable = "Yield Season 3"
+    Yield_S3.Variable = "Yield %s Season 3" %Yield_info_S3["Croptype"]
     Yield_S3.Unit = "kg-ha-1-season-1"      
     Yield_S3.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "S3"))
 
     # Season Perennial
-    Yield_Data_Per = Harvest_Index * ((Accumulated_NPP_Per.Data)/C3_C4)/(1 - Moisture_Index)
+    if Yield_info_Per["Croptype"] != "":
+        Moisture_Index_Per = Yield_info_Per["Moisture_Index"]
+        Harvest_Index_Per = Yield_info_Per["Harvest_Index"]      
+    else:
+        Moisture_Index_Per= np.nan
+        Harvest_Index_Per = np.nan      
+        
+    Yield_Data_Per = Harvest_Index_Per * ((Accumulated_NPP_Per.Data)/C3_C4)/(1 - Moisture_Index_Per)
     
     Yield_Per = DataCube.Rasterdata_Empty()
     Yield_Per.Data = Yield_Data_Per * MASK
@@ -541,7 +565,7 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_Per.GeoTransform = Per_Start.GeoTransform
     Yield_Per.Ordinal_time = Per_Start.Ordinal_time
     Yield_Per.Size = Yield_Data_Per.shape
-    Yield_Per.Variable = "Yield Season Perennial"
+    Yield_Per.Variable = "Yield %s Season Per" %Yield_info_Per["Croptype"]
     Yield_Per.Unit = "kg-ha-1-season-1"      
     Yield_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "Perennial"))
     
@@ -558,6 +582,27 @@ def main(Start_year_analyses, End_year_analyses, output_folder):
     Yield_Fresh_Grass.Variable = "Accumulated Yield Season"
     Yield_Fresh_Grass.Unit = "kg-ha-1-season-1"      
     Yield_Fresh_Grass.Save_As_Tiff(os.path.join(output_folder_L3, "Yield_Fresh_Grass"))
+
+    ################################# Calculate All season #################################
+      
+    Yield_Fresh_Grass_Data[np.isnan(Yield_Fresh_Grass_Data)] = 0.0 
+    Yield_Data_Per[np.isnan(Yield_Data_Per)] = 0.0 
+    Yield_Data_S1[np.isnan(Yield_Data_S1)] = 0.0 
+    Yield_Data_S2[np.isnan(Yield_Data_S2)] = 0.0 
+    Yield_Data_S3[np.isnan(Yield_Data_S3)] = 0.0     
+    Yield_Data = Yield_Fresh_Grass_Data + Yield_Data_Per + Yield_Data_S1 + Yield_Data_S2 + Yield_Data_S3
+    Yield_Data[Yield_Data==0.0] = np.nan   
+    
+    Yield = DataCube.Rasterdata_Empty()
+    Yield.Data = Yield_Data * MASK
+    Yield.Projection = Per_Start.Projection
+    Yield.GeoTransform = Per_Start.GeoTransform
+    Yield.Ordinal_time = Per_Start.Ordinal_time
+    Yield.Size = Yield_Data.shape
+    Yield.Variable = "Yield Season"
+    Yield.Unit = "kg-ha-1-season-1"      
+    Yield.Save_As_Tiff(os.path.join(output_folder_L3, "Yield", "All"))
+
     
     ################################# Calculate Mean Biomass Production over every AEZ per year #################################
     
