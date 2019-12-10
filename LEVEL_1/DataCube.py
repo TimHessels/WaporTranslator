@@ -85,7 +85,7 @@ class Rasterdata_tiffs:
                         Array[np.isnan(Array)] = -9999
                         Array = RC.gap_filling(Array, -9999, gap_filling)
                         
-                    Array_end[time_or==Date.toordinal(), :, : ] = Array * Conversion * MASK
+                    Array_end[time_or==Date.toordinal(), :, : ] = Array * Conversion * MASK    
                     i += 1
                 except:
                     print("Was not able to collect %s %s" %(Variable, Date))
@@ -121,7 +121,7 @@ class Rasterdata_tiffs:
         self.Projection = proj
         self.Size = shape
         self.GeoTransform = geo
-        self.Data = Array_end
+        self.Data = Array_end.astype(np.float16)
         self.NoData = np.nan
         self.Ordinal_time = time_or
     

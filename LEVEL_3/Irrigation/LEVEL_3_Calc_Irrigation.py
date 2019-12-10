@@ -22,6 +22,7 @@ def main(inputs):
     End_year_analyses = inputs["End_year"]
     output_folder = inputs["Output_folder"]  
     WAPOR_LVL = inputs["WAPOR_LEVEL"]   
+    threshold_irrigated = inputs["Irrigation_Dekads_Threshold"]   
     
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
@@ -367,7 +368,6 @@ def main(inputs):
     Non_Beneficial_Water_Losses.Save_As_Tiff(os.path.join(output_folder_L3, "Non_Beneficial_Water_Losses"))    
     
     ##################################### Calculate Equity ####################################
-    threshold_irrigated = 3
     
     Irrigation_MASK_Data = np.where(Irrigation.Data>threshold_irrigated, 1, np.nan)
     

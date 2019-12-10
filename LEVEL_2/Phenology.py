@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import watertools.General.data_conversions as DC
 
-def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads):
+def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, phenology_threshold):
 
     # Define start and enddate
     Startdate = "%s-01-01" %Start_year_analyses
@@ -65,7 +65,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
           Ts = T_selected[:, i, j]
           if not np.isnan(np.nanmean(Ts)): 
            
-              Start, End, Start_Per, End_Per = Calc_Season(Ts)
+              Start, End, Start_Per, End_Per = Calc_Season(Ts, phenology_threshold)
     
               Seasons_dict_start[pixel] = Start
               Seasons_dict_end[pixel] = End
@@ -319,11 +319,11 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
        
     return()
     
-def Calc_Season(Ts):
+def Calc_Season(Ts, phenology_threshold):
     
     # Create a moving window of the Transpiration
-    Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]) + np.append(Ts[-2:], Ts[:-2]) + np.append(Ts[2:], Ts[0:2]))/5
-    #Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]))/3
+    #Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]) + np.append(Ts[-2:], Ts[:-2]) + np.append(Ts[2:], Ts[0:2]))/5
+    Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]))/3
     
     # Get the minimum and maximum Transpiration over the period
     Minimum_T = np.nanpercentile(Ts_MW,5)
@@ -338,7 +338,7 @@ def Calc_Season(Ts):
     
     # In the end I have set the threshold values on 1.5 and 1.0
     #Maximum_Threshold = np.minimum(Threshold_LVL * (Maximum_T + Minimum_T) / 2 + Minimum_T, Threshold_LVL_min)
-    Maximum_Threshold = 3
+    Maximum_Threshold = phenology_threshold
     #Threshold_stop = np.maximum(0.2 * Maximum_Threshold + Minimum_T, 0.3 * Maximum_Threshold)
     Threshold_stop = 1.5
     

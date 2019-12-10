@@ -7,6 +7,8 @@
 			 "WAPOR_LEVEL": 2,
 			 "Albedo_Source": "MODIS",
 			 "Radiation_Source" : "KNMI",
+			 "Phenology_Threshold": 3,
+			 "Irrigation_Dekads_Threshold": 3,
 			 "Yield_info_S1": {"Croptype": "Rice", 
 			                   "Harvest_Index": 0.40,
 							   "Moisture_Index": 0.15},
