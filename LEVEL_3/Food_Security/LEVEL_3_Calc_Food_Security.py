@@ -28,6 +28,7 @@ def main(inputs):
     Yield_info_S2 = inputs["Yield_info_S2"]       
     Yield_info_S3 = inputs["Yield_info_S3"]       
     Yield_info_Per = inputs["Yield_info_Per"]   
+    Threshold = inputs["Irrigation_Dekads_Threshold"]  
     
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
@@ -134,7 +135,7 @@ def main(inputs):
     Season_Type = Calc_Crops(CropType, CropSeason, MASK)
     
     ################################# Created AEZ numbers #################################
-    AEZ = Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Type, MASK)
+    AEZ = Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Type, MASK, Threshold)
     AEZ.Save_As_Tiff(os.path.join(output_folder_L3, "AEZ"))
     
     ################################# Create dictionary for all AEZ #################################
@@ -777,7 +778,7 @@ def Calc_Crops(CropType, CropClass, MASK):
 
     return(Season_Type)
     
-def Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Type, MASK):
+def Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Type, MASK, Threshold):
     
     # Create Aridity AEZ
     dict_ipi = AEZ_Conversions()
@@ -789,11 +790,13 @@ def Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Ty
     AEZ5 = np.ones(Slope.Size) * np.nan
     AEZ6 = np.ones(Aridity.Size) * np.nan
     
+    Irrigation_Yearly_Data = np.where(Irrigation_Yearly.Data>Threshold, 1, 0)
+    
     for ID, value in dict_ipi['Crop'].items():
-        AEZ1[Season_Type.Data==ID] = value      
+        AEZ1[Season_Type.Data.astype(np.int)==ID] = value      
         
     for ID, value in dict_ipi['Irrigated'].items():
-        AEZ2[Irrigation_Yearly.Data==ID] = value
+        AEZ2[Irrigation_Yearly_Data==ID] = value
           
     for ID, value in dict_ipi['Soil'].items():
         AEZ3[np.logical_and.reduce((Clay.Data > value[0][0], Clay.Data <= value[0][1],Silt.Data > value[1][0], Silt.Data <= value[1][1], Sand.Data > value[2][0], Sand.Data <= value[2][1]))] = ID       

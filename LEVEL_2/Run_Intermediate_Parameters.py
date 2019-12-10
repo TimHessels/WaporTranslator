@@ -224,7 +224,7 @@ def main(inputs):
     Net_Radiation_Daily.Variable = "Net Radiation"
     Net_Radiation_Daily.Unit = "W-m-2"
     
-    del Net_Radiation_Data_Daily, Albedo_Daily, ET0_deBruin_Daily
+    del Net_Radiation_Data_Daily, Albedo_Daily, ET0_deBruin_Daily, Albedo
     
     ############### convert Net Radiation to dekadal ############################################
     Net_Radiation = Functions.Calc_Dekads_from_Daily(Net_Radiation_Daily, flux_state = "state")
@@ -270,7 +270,6 @@ def main(inputs):
 
     # Load inputs for LEVEL 2    
     ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
-    I = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.I) %WAPOR_LVL), str(Formats.I) %WAPOR_LVL, Dates, Conversion = Conversions.I, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'I', Product = 'WAPOR', Unit = 'mm/day')
     P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.P), Formats.P, Dates, Conversion = Conversions.P, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'P', Product = 'WAPOR', Unit = 'mm/day')
     NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.NPP) %WAPOR_LVL), str(Formats.NPP) %WAPOR_LVL, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, Variable = 'NPP', Product = 'WAPOR', Unit = 'kg/ha/day')
  
@@ -324,7 +323,7 @@ def main(inputs):
     Kc_MAX.Variable = "Kc MAX"
     Kc_MAX.Unit = "-"
     
-    del Kc_MAX_Data
+    del Kc_MAX_Data, Fract_vegt
     
     Kc_MAX.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX"))
  
@@ -455,7 +454,7 @@ def main(inputs):
     Crop_Water_Requirement.Variable = "Crop Water Requirement"
     Crop_Water_Requirement.Unit = "mm-dekad-1"
     
-    del Crop_Water_Requirement_Data
+    del Crop_Water_Requirement_Data, Kc_MAX
     
     Crop_Water_Requirement.Save_As_Tiff(os.path.join(output_folder_L2, "Crop_Water_Requirement"))
     
@@ -477,6 +476,8 @@ def main(inputs):
     del Critical_Soil_Moisture_Data
     
     Critical_Soil_Moisture.Save_As_Tiff(os.path.join(output_folder_L2, "Critical_Soil_Moisture"))
+    
+    del Critical_Soil_Moisture
     
     ################## Calculate Soil Moisture Start and End ########################
     
@@ -522,7 +523,7 @@ def main(inputs):
     Soil_Moisture_Change.Variable = "Change Soil Moisture"
     Soil_Moisture_Change.Unit = "mm-dekad-1"
     
-    del Soil_Moisture_Change_Data
+    del Soil_Moisture_Change_Data, Soil_Moisture_Start, Soil_Moisture_End
     
     Soil_Moisture_Change.Save_As_Tiff(os.path.join(output_folder_L2, "Soil_Moisture_Change"))
     
@@ -540,9 +541,11 @@ def main(inputs):
     Net_Supply_Drainage.Variable = "Net Supply Drainage"
     Net_Supply_Drainage.Unit = "mm-dekad-1"
     
-    del Net_Supply_Drainage_Data
+    del Net_Supply_Drainage_Data, Soil_Moisture_Change
     
     Net_Supply_Drainage.Save_As_Tiff(os.path.join(output_folder_L2, "Temp", "Net_Supply_Drainage"))
+    
+    del Net_Supply_Drainage
     
     #################### Calculate Deep Percolation ###################################    
     
@@ -561,6 +564,8 @@ def main(inputs):
     del Deep_Percolation_Data
     
     Deep_Percolation.Save_As_Tiff(os.path.join(output_folder_L2, "Deep_Percolation"))
+    
+    del Deep_Percolation
     
     ############### Calculate Storage coefficient for surface runoff #################   
     
@@ -581,6 +586,7 @@ def main(inputs):
     Storage_Coeff_Surface_Runoff.Save_As_Tiff(os.path.join(output_folder_L2, "Storage_Coeff_Surface_Runoff"))
     
     ######################## Calculate Surface Runoff P  #############################
+    I = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.I) %WAPOR_LVL), str(Formats.I) %WAPOR_LVL, Dates, Conversion = Conversions.I, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'I', Product = 'WAPOR', Unit = 'mm/day')
     
     Surface_Runoff_P_Data = (Days_in_Dekads[:, None, None] * (P.Data - I.Data))**2/(Days_in_Dekads[:, None, None] * (P.Data- I.Data) + Storage_Coeff_Surface_Runoff.Data)
     Surface_Runoff_P_Data[np.isnan(Surface_Runoff_P_Data)] = 0.0
@@ -595,7 +601,7 @@ def main(inputs):
     Surface_Runoff_P.Variable = "Surface Runoff Precipitation"
     Surface_Runoff_P.Unit = "mm-dekad-1"
     
-    del Surface_Runoff_P_Data
+    del Surface_Runoff_P_Data, I, Storage_Coeff_Surface_Runoff
     
     Surface_Runoff_P.Save_As_Tiff(os.path.join(output_folder_L2, "Surface_Runoff_P"))
     
@@ -618,6 +624,8 @@ def main(inputs):
     
     Surface_Runoff_Coefficient.Save_As_Tiff(os.path.join(output_folder_L2, "Surface_Runoff_Coefficient"))
     
+    del Surface_Runoff_P, Surface_Runoff_Coefficient
+    
     ######################## Calculate updated maximum kc ######################
     
     Kc_MAX_update_Data = Crop_Water_Requirement.Data/(Days_in_Dekads[:, None, None] * ET0.Data)
@@ -635,6 +643,8 @@ def main(inputs):
     del Kc_MAX_update_Data
     
     Kc_MAX_update.Save_As_Tiff(os.path.join(output_folder_L2, "Kc_MAX_update"))
+    
+    del Kc_MAX_update
     
     ################# Calculate 10 year Mean Net Radiation, per Pixel ########################
     
@@ -660,6 +670,8 @@ def main(inputs):
     
     Net_Radiation_Long_Term.Save_As_Tiff(os.path.join(output_folder_L2, "Net_Radiation_Long_Term"))
     
+    del Net_Radiation_Long_Term
+    
     ##################### Calculate 10 year mean evaporative fraction ###########################
     
     Total_years = int(np.ceil(Evaporative_Fraction.Size[0]/36))
@@ -683,6 +695,8 @@ def main(inputs):
     del Evaporative_Fraction_Long_Term_Data
     
     Evaporative_Fraction_Long_Term.Save_As_Tiff(os.path.join(output_folder_L2, "Evaporative_Fraction_Long_Term"))
+    
+    del Evaporative_Fraction_Long_Term
     
     ######################### Calculate 10 yr mean soil moisture ###########################
     
@@ -708,6 +722,8 @@ def main(inputs):
     
     Soil_Moisture_Long_Term.Save_As_Tiff(os.path.join(output_folder_L2, "Soil_Moisture_Long_Term"))
     
+    del Soil_Moisture_Long_Term
+    
     ################## Calculate Available Water Before Depletion ##########################
     
     Available_Before_Depletion_Data = 0.8 * (Theta_FC_Subsoil.Data[None, :, :] - 0.12) * 10 * Root_Depth.Data
@@ -725,6 +741,8 @@ def main(inputs):
     del Theta_WP_Subsoil, Root_Depth
     
     Available_Before_Depletion.Save_As_Tiff(os.path.join(output_folder_L2, "Available_Before_Depletion"))
+    
+    del Available_Before_Depletion
     
     ############################### Calculate Phenelogy ####################################
     
