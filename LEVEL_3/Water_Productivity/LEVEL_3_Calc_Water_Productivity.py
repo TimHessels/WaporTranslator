@@ -597,6 +597,7 @@ def main(inputs):
 
     ################################# Calculate Mean Yield Fresh Grass over every AEZ per year #################################
     L3_AEZ_ET = dict()
+    AEZ.Data = AEZ.Data.astype(np.int)
     for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
         L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ.Data == AEZ_ID, ET.Data, np.nan), 99, axis=(1,2))
         
