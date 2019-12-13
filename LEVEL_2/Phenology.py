@@ -322,8 +322,8 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
 def Calc_Season(Ts, phenology_threshold):
     
     # Create a moving window of the Transpiration
-    #Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]) + np.append(Ts[-2:], Ts[:-2]) + np.append(Ts[2:], Ts[0:2]))/5
-    Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]))/3
+    Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]) + np.append(Ts[-2:], Ts[:-2]) + np.append(Ts[2:], Ts[0:2]))/5
+    #Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]))/3
     
     # Get the minimum and maximum Transpiration over the period
     Minimum_T = np.nanpercentile(Ts_MW,5)
@@ -339,6 +339,7 @@ def Calc_Season(Ts, phenology_threshold):
     # In the end I have set the threshold values on 1.5 and 1.0
     #Maximum_Threshold = np.minimum(Threshold_LVL * (Maximum_T + Minimum_T) / 2 + Minimum_T, Threshold_LVL_min)
     Maximum_Threshold = phenology_threshold
+    slope_treshold = 0.15
     #Threshold_stop = np.maximum(0.2 * Maximum_Threshold + Minimum_T, 0.3 * Maximum_Threshold)
     Threshold_stop = 1.5
     
@@ -352,17 +353,26 @@ def Calc_Season(Ts, phenology_threshold):
     Values = np.where(np.isnan(Ts_MW), 0, 1)
     
     # Difference values
+    Array_Diff = np.append(0, Ts_MW[1:] - Ts_MW[:-1])
     Ts_MW_Diff = np.append(0, np.where(Ts_MW[1:] - Ts_MW[:-1] < 0, -1, 1))
     DIFFS = (Ts_MW_Diff + np.append(Ts_MW_Diff[1:], 0) + np.append(0, Ts_MW_Diff[:-1]) + np.append([0,0], Ts_MW_Diff[:-2]) + np.append(Ts_MW_Diff[2:], [0,0]))
+    Ts_MW_array = np.ones([len(Ts_MW_Diff), int(phenology_threshold)]) * np.nan
+    for i in range(0, int(phenology_threshold)):
+        if i == 0:
+            Ts_MW_array[:, i] = Array_Diff[i:]
+        else:
+            Ts_MW_array[:-i, i] = Array_Diff[i:]
+            
+    DIFFS_max = np.nanmax(Ts_MW_array, axis = 1)
 
     # Check over the days
-    if (Maximum_Threshold > 1.2 and Maximum_T > Maximum_Threshold):
+    if np.nanmax(Ts) > 1.2:
         
         
         for i in range(0, len(Ts_MW)):
             
             # Find start of a period
-            if (DIFFS[i]>=Maximum_Threshold and Season_on == 0) and (np.nanmax(Endmax) < i):
+            if (DIFFS[i]>=Maximum_Threshold and Season_on == 0) and (np.nanmax(Endmax) < i) and (DIFFS_max[np.maximum(0,i-1)] > slope_treshold):
                 #print("start ", i)
                 
                 # Set start of period paramters
