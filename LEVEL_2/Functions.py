@@ -78,6 +78,64 @@ def Calc_Dekads_from_Daily(DataCube_in, flux_state = "flux"):
         
     return(DataCube_out)         
 
+def Calc_Dekads_from_Monthly(DataCube_in):
+    
+    import WaporTranslator.LEVEL_1.DataCube as DataCube
+    
+    # Get the timesteps of the dekads and the monthly
+    Time_monthly = DataCube_in.Ordinal_time
+    Time = Get_Dekads(datetime.datetime.fromordinal(Time_monthly[0]).year, datetime.datetime.fromordinal(Time_monthly[-1]).year)
+    Time = np.array(list(map(lambda i : i.toordinal(), Time)))
+    
+    # Create empty array
+    Data_out = np.ones([len(Time_monthly) * 3, DataCube_in.Size[1], DataCube_in.Size[2]]) * np.nan
+    
+    Counter = 1
+    
+    for i in range(0, DataCube_in.Size[1]):
+        for j in range(0, DataCube_in.Size[2]):
+            
+            sys.stdout.write("\rCreate Dekads %s %i/%i (%f %%)" %(DataCube_in.Variable, Counter, (DataCube_in.Size[1] * DataCube_in.Size[2]), Counter/(DataCube_in.Size[1] * DataCube_in.Size[2]) * 100))
+            sys.stdout.flush()
+
+            x = np.append(Time_monthly, Time[-1])
+            y = np.append(DataCube_in.Data[:,i,j], DataCube_in.Data[-1,i,j])
+            try:
+                f2 = interp1d(x, y, kind='linear')
+                inter = f2(Time)
+            except:
+                inter = np.ones(len(Time)) * np.nan
+                
+            Data_out[:,i,j] = inter
+            Counter += 1
+    
+    DataCube_out = DataCube.Rasterdata_Empty()
+    DataCube_out.Data = Data_out
+    DataCube_out.Projection = DataCube_in.Projection
+    DataCube_out.Size = [len(Time), DataCube_in.Size[1], DataCube_in.Size[2]]
+    DataCube_out.GeoTransform = DataCube_in.GeoTransform
+    DataCube_out.NoData = np.nan
+    DataCube_out.Ordinal_time = Time
+
+    # Origin Of Data
+    DataCube_out.Directory = ''
+    DataCube_out.Format = ''
+
+    # Describtion of dataset
+    DataCube_out.Variable = DataCube_in.Variable
+    DataCube_out.Product = DataCube_in.Product
+    DataCube_out.Description = DataCube_in.Description
+    DataCube_out.Unit = DataCube_in.Unit
+    DataCube_out.Dimension_description = DataCube_in.Dimension_description
+    
+    # Time Series
+    DataCube_out.Startdate = '%d-%02d-%02d' %(datetime.datetime.fromordinal(Time[0]).year, datetime.datetime.fromordinal(Time[0]).month, datetime.datetime.fromordinal(Time[0]).day)
+    DataCube_out.Enddate = '%d-%02d-%02d' %(datetime.datetime.fromordinal(Time[-1]).year, datetime.datetime.fromordinal(Time[-1]).month, datetime.datetime.fromordinal(Time[-1]).day)   
+    DataCube_out.Timestep = ''    
+
+    print("                                                                                                                      ")
+            
+    return(DataCube_out)            
 
 
 def Calc_Daily_from_Dekads(DataCube_in):

@@ -38,7 +38,11 @@ class Input_Paths():
     Temp = r"LEVEL_1\Weather_Data\Model\GLDAS\daily\tair_f_inst\mean"
     Wind = r"LEVEL_1\Weather_Data\Model\GLDAS\daily\wind_f_inst\mean"
     Hum = r"LEVEL_1\Weather_Data\Model\GLDAS\daily\hum_f_inst\mean"
-
+    Temp_monthly = r"LEVEL_1\Weather_Data\Model\GLDAS\monthly\tair_f_inst"
+    Wind_monthly = r"LEVEL_1\Weather_Data\Model\GLDAS\monthly\wind_f_inst"
+    Hum_monthly = r"LEVEL_1\Weather_Data\Model\GLDAS\monthly\hum_f_inst\mean"
+    DSSF_monthly = r"LEVEL_1\Weather_Data\Model\GLDAS\monthly\swdown_f_tavg"  
+    
 	# LEVEL 2
     Available_Before_Depletion = r"LEVEL_2\Available_Before_Depletion"
     Critical_Soil_Moisture = r"LEVEL_2\Critical_Soil_Moisture"
@@ -117,6 +121,7 @@ class Input_Formats:
     DSLF = "DSLF_LSASAF_MSG_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     DSSF = "DSSF_LSASAF_MSG_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     KNMI = "SDS_MSGCPP_W-m-2_daily_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    DSSF_monthly = "DSSF_LSASAF_MSG_{yyyy}.{mm:02d}.{dd:02d}.tif"  #!!!
     
     Albedo = "Albedo_MCD43A3_-_daily_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     
@@ -133,7 +138,11 @@ class Input_Formats:
     Temp = "Tair_GLDAS-NOAH_C_daily_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Wind = "W_GLDAS-NOAH_m-s-1_daily_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Hum = "Hum_GLDAS-NOAH_percentage_daily_{yyyy}.{mm:02d}.{dd:02d}.tif"
- 
+    Temp_monthly = "Tair_GLDAS-NOAH_C_monthly_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    Wind_monthly = "W_GLDAS-NOAH_m-s-1_monthly_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    Hum_monthly = "Hum_GLDAS-NOAH_percentage_monthly_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    DSSF_monthly = "SWdown_GLDAS-NOAH_W-m-2_monthly_{yyyy}.{mm:02d}.{dd:02d}.tif"
+    
 	# LEVEL 2
     Available_Before_Depletion = "Available_Before_Depletion_mm_{yyyy}.{mm:02d}.{dd:02d}.tif"
     Critical_Soil_Moisture = "Critical_Soil_Moisture_cm3-cm-3_{yyyy}.{mm:02d}.{dd:02d}.tif"
@@ -213,6 +222,7 @@ class Input_Conversions:
     DSLF = 0.000001                 #w/m2
     DSSF = 0.000001                 #w/m2
     KNMI = 1                        #w/m2
+    DSSF_monthly = 1               #w/m2
     
     Albedo = 1                      # -
     
@@ -229,7 +239,10 @@ class Input_Conversions:
     Temp = 1                        #C
     Wind = 1                        #m/s
     Hum = 1                         #%
-    
+    Temp_monthly = 1                        #C
+    Wind_monthly = 1                        #m/s
+    Hum_monthly = 1                         #%
+        
  	# LEVEL 2
     Available_Before_Depletion = 1
     Critical_Soil_Moisture = 1

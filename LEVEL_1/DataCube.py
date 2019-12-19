@@ -121,7 +121,7 @@ class Rasterdata_tiffs:
         self.Projection = proj
         self.Size = shape
         self.GeoTransform = geo
-        self.Data = Array_end.astype(np.float16)
+        self.Data = Array_end.astype(np.float64)
         self.NoData = np.nan
         self.Ordinal_time = time_or
     
@@ -222,7 +222,7 @@ class Rasterdata_Empty:
         Dates = self.Ordinal_time
         geo = self.GeoTransform
         proj = self.Projection
-        Data = self.Data
+        Data = self.Data.astype(np.float64)
         Variable = self.Variable
         Unit = self.Unit
         
@@ -272,6 +272,8 @@ def Get_Data(filename_in, Example_Data, reprojection_type):
         band = dest_br.GetRasterBand(1)
         NDV = band.GetNoDataValue()
         Array = band.ReadAsArray()
+        Array = np.float_(Array)
+        Array[Array == NDV] = np.nan
         Array_NDV = np.where(Array == NDV, 0, 1)
         proj_br = dest_br.GetProjection()
         geo_br = dest_br.GetGeoTransform()

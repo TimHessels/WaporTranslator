@@ -29,6 +29,7 @@ def main(inputs):
     Yield_info_S3 = inputs["Yield_info_S3"]       
     Yield_info_Per = inputs["Yield_info_Per"]   
     Threshold = inputs["Irrigation_Dekads_Threshold"]  
+    Champion_per = inputs["Champion_Percentage"] 
     
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
@@ -166,7 +167,7 @@ def main(inputs):
     AEZ_decads = np.repeat(AEZ.Data, 36, 0).reshape([36 * AEZ.Size[0], AEZ.Size[1], AEZ.Size[2]])
     L3_AEZ_NPP = dict()
     for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
-        L3_AEZ_NPP[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ_decads == AEZ_ID, Actual_Biomass_Production.Data, np.nan), 99, axis=(1,2))
+        L3_AEZ_NPP[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ_decads == AEZ_ID, Actual_Biomass_Production.Data, np.nan), Champion_per, axis=(1,2))
     
     ################################# Create spatial target maps #################################
     NPP_target_Data = np.ones(Actual_Biomass_Production.Size) * np.nan

@@ -14,51 +14,66 @@ from joblib import Parallel, delayed
 import watertools
 import watertools.General.data_conversions as DC
 
-def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, cores):
+def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, cores, method = "Daily"):
 
     # Get Date range
     Startdate = "%s-01-01" %Start_year_analyses
     Enddate = "%s-12-31" %End_year_analyses
-    Dates = pd.date_range(Startdate, Enddate, freq = "D")
-    Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst']
-    
+    if method == "Daily":
+        Dates = pd.date_range(Startdate, Enddate, freq = "D")
+        Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst']   
+    if method == "Monthly": 
+        Dates = pd.date_range(Startdate, Enddate, freq = "MS")
+        Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst', 'swdown_f_tavg']           
+ 
     print("Downloading METEO data from GLDAS")
 
     # Download required GLDAS data    
-    Parallel(n_jobs=cores)(delayed(Download_GLDAS_Parallel)(Var, output_folder_L1, Startdate, Enddate, latlim, lonlim)
+    Parallel(n_jobs=cores)(delayed(Download_GLDAS_Parallel)(Var, output_folder_L1, Startdate, Enddate, latlim, lonlim, method)
                                              for Var in Vars)
-
+           
     # Create folder for relative humidity
-    output_dir = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", "daily", "hum_f_inst", "mean")
+    output_dir = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", method.lower(), "hum_f_inst", "mean")
+        
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     # Calculate Humidity
     for Date_one in Dates:
-        
-        output_filename = os.path.join(output_dir, "Hum_GLDAS-NOAH_percentage_daily_%d.%02d.%02d.tif" %(Date_one.year, Date_one.month, Date_one.day))
+        output_filename = os.path.join(output_dir, "Hum_GLDAS-NOAH_percentage_%s_%d.%02d.%02d.tif" %(method.lower(), Date_one.year, Date_one.month, Date_one.day))
         if not os.path.exists(output_filename):
-            Calc_Humidity(output_folder_L1, output_filename)
+            Calc_Humidity(output_folder_L1, output_filename, method)
         
     return()
     
-def Download_GLDAS_Parallel(Var, output_folder_L1, Startdate, Enddate, latlim, lonlim):
+def Download_GLDAS_Parallel(Var, output_folder_L1, Startdate, Enddate, latlim, lonlim, method):
     
     Var_array = ["%s" %Var]
-    watertools.Collect.GLDAS.daily(output_folder_L1, Var_array, Startdate, Enddate, latlim, lonlim, Waitbar = 0)
-    
-        
-def Calc_Humidity(output_folder_L1, output_filename):
+    if method == "Daily":
+        watertools.Collect.GLDAS.daily(output_folder_L1, Var_array, Startdate, Enddate, latlim, lonlim, Waitbar = 0)
+    if method == "Monthly":
+        watertools.Collect.GLDAS.monthly(output_folder_L1, Var_array, Startdate, Enddate, latlim, lonlim, Waitbar = 0)    
+
+def Calc_Humidity(output_folder_L1, output_filename, method):
     
     # find date
     year = int((output_filename.split("_")[-1]).split(".")[0])
     month = int((output_filename.split("_")[-1]).split(".")[1])
     day = int((output_filename.split("_")[-1]).split(".")[2])
     
-    # find paths
-    file_t = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", "daily", "tair_f_inst", "mean", "Tair_GLDAS-NOAH_C_daily_%d.%02d.%02d.tif" %(year, month, day))
-    file_h = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", "daily", "qair_f_inst", "mean", "Hum_GLDAS-NOAH_kg-kg_daily_%d.%02d.%02d.tif" %(year, month, day))
-    file_p = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", "daily", "psurf_f_inst", "mean", "P_GLDAS-NOAH_kpa_daily_%d.%02d.%02d.tif" %(year, month, day))
+    if method == "Daily":
+    
+        # find paths
+        file_t = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", method.lower(), "tair_f_inst", "mean", "Tair_GLDAS-NOAH_C_%s_%d.%02d.%02d.tif" %(method.lower(), year, month, day))
+        file_h = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", method.lower(), "qair_f_inst", "mean", "Hum_GLDAS-NOAH_kg-kg_%s_%d.%02d.%02d.tif" %(method.lower(), year, month, day))
+        file_p = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", method.lower(), "psurf_f_inst", "mean", "P_GLDAS-NOAH_kpa_%s_%d.%02d.%02d.tif" %(method.lower(), year, month, day))
+    
+    if method == "Monthly":
+    
+        # find paths
+        file_t = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", method.lower(), "tair_f_inst", "Tair_GLDAS-NOAH_C_%s_%d.%02d.%02d.tif" %(method.lower(), year, month, day))
+        file_h = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", method.lower(), "qair_f_inst", "Hum_GLDAS-NOAH_kg-kg_%s_%d.%02d.%02d.tif" %(method.lower(), year, month, day))
+        file_p = os.path.join(output_folder_L1, "Weather_Data", "Model", "GLDAS", method.lower(), "psurf_f_inst", "P_GLDAS-NOAH_kpa_%s_%d.%02d.%02d.tif" %(method.lower(), year, month, day))
 
     # Open paths
     destt = gdal.Open(file_t)

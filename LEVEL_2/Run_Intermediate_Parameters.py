@@ -21,7 +21,9 @@ def main(inputs):
     End_year_analyses = inputs["End_year"]
     output_folder = inputs["Output_folder"]  
     WAPOR_LVL = inputs["WAPOR_LEVEL"]  
-    Phenology_Threshold = inputs["Phenology_Threshold"]    
+    Phenology_Threshold = inputs["Phenology_Threshold"]  
+    Phenology_Slope = inputs["Phenology_Slope"]  
+    METEO_timestep = inputs["METEO_timestep"]             
     try:
         Radiation_Data = inputs["Radiation_Source"]   
     except:
@@ -49,14 +51,6 @@ def main(inputs):
     # Define dates
     Dates = Functions.Get_Dekads(Start_year_analyses, End_year_analyses)
     Dates_yearly = list(pd.date_range("%s-01-01" %str(Start_year_analyses), "%s-12-31" %End_year_analyses, freq = "AS")) 
-    Dates_Daily = list(pd.date_range("%s-01-01" %str(Start_year_analyses), "%s-12-31" %End_year_analyses))
-    if Radiation_Data == "LANDSAF":
-        Start_Rad = 2016
-    if Radiation_Data == "KNMI":    
-        Start_Rad = 2017
-        
-    Dates_Net_Radiation_Daily = list(pd.date_range("%s-01-01" %str(np.maximum(int(Start_year_analyses), Start_Rad)), "%s-12-31" %End_year_analyses))
-    Dates_Net_Radiation = Functions.Get_Dekads(str(np.maximum(int(Start_year_analyses), Start_Rad)), End_year_analyses)    
 
     # Get path and formats
     Paths = Inputs.Input_Paths()
@@ -82,12 +76,22 @@ def main(inputs):
     LU_END = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, list(Dates_yearly), Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
 
     del LU
-    
+       
     ################################## Get ALBEDO data ############################################
+
+    if Radiation_Data == "LANDSAF":
+        Start_Rad = 2016
+    if Radiation_Data == "KNMI":    
+        Start_Rad = 2017
+    if METEO_timestep == "Monthly":    
+        Start_Rad = Start_year_analyses
+        
+    Dates_Net_Radiation = Functions.Get_Dekads(str(np.maximum(int(Start_year_analyses), Start_Rad)), End_year_analyses)   
 
     if Albedo_Data == "MODIS":
         Albedo = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Albedo), Formats.Albedo, Dates_Net_Radiation, Conversion = Conversions.Albedo, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Albedo', Product = 'MODIS', Unit = '-')
     else:
+    
         Albedo_Array = np.ones([len(Dates_Net_Radiation), T.Size[1], T.Size[2]])* 0.17
         
         for Dates_albedo in Dates_Net_Radiation:
@@ -106,19 +110,31 @@ def main(inputs):
         Albedo.Size = Albedo_Array.shape
         Albedo.Variable = "Albedo"
         Albedo.Unit = "-"
-    
-    # Open daily
-    if Radiation_Data == "LANDSAF":
-        DSLF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DSLF), Formats.DSLF, Dates_Net_Radiation_Daily, Conversion = Conversions.DSLF, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DSLF', Product = 'LANDSAF', Unit = 'W/m2')
-        DSSF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DSSF), Formats.DSSF, Dates_Net_Radiation_Daily, Conversion = Conversions.DSLF, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DSSF', Product = 'LANDSAF', Unit = 'W/m2')
-    if Radiation_Data == "KNMI":
-        KNMI_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.KNMI), Formats.KNMI, Dates_Net_Radiation_Daily, Conversion = Conversions.KNMI, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'SDS', Product = 'KNMI', Unit = 'W/m2')
+
+    if METEO_timestep == "Monthly":
+        Dates_monthly = list(pd.date_range("%s-01-01" %str(Start_year_analyses), "%s-12-31" %End_year_analyses, freq = "MS"))    
+     
+        Temp_monthly = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Temp_monthly), Formats.Temp_monthly, Dates_monthly, Conversion = Conversions.Temp_monthly, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Temperature', Product = 'GLDAS', Unit = 'Celcius')
+        Hum_monthly = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Hum_monthly), Formats.Hum_monthly, Dates_monthly, Conversion = Conversions.Hum_monthly, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Humidity', Product = 'GLDAS', Unit = 'Percentage')
+        DSSF_monthly = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DSSF_monthly), Formats.DSSF_monthly, Dates_monthly, Conversion = Conversions.DSSF_monthly,  Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DSSF', Product = 'GLDAS', Unit = 'W/m2')
         
-    Temp_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Temp), Formats.Temp, Dates_Daily, Conversion = Conversions.Temp, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Temperature', Product = 'GLDAS', Unit = 'Celcius')
-    Hum_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Hum), Formats.Hum, Dates_Daily, Conversion = Conversions.Hum, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Humidity', Product = 'GLDAS', Unit = 'Percentage')
- 
-    #################### Convert into daily datasets ############################################
-    Albedo_Daily = Functions.Calc_Daily_from_Dekads(Albedo)
+    if METEO_timestep == "Daily":
+        Dates_Daily = list(pd.date_range("%s-01-01" %str(Start_year_analyses), "%s-12-31" %End_year_analyses))
+        
+        Dates_Net_Radiation_Daily = list(pd.date_range("%s-01-01" %str(np.maximum(int(Start_year_analyses), Start_Rad)), "%s-12-31" %End_year_analyses))
+
+        # Open daily
+        if Radiation_Data == "LANDSAF":
+            DSLF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DSLF), Formats.DSLF, Dates_Net_Radiation_Daily, Conversion = Conversions.DSLF, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DSLF', Product = 'LANDSAF', Unit = 'W/m2')
+            DSSF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DSSF), Formats.DSSF, Dates_Net_Radiation_Daily, Conversion = Conversions.DSSF, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DSSF', Product = 'LANDSAF', Unit = 'W/m2')
+        if Radiation_Data == "KNMI":
+            DSSF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.KNMI), Formats.KNMI, Dates_Net_Radiation_Daily, Conversion = Conversions.KNMI, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'SDS', Product = 'KNMI', Unit = 'W/m2')
+            
+        Temp_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Temp), Formats.Temp, Dates_Daily, Conversion = Conversions.Temp, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Temperature', Product = 'GLDAS', Unit = 'Celcius')
+        Hum_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Hum), Formats.Hum, Dates_Daily, Conversion = Conversions.Hum, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Humidity', Product = 'GLDAS', Unit = 'Percentage')
+     
+        #################### Convert into daily datasets ############################################
+        Albedo_Daily = Functions.Calc_Daily_from_Dekads(Albedo)
 
     ################################### Calculate LAI ############################################
     LAI_Data = np.log((1-np.minimum(T.Data/ET0.Data, 0.99)))/(-0.55)
@@ -138,102 +154,155 @@ def main(inputs):
     del LAI_Data, LUdek
     
     LAI.Save_As_Tiff(os.path.join(output_folder_L2, "LAI"))
-
-    #################### Calculate Net Radiation LANDSAF method ###################################    
-    if Radiation_Data == "LANDSAF":
-        
-        ################# Calculate Land Surface Emissivity ###########################################
-        Land_Surface_Emissivity_Data = np.minimum(1, 0.9 + 0.017 * LAI.Data[np.isin(LAI.Ordinal_time, Albedo.Ordinal_time), :, :])
-        Land_Surface_Emissivity_Data = Land_Surface_Emissivity_Data.clip(0, 1.0)
-        
-        # Write in DataCube
-        Land_Surface_Emissivity = DataCube.Rasterdata_Empty()
-        Land_Surface_Emissivity.Data = Land_Surface_Emissivity_Data * MASK
-        Land_Surface_Emissivity.Projection = Albedo.Projection
-        Land_Surface_Emissivity.GeoTransform = Albedo.GeoTransform
-        Land_Surface_Emissivity.Ordinal_time = Albedo.Ordinal_time
-        Land_Surface_Emissivity.Size = Land_Surface_Emissivity_Data.shape
-        Land_Surface_Emissivity.Variable = "Land Surface Emissivity"
-        Land_Surface_Emissivity.Unit = "-"
-        
-        del Land_Surface_Emissivity_Data
-        
-        Land_Surface_Emissivity.Save_As_Tiff(os.path.join(output_folder_L2, "Land_Surface_Emissivity"))
-        
-        #################### Convert into daily datasets ############################################
-        Land_Surface_Emissivity_Daily = Functions.Calc_Daily_from_Dekads(Land_Surface_Emissivity)   
-
-        ###################### Calculate Net Radiation (daily) #####################################
-        Net_Radiation_Data_Daily = (1 - Albedo_Daily.Data) * DSSF_daily.Data + DSLF_daily.Data * 1.15 - Land_Surface_Emissivity_Daily.Data * 0.0000000567 * (273.15 + Temp_daily.Data[np.isin(Temp_daily.Ordinal_time, DSLF_daily.Ordinal_time)] - 4)**4
-        Net_Radiation_Data_Daily  = Net_Radiation_Data_Daily.clip(0, 500)
-        Net_Radiation_Data_Daily[Net_Radiation_Data_Daily == 0] = np.nan
-        
-        del Land_Surface_Emissivity_Daily, DSSF_daily, DSLF_daily
-        
-    #################### Calculate Net Radiation KNMI method ###################################  
-    if Radiation_Data == "KNMI":
-        
+    
+    if METEO_timestep == "Monthly":       
+    
         DEM =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DEM), Formats.DEM, Dates = None, Conversion = Conversions.DEM, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DEM', Product = 'SRTM', Unit = 'm')
-
+  
+        DSSF = Functions.Calc_Dekads_from_Monthly(DSSF_monthly)
+        Temp = Functions.Calc_Dekads_from_Monthly(Temp_monthly)
+        Hum = Functions.Calc_Dekads_from_Monthly(Hum_monthly)
+        
         ###################### Calculate Net Radiation (daily) #####################################
-        DOY = np.array(list(map(lambda i : int(datetime.datetime.fromordinal(i).strftime('%j')), Albedo_Daily.Ordinal_time[np.isin(Albedo_Daily.Ordinal_time, KNMI_daily.Ordinal_time)])))
+        DOY = np.array(list(map(lambda i : int(datetime.datetime.fromordinal(i).strftime('%j')), LAI.Ordinal_time[np.isin(LAI.Ordinal_time, DSSF.Ordinal_time)])))
         Latitude = Albedo.GeoTransform[3] + Albedo.GeoTransform[5] * np.float_(list(range(0,Albedo.Size[1]))) - 0.5 * Albedo.GeoTransform[5]
         Inverse_Relative_Distance_Earth_Sun = 1 + 0.033* np.cos(2 * np.pi * DOY/365)
         Solar_Declanation = 0.409 * np.sin(2 * np.pi * DOY/365 - 1.39) 
         Sunset_Hour_Angle = np.squeeze(np.arccos(-np.tan(Latitude[None, :, None]/180 * np.pi)*np.tan(Solar_Declanation[:, None, None])))
         Extra_Terrestrial_Radiation = np.squeeze(435.2 * Inverse_Relative_Distance_Earth_Sun[:, None, None] * (Sunset_Hour_Angle[:, :, None] * np.sin((Latitude[None, :, None]/180) * np.pi) * np.sin(Solar_Declanation[:, None, None]) + np.cos((Latitude[None, :, None]/180) * np.pi) * np.cos(Solar_Declanation[:, None, None]) * np.sin(Sunset_Hour_Angle[:, :, None])))
-        Saturated_Vapor_Pressure = 0.611 * np.exp((17.27 * Temp_daily.Data)/(237.3 + Temp_daily.Data))
-        Actual_Vapor_Pressure = Hum_daily.Data * 0.01 * Saturated_Vapor_Pressure     
-        Slope_Saturated_Vapor_Pressure = 4098 * Saturated_Vapor_Pressure/(Temp_daily.Data+237.3)**2
+        Saturated_Vapor_Pressure = 0.611 * np.exp((17.27 * Temp.Data)/(237.3 + Temp.Data))
+        Actual_Vapor_Pressure = Hum.Data * 0.01 * Saturated_Vapor_Pressure     
+        Slope_Saturated_Vapor_Pressure = 4098 * Saturated_Vapor_Pressure/(Temp.Data+237.3)**2
         Psy_Constant = 0.665 * 0.001 * 101.3 * ((293 - 0.0065 * DEM.Data)/293)**(5.26)
-        Net_Longwave_FAO = (0.34 - 0.14 * (Actual_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :])**(0.5)) * (1.35 * KNMI_daily.Data/(0.8 * Extra_Terrestrial_Radiation[:, :, None]) - 0.35) * 0.0000000567 * (273.15+Temp_daily.Data[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :])**4
-        Net_Longwave_Slob = 110 * (KNMI_daily.Data/Extra_Terrestrial_Radiation[:, :, None])
+        Net_Longwave_FAO = (0.34 - 0.14 * (Actual_Vapor_Pressure[np.isin(Temp.Ordinal_time, DSSF.Ordinal_time), :, :])**(0.5)) * (1.35 * DSSF.Data/(0.8 * Extra_Terrestrial_Radiation[:, :, None]) - 0.35) * 0.0000000567 * (273.15+Temp.Data[np.isin(Temp.Ordinal_time, DSSF.Ordinal_time), :, :])**4
+        Net_Longwave_Slob = 110 * (DSSF.Data/Extra_Terrestrial_Radiation[:, :, None])
         Net_Longwave = np.where(Net_Longwave_FAO>Net_Longwave_Slob, Net_Longwave_FAO, Net_Longwave_Slob) 
-        Net_Radiation_Data_Daily =(1 - Albedo_Daily.Data[np.isin(Albedo_Daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :])*KNMI_daily.Data - Net_Longwave
-
-        del Hum_daily, Latitude, Inverse_Relative_Distance_Earth_Sun, Solar_Declanation, Sunset_Hour_Angle, Saturated_Vapor_Pressure, Actual_Vapor_Pressure, Net_Longwave_FAO, Net_Longwave
-
+        Net_Radiation_Data =(1 - Albedo.Data[np.isin(Albedo.Ordinal_time, DSSF.Ordinal_time), :, :])*DSSF.Data - Net_Longwave
+  
+        Days_in_Dekads = np.append(Albedo.Ordinal_time[1:] - Albedo.Ordinal_time[:-1], 11)
+       
         ###################### Calculate ET0 de Bruin Daily #####################################
-        ET0_deBruin_Daily_Data = ((Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :]/(Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, KNMI_daily.Ordinal_time), :, :] + Psy_Constant[None, :, :])) * ((1 - 0.23) * KNMI_daily.Data - Net_Longwave_Slob) + 20)/28.4
+        ET0_deBruin_Data = ((Slope_Saturated_Vapor_Pressure[np.isin(Temp.Ordinal_time, DSSF.Ordinal_time), :, :]/(Slope_Saturated_Vapor_Pressure[np.isin(Temp.Ordinal_time, DSSF.Ordinal_time), :, :] + Psy_Constant[None, :, :])) * ((1 - 0.23) * DSSF.Data - Net_Longwave_Slob) + 20)/28.4 * Days_in_Dekads[:, None, None]
 
         # Write in DataCube
-        ET0_deBruin_Daily = DataCube.Rasterdata_Empty()
-        ET0_deBruin_Daily.Data = ET0_deBruin_Daily_Data * MASK
-        ET0_deBruin_Daily.Projection = Albedo.Projection
-        ET0_deBruin_Daily.GeoTransform = Albedo.GeoTransform
-        ET0_deBruin_Daily.Ordinal_time = Albedo_Daily.Ordinal_time
-        ET0_deBruin_Daily.Size = ET0_deBruin_Daily_Data.shape
-        ET0_deBruin_Daily.Variable = "ET0 de Bruin"
-        ET0_deBruin_Daily.Unit = "mm-d-1"
-        
-        # change from daily to decads
-        ET0_deBruin = Functions.Calc_Dekads_from_Daily(ET0_deBruin_Daily, flux_state = "flux")
+        ET0_deBruin = DataCube.Rasterdata_Empty()
+        ET0_deBruin.Data = ET0_deBruin_Data * MASK
+        ET0_deBruin.Projection = Albedo.Projection
+        ET0_deBruin.GeoTransform = Albedo.GeoTransform
+        ET0_deBruin.Ordinal_time = Albedo.Ordinal_time
+        ET0_deBruin.Size = ET0_deBruin_Data.shape
+        ET0_deBruin.Variable = "ET0 de Bruin"
         ET0_deBruin.Unit = "mm-dekad-1"
         
-        del ET0_deBruin_Daily_Data, Net_Longwave_Slob, KNMI_daily, Psy_Constant
+        ET0_deBruin.Save_As_Tiff(os.path.join(output_folder_L2, "ET0_deBruin"))  
         
-        ET0_deBruin.Save_As_Tiff(os.path.join(output_folder_L2, "ET0_deBruin"))
-
-    # Write in DataCube
-    Net_Radiation_Daily = DataCube.Rasterdata_Empty()
-    Net_Radiation_Daily.Data = Net_Radiation_Data_Daily * MASK
-    Net_Radiation_Daily.Projection = Albedo.Projection
-    Net_Radiation_Daily.GeoTransform = Albedo.GeoTransform
-    Net_Radiation_Daily.Ordinal_time = Albedo_Daily.Ordinal_time
-    Net_Radiation_Daily.Size = Net_Radiation_Data_Daily.shape
-    Net_Radiation_Daily.Variable = "Net Radiation"
-    Net_Radiation_Daily.Unit = "W-m-2"
+         # Write in DataCube
+        Net_Radiation = DataCube.Rasterdata_Empty()
+        Net_Radiation.Data = Net_Radiation_Data * MASK
+        Net_Radiation.Projection = Albedo.Projection
+        Net_Radiation.GeoTransform = Albedo.GeoTransform
+        Net_Radiation.Ordinal_time = Albedo.Ordinal_time
+        Net_Radiation.Size = Net_Radiation_Data.shape
+        Net_Radiation.Variable = "Net Radiation"
+        Net_Radiation.Unit = "W-m-2"      
+            
+    if METEO_timestep == "Daily":    
     
-    del Net_Radiation_Data_Daily, Albedo_Daily, ET0_deBruin_Daily, Albedo
+        #################### Calculate Net Radiation LANDSAF method ###################################    
+        if Radiation_Data == "LANDSAF":
+            
+            ################# Calculate Land Surface Emissivity ###########################################
+            Land_Surface_Emissivity_Data = np.minimum(1, 0.9 + 0.017 * LAI.Data[np.isin(LAI.Ordinal_time, Albedo.Ordinal_time), :, :])
+            Land_Surface_Emissivity_Data = Land_Surface_Emissivity_Data.clip(0, 1.0)
+            
+            # Write in DataCube
+            Land_Surface_Emissivity = DataCube.Rasterdata_Empty()
+            Land_Surface_Emissivity.Data = Land_Surface_Emissivity_Data * MASK
+            Land_Surface_Emissivity.Projection = Albedo.Projection
+            Land_Surface_Emissivity.GeoTransform = Albedo.GeoTransform
+            Land_Surface_Emissivity.Ordinal_time = Albedo.Ordinal_time
+            Land_Surface_Emissivity.Size = Land_Surface_Emissivity_Data.shape
+            Land_Surface_Emissivity.Variable = "Land Surface Emissivity"
+            Land_Surface_Emissivity.Unit = "-"
+            
+            del Land_Surface_Emissivity_Data
+            
+            Land_Surface_Emissivity.Save_As_Tiff(os.path.join(output_folder_L2, "Land_Surface_Emissivity"))
+            
+            #################### Convert into daily datasets ############################################
+            Land_Surface_Emissivity_Daily = Functions.Calc_Daily_from_Dekads(Land_Surface_Emissivity)   
     
-    ############### convert Net Radiation to dekadal ############################################
-    Net_Radiation = Functions.Calc_Dekads_from_Daily(Net_Radiation_Daily, flux_state = "state")
-    Temp = Functions.Calc_Dekads_from_Daily(Temp_daily, flux_state = "state")
+            ###################### Calculate Net Radiation (daily) #####################################
+            Net_Radiation_Data_Daily = (1 - Albedo_Daily.Data) * DSSF_daily.Data + DSLF_daily.Data * 1.15 - Land_Surface_Emissivity_Daily.Data * 0.0000000567 * (273.15 + Temp_daily.Data[np.isin(Temp_daily.Ordinal_time, DSLF_daily.Ordinal_time)] - 4)**4
+            Net_Radiation_Data_Daily  = Net_Radiation_Data_Daily.clip(0, 500)
+            Net_Radiation_Data_Daily[Net_Radiation_Data_Daily == 0] = np.nan
+            
+            del Land_Surface_Emissivity_Daily, DSSF_daily, DSLF_daily
+            
+        #################### Calculate Net Radiation KNMI method ###################################  
+        if Radiation_Data == "KNMI":
+            
+            DEM =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DEM), Formats.DEM, Dates = None, Conversion = Conversions.DEM, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DEM', Product = 'SRTM', Unit = 'm')
     
-    del Net_Radiation_Daily, Temp_daily
+            ###################### Calculate Net Radiation (daily) #####################################
+            DOY = np.array(list(map(lambda i : int(datetime.datetime.fromordinal(i).strftime('%j')), Albedo_Daily.Ordinal_time[np.isin(Albedo_Daily.Ordinal_time, DSSF_daily.Ordinal_time)])))
+            Latitude = Albedo.GeoTransform[3] + Albedo.GeoTransform[5] * np.float_(list(range(0,Albedo.Size[1]))) - 0.5 * Albedo.GeoTransform[5]
+            Inverse_Relative_Distance_Earth_Sun = 1 + 0.033* np.cos(2 * np.pi * DOY/365)
+            Solar_Declanation = 0.409 * np.sin(2 * np.pi * DOY/365 - 1.39) 
+            Sunset_Hour_Angle = np.squeeze(np.arccos(-np.tan(Latitude[None, :, None]/180 * np.pi)*np.tan(Solar_Declanation[:, None, None])))
+            Extra_Terrestrial_Radiation = np.squeeze(435.2 * Inverse_Relative_Distance_Earth_Sun[:, None, None] * (Sunset_Hour_Angle[:, :, None] * np.sin((Latitude[None, :, None]/180) * np.pi) * np.sin(Solar_Declanation[:, None, None]) + np.cos((Latitude[None, :, None]/180) * np.pi) * np.cos(Solar_Declanation[:, None, None]) * np.sin(Sunset_Hour_Angle[:, :, None])))
+            Saturated_Vapor_Pressure = 0.611 * np.exp((17.27 * Temp_daily.Data)/(237.3 + Temp_daily.Data))
+            Actual_Vapor_Pressure = Hum_daily.Data * 0.01 * Saturated_Vapor_Pressure     
+            Slope_Saturated_Vapor_Pressure = 4098 * Saturated_Vapor_Pressure/(Temp_daily.Data+237.3)**2
+            Psy_Constant = 0.665 * 0.001 * 101.3 * ((293 - 0.0065 * DEM.Data)/293)**(5.26)
+            Net_Longwave_FAO = (0.34 - 0.14 * (Actual_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, DSSF_daily.Ordinal_time), :, :])**(0.5)) * (1.35 * DSSF_daily.Data/(0.8 * Extra_Terrestrial_Radiation[:, :, None]) - 0.35) * 0.0000000567 * (273.15+Temp_daily.Data[np.isin(Temp_daily.Ordinal_time, DSSF_daily.Ordinal_time), :, :])**4
+            Net_Longwave_Slob = 110 * (DSSF_daily.Data/Extra_Terrestrial_Radiation[:, :, None])
+            Net_Longwave = np.where(Net_Longwave_FAO>Net_Longwave_Slob, Net_Longwave_FAO, Net_Longwave_Slob) 
+            Net_Radiation_Data_Daily =(1 - Albedo_Daily.Data[np.isin(Albedo_Daily.Ordinal_time, DSSF_daily.Ordinal_time), :, :])*DSSF_daily.Data - Net_Longwave
+    
+            del Hum_daily, Latitude, Inverse_Relative_Distance_Earth_Sun, Solar_Declanation, Sunset_Hour_Angle, Saturated_Vapor_Pressure, Actual_Vapor_Pressure, Net_Longwave_FAO, Net_Longwave
+     
+            ###################### Calculate ET0 de Bruin Daily #####################################
+            ET0_deBruin_Daily_Data = ((Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, DSSF_daily.Ordinal_time), :, :]/(Slope_Saturated_Vapor_Pressure[np.isin(Temp_daily.Ordinal_time, DSSF_daily.Ordinal_time), :, :] + Psy_Constant[None, :, :])) * ((1 - 0.23) * DSSF_daily.Data - Net_Longwave_Slob) + 20)/28.4
+    
+            # Write in DataCube
+            ET0_deBruin_Daily = DataCube.Rasterdata_Empty()
+            ET0_deBruin_Daily.Data = ET0_deBruin_Daily_Data * MASK
+            ET0_deBruin_Daily.Projection = Albedo.Projection
+            ET0_deBruin_Daily.GeoTransform = Albedo.GeoTransform
+            ET0_deBruin_Daily.Ordinal_time = Albedo_Daily.Ordinal_time
+            ET0_deBruin_Daily.Size = ET0_deBruin_Daily_Data.shape
+            ET0_deBruin_Daily.Variable = "ET0 de Bruin"
+            ET0_deBruin_Daily.Unit = "mm-d-1"
+            
+            # change from daily to decads
+            ET0_deBruin = Functions.Calc_Dekads_from_Daily(ET0_deBruin_Daily, flux_state = "flux")
+            ET0_deBruin.Unit = "mm-dekad-1"
+            
+            del ET0_deBruin_Daily_Data, Net_Longwave_Slob, KNMI_daily, Psy_Constant
+            
+            ET0_deBruin.Save_As_Tiff(os.path.join(output_folder_L2, "ET0_deBruin"))
+    
+        # Write in DataCube
+        Net_Radiation_Daily = DataCube.Rasterdata_Empty()
+        Net_Radiation_Daily.Data = Net_Radiation_Data_Daily * MASK
+        Net_Radiation_Daily.Projection = Albedo.Projection
+        Net_Radiation_Daily.GeoTransform = Albedo.GeoTransform
+        Net_Radiation_Daily.Ordinal_time = Albedo_Daily.Ordinal_time
+        Net_Radiation_Daily.Size = Net_Radiation_Data_Daily.shape
+        Net_Radiation_Daily.Variable = "Net Radiation"
+        Net_Radiation_Daily.Unit = "W-m-2"
+        
+        del Net_Radiation_Data_Daily, Albedo_Daily, ET0_deBruin_Daily, Albedo
+        
+        ############### convert Net Radiation to dekadal ############################################
+        Net_Radiation = Functions.Calc_Dekads_from_Daily(Net_Radiation_Daily, flux_state = "state")
+        Temp = Functions.Calc_Dekads_from_Daily(Temp_daily, flux_state = "state")
+        
+        del Net_Radiation_Daily, Temp_daily
 
     # Calc net Radiation of before 2016 if required
-    if int(Start_year_analyses) < Start_Rad:
+    if (int(Start_year_analyses) < Start_Rad and METEO_timestep != "Monthly"):
         
         Total_years = int(np.ceil(Net_Radiation.Size[0]/36))
         Net_Radiation_Per_Dekad = np.ones([36, Net_Radiation.Size[1], Net_Radiation.Size[2]]) * np.nan
@@ -351,7 +420,7 @@ def main(inputs):
     Bulk =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Bulk), Formats.Bulk.format(level=6), Dates = None, Conversion = Conversions.Bulk, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Bulk', Product = 'SoilGrids', Unit = 'kg/m3')
     Sand =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Sand), Formats.Sand.format(level=6), Dates = None, Conversion = Conversions.Sand, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Sand', Product = 'SoilGrids', Unit = 'Percentage')
     Clay =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Clay), Formats.Clay.format(level=6), Dates = None, Conversion = Conversions.Clay, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Clay', Product = 'SoilGrids', Unit = 'Percentage')
-
+       
     Theta_Sat_Subsoil_Data = 0.85 * (1 - Bulk.Data/2650) + 0.13 * Clay.Data * 0.01
     
     # Write in DataCube
@@ -369,7 +438,7 @@ def main(inputs):
     Theta_Sat_Subsoil.Save_As_Tiff(os.path.join(output_folder_L2, "Theta_Sat_Subsoil"))
     
     ################### Calculate Theta Field Capacity Subsoil #############################
-    Theta_FC_Subsoil_Data = -2.2 * Theta_Sat_Subsoil.Data**2 + 2.92 * Theta_Sat_Subsoil.Data - 0.59
+    Theta_FC_Subsoil_Data = -2.95 * Theta_Sat_Subsoil.Data**2 + 3.96 * Theta_Sat_Subsoil.Data - 0.871
     
     # Write in DataCube
     Theta_FC_Subsoil = DataCube.Rasterdata_Empty()
@@ -420,7 +489,7 @@ def main(inputs):
     Soil_Water_Holding_Capacity.Save_As_Tiff(os.path.join(output_folder_L2, "Soil_Water_Holding_Capacity"))
     
     ################### Calculate Soil Moisture ############################################
-    Soil_Moisture_Data = Theta_Sat_Subsoil.Data * np.exp((np.minimum(Evaporative_Fraction.Data, 0.9) - 1)/0.421)
+    Soil_Moisture_Data = Theta_Sat_Subsoil.Data * np.exp((Evaporative_Fraction.Data.clip(0, 0.9) - 1)/0.421)
     
     # Write in DataCube
     Soil_Moisture = DataCube.Rasterdata_Empty()
@@ -746,7 +815,7 @@ def main(inputs):
     
     ############################### Calculate Phenelogy ####################################
     
-    L2.Phenology.Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold)
+    L2.Phenology.Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope)
 
     return()    
     

@@ -23,6 +23,7 @@ def main(inputs):
     output_folder = inputs["Output_folder"]  
     WAPOR_LVL = inputs["WAPOR_LEVEL"]   
     threshold_irrigated = inputs["Irrigation_Dekads_Threshold"]   
+    Champion_per = inputs["Champion_Percentage"]     
     
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
@@ -111,7 +112,7 @@ def main(inputs):
     
     ######################## Calculate Gross Irrigation Water Supply ########################
     Gross_Irrigation_Water_Supply_Data = np.maximum(0, (Net_Supply_Drainage.Data + Deep_Percolation.Data + Surface_Runoff_P.Data) * (1 + Surface_Runoff_Coefficient.Data))
-    Gross_Irrigation_Water_Supply_Data = np.minimum(1/0.95 * ETblue.Data, Gross_Irrigation_Water_Supply_Data)
+    Gross_Irrigation_Water_Supply_Data = np.maximum(1/0.95 * ETblue.Data, Gross_Irrigation_Water_Supply_Data)
     
     # Write in DataCube
     Gross_Irrigation_Water_Supply = DataCube.Rasterdata_Empty()
@@ -167,7 +168,7 @@ def main(inputs):
 
     # Write in DataCube
     Non_Consumptive_Use_Due_To_Irrigation = DataCube.Rasterdata_Empty()
-    Non_Consumptive_Use_Due_To_Irrigation.Data = Non_Consumptive_Use_Due_To_Irrigation_Data * MASK
+    Non_Consumptive_Use_Due_To_Irrigation.Data = Non_Consumptive_Use_Due_To_Irrigation_Data.clip(0,100) * MASK
     Non_Consumptive_Use_Due_To_Irrigation.Projection = ET.Projection
     Non_Consumptive_Use_Due_To_Irrigation.GeoTransform = ET.GeoTransform
     Non_Consumptive_Use_Due_To_Irrigation.Ordinal_time = ET.Ordinal_time
@@ -180,11 +181,13 @@ def main(inputs):
     Non_Consumptive_Use_Due_To_Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Non_Consumptive_Use_Due_To_Irrigation"))    
     
     ######################### Calculate Onfarm Irrigation Efficiency ########################
+    Gross_Irrigation_Water_Supply.Data[Gross_Irrigation_Water_Supply.Data==0] = 0.001
     Onfarm_Irrigation_Efficiency_Data = ETblue.Data/Gross_Irrigation_Water_Supply.Data * 100
+    Onfarm_Irrigation_Efficiency_Data = Onfarm_Irrigation_Efficiency_Data.astype(np.float64)
     
     # Write in DataCube
     Onfarm_Irrigation_Efficiency = DataCube.Rasterdata_Empty()
-    Onfarm_Irrigation_Efficiency.Data = Onfarm_Irrigation_Efficiency_Data * MASK
+    Onfarm_Irrigation_Efficiency.Data = Onfarm_Irrigation_Efficiency_Data.clip(0,100) * MASK
     Onfarm_Irrigation_Efficiency.Projection = ET.Projection
     Onfarm_Irrigation_Efficiency.GeoTransform = ET.GeoTransform
     Onfarm_Irrigation_Efficiency.Ordinal_time = ET.Ordinal_time
@@ -197,7 +200,7 @@ def main(inputs):
     Onfarm_Irrigation_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "Onfarm_Irrigation_Efficiency"))    
     
     ########################## Calculate Degree Of Over Irrigation #########################
-    Degree_Of_Over_Irrigation_Data = Soil_Moisture.Data/Theta_FC_Subsoil.Data[None, :, :]
+    Degree_Of_Over_Irrigation_Data = np.maximum(Theta_FC_Subsoil.Data[None, :, :]/Soil_Moisture.Data,1) * 100
  
     # Write in DataCube
     Degree_Of_Over_Irrigation = DataCube.Rasterdata_Empty()
@@ -214,7 +217,7 @@ def main(inputs):
     Degree_Of_Over_Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Degree_Of_Over_Irrigation"))        
     
     ########################### Calculate Adequacy Degree Of Under Irrigation ##########################
-    Degree_Of_Under_Irrigation_Data = Soil_Moisture.Data/Critical_Soil_Moisture.Data
+    Degree_Of_Under_Irrigation_Data = np.minimum(Critical_Soil_Moisture.Data/Soil_Moisture.Data, 1) * 100 
  
     # Write in DataCube
     Degree_Of_Under_Irrigation = DataCube.Rasterdata_Empty()
@@ -251,7 +254,7 @@ def main(inputs):
     L3_AEZ_ET = dict()
     AEZ.Data = AEZ.Data.astype(np.int)
     for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
-        L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ.Data == AEZ_ID, ET.Data, np.nan), 99, axis=(1,2))
+        L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ.Data == AEZ_ID, ET.Data, np.nan), Champion_per, axis=(1,2))
     
     ################################# Create spatial target maps #################################
     ET_Target_Spatial_Data = np.ones(Adequacy_Crop_Water_Deficit.Size) * np.nan
@@ -316,7 +319,8 @@ def main(inputs):
     del Mean_Long_Term_ET_Data
     
     Mean_Long_Term_ET.Save_As_Tiff(os.path.join(output_folder_L3, "Mean_Long_Term_Evapotranspiration"))
-    
+
+    '''    
     ################################## Calculate Gap in Evapotranspiration #################################
     ET_Gap_Temporal_Data = np.minimum(0, np.tile(Mean_Long_Term_ET.Data, (Total_years, 1, 1)) - ET.Data * Days_in_Dekads[:, None, None])
 
@@ -334,6 +338,7 @@ def main(inputs):
     
     ET_Gap_Temporal.Save_As_Tiff(os.path.join(output_folder_L3, "ETgap"))
 
+
     ################################### Calculate Feasible Water Conservation ##################################
     Feasible_Water_Conservation_Data =(ET_Savings_Spatial.Data + ET_Gap_Temporal.Data)/2
 
@@ -350,7 +355,7 @@ def main(inputs):
     del Feasible_Water_Conservation_Data
     
     Feasible_Water_Conservation.Save_As_Tiff(os.path.join(output_folder_L3, "Feasible_Water_Conservation"))
-    
+    '''  
     #################################### Calculate Non Beneficial Water Losses ###################################
     Non_Beneficial_Water_Losses_Data = (E.Data + I.Data) * Days_in_Dekads[:, None, None]
 
@@ -367,7 +372,7 @@ def main(inputs):
     del Non_Beneficial_Water_Losses_Data
     
     Non_Beneficial_Water_Losses.Save_As_Tiff(os.path.join(output_folder_L3, "Non_Beneficial_Water_Losses"))    
-    
+  
     ##################################### Calculate Equity ####################################
     
     Irrigation_MASK_Data = np.where(Irrigation.Data>threshold_irrigated, 1, np.nan)

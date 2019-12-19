@@ -9,15 +9,19 @@ import numpy as np
 import watertools
 import WaporTranslator.LEVEL_2.Functions as Functions
 
-def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, Radiation_Data):
+def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, Radiation_Data, METEO_timestep):
 
-    if Radiation_Data == "LANDSAF":
-        Start_year_analyses = np.maximum(int(Start_year_analyses), 2016)
-    elif Radiation_Data == "KNMI":
-        Start_year_analyses = np.maximum(int(Start_year_analyses), 2017)       
-    else:
-        print("Choose for Radiation input LANDSAF or KNMI")
+    if METEO_timestep == "Monthly":    
+        Start_year_analyses = Start_year_analyses
     
+    if METEO_timestep == "Daily":       
+        if Radiation_Data == "LANDSAF":
+            Start_year_analyses = np.maximum(int(Start_year_analyses), 2016)
+        elif Radiation_Data == "KNMI":
+            Start_year_analyses = np.maximum(int(Start_year_analyses), 2017)       
+        else:
+            print("Choose for Radiation input LANDSAF or KNMI")
+            
     # Find dates
     dates_dek = Functions.Get_Dekads(Start_year_analyses, End_year_analyses)
 

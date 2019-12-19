@@ -11,7 +11,7 @@ import warnings
 import pandas as pd
 import WaporTranslator.LEVEL_1 as L1
 
-def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data):
+def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep):
     
     # Create output folder for LEVEL 1 data
     output_folder_L1 = os.path.join(output_folder, "LEVEL_1")
@@ -45,23 +45,28 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
         L1.LEVEL_1_Download_WAPOR.main(output_folder_L1, year, year, latlim, lonlim, WAPOR_LVL, API_WAPOR_KEY)    
         
         # Download GLDAS data
-        L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores)
-        
+        if METEO_timestep == "Daily":
+            L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores, method = "Daily")
+            
+            # Process MSGCCP data
+            if Radiation_Data == "LANDSAF":
+                if year >= 2016:
+                    L1.LEVEL_1_Process_MSGCCP.main(output_folder_L1, year, latlim, lonlim)
+            elif Radiation_Data == "KNMI":
+                if year >= 2017:            
+                    L1.LEVEL_1_Process_KNMI.main(output_folder_L1, year, latlim, lonlim, cores)
+            else:
+                print("Choose for Radiation input LANDSAF or KNMI")     
+                
+        elif METEO_timestep == "Monthly":
+            L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores, method = "Monthly")            
+        else:
+            print("Choose for METEO timestep Daily or Monthly")
+            
         # Download MODIS data
         if Albedo_Data == "MODIS":
             L1.LEVEL_1_Download_MODIS.main(output_folder_L1, year, year, latlim, lonlim, Radiation_Data)
         
-        # Process MSGCCP data
-        if Radiation_Data == "LANDSAF":
-            if year >= 2016:
-                L1.LEVEL_1_Process_MSGCCP.main(output_folder_L1, year, latlim, lonlim)
-            
-        elif Radiation_Data == "KNMI":
-            if year >= 2017:            
-                L1.LEVEL_1_Process_KNMI.main(output_folder_L1, year, latlim, lonlim, cores)
-        else:
-            print("Choose for Radiation input LANDSAF or KNMI")
-    
     # Create Mask
     L1.LEVEL_1_Create_Mask.main(output_folder_L1, dest_AOI_MASK, Threshold_Mask)
 
@@ -84,6 +89,8 @@ if __name__== "__main__":
     output_folder = inputs["Output_folder"]
     API_WAPOR_KEY = inputs["API_WAPOR_KEY"]    
     WAPOR_LVL = inputs["WAPOR_LEVEL"]  
+    METEO_timestep = inputs["METEO_timestep"]      
+    
     try:
         Radiation_Data = inputs["Radiation_Source"]   
     except:
@@ -94,4 +101,4 @@ if __name__== "__main__":
         Albedo_Data = "MODIS"        
     
     # run code
-    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data)
+    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep)

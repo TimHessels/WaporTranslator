@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import watertools.General.data_conversions as DC
 
-def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, phenology_threshold):
+def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope):
 
     # Define start and enddate
     Startdate = "%s-01-01" %Start_year_analyses
@@ -65,7 +65,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
           Ts = T_selected[:, i, j]
           if not np.isnan(np.nanmean(Ts)): 
            
-              Start, End, Start_Per, End_Per = Calc_Season(Ts, phenology_threshold)
+              Start, End, Start_Per, End_Per = Calc_Season(Ts, Phenology_Threshold, Phenology_Slope)
     
               Seasons_dict_start[pixel] = Start
               Seasons_dict_end[pixel] = End
@@ -319,7 +319,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
        
     return()
     
-def Calc_Season(Ts, phenology_threshold):
+def Calc_Season(Ts, Phenology_Threshold, Phenology_Slope):
     
     # Create a moving window of the Transpiration
     Ts_MW = (Ts + np.append(Ts[1:], Ts[0]) + np.append(Ts[-1], Ts[:-1]) + np.append(Ts[-2:], Ts[:-2]) + np.append(Ts[2:], Ts[0:2]))/5
@@ -338,14 +338,16 @@ def Calc_Season(Ts, phenology_threshold):
     
     # In the end I have set the threshold values on 1.5 and 1.0
     #Maximum_Threshold = np.minimum(Threshold_LVL * (Maximum_T + Minimum_T) / 2 + Minimum_T, Threshold_LVL_min)
-    Maximum_Threshold = phenology_threshold
-    slope_treshold = 0.15
+    Maximum_Threshold = Phenology_Threshold
+    slope_treshold = Phenology_Slope
     #Threshold_stop = np.maximum(0.2 * Maximum_Threshold + Minimum_T, 0.3 * Maximum_Threshold)
     Threshold_stop = 1.5
     
     # Set the start point
     Start = []
     End = []
+    Start_Per = []
+    End_Per  = []    
     Endmax = 0
     Season_on = 0
     
@@ -356,8 +358,8 @@ def Calc_Season(Ts, phenology_threshold):
     Array_Diff = np.append(0, Ts_MW[1:] - Ts_MW[:-1])
     Ts_MW_Diff = np.append(0, np.where(Ts_MW[1:] - Ts_MW[:-1] < 0, -1, 1))
     DIFFS = (Ts_MW_Diff + np.append(Ts_MW_Diff[1:], 0) + np.append(0, Ts_MW_Diff[:-1]) + np.append([0,0], Ts_MW_Diff[:-2]) + np.append(Ts_MW_Diff[2:], [0,0]))
-    Ts_MW_array = np.ones([len(Ts_MW_Diff), int(phenology_threshold)]) * np.nan
-    for i in range(0, int(phenology_threshold)):
+    Ts_MW_array = np.ones([len(Ts_MW_Diff), int(Phenology_Threshold)]) * np.nan
+    for i in range(0, int(Phenology_Threshold)):
         if i == 0:
             Ts_MW_array[:, i] = Array_Diff[i:]
         else:

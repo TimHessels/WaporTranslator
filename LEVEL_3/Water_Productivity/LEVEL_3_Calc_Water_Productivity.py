@@ -9,6 +9,7 @@ import gdal
 import warnings
 import pandas as pd
 import numpy as np
+from scipy.optimize import curve_fit
 
 def main(inputs):  
 
@@ -21,6 +22,7 @@ def main(inputs):
     Yield_info_S2 = inputs["Yield_info_S2"]       
     Yield_info_S3 = inputs["Yield_info_S3"]       
     Yield_info_Per = inputs["Yield_info_Per"]   
+    Champion_per = inputs["Champion_Percentage"] 
     
     import WaporTranslator.LEVEL_1.Input_Data as Inputs
     import WaporTranslator.LEVEL_1.DataCube as DataCube
@@ -59,7 +61,7 @@ def main(inputs):
     ################################# Dynamic maps #################################
     ET = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.ET) %WAPOR_LVL), str(Formats.ET) %WAPOR_LVL, Dates, Conversion = Conversions.ET, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET', Product = 'WAPOR', Unit = 'mm/day')
     T = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.T) %WAPOR_LVL), str(Formats.T) %WAPOR_LVL, Dates, Conversion = Conversions.T, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'T', Product = 'WAPOR', Unit = 'mm/day')
-    ET0 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET0), Formats.ET0, Dates, Conversion = Conversions.ET0, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET0', Product = 'WAPOR', Unit = 'mm/day')
+    #ET0 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET0), Formats.ET0, Dates, Conversion = Conversions.ET0, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET0', Product = 'WAPOR', Unit = 'mm/day')
     Actual_Biomass_Production = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Actual_Biomass_Production), Formats.Actual_Biomass_Production, Dates, Conversion = Conversions.Actual_Biomass_Production, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Actual Biomass Production', Product = '', Unit = 'kg/ha/d')
     NPPcum = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Cumulative_NPP), Formats.Cumulative_NPP, Dates, Conversion = Conversions.Cumulative_NPP, Variable = 'Cumulated NPP', Product = '', Unit = 'mm/decade')      
     Crop_S1_Start = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Season_Start_S1), Formats.Season_Start_S1, list(Dates_Years), Conversion = Conversions.Season_Start_S1, Variable = 'Season 1 Start', Product = '', Unit = 'DOY')
@@ -95,6 +97,7 @@ def main(inputs):
     ################################# Calculate Crop Season and LU #################################
     Season_Type = L3_Food.Calc_Crops(CropType, CropSeason, MASK)
 
+    '''
     ######################## Calculate Transpiration Efficiency ########################
     T_Efficiency_Data = Actual_Biomass_Production.Data/(T.Data * 10)
 
@@ -111,7 +114,7 @@ def main(inputs):
     del T_Efficiency_Data
     
     T_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "T_Efficiency"))         
-
+    '''
     ######################### Calculate accumulated parameters #######################
 
     # Calculate cummulative ET and ET0 over the seasons
@@ -324,7 +327,7 @@ def main(inputs):
     
     ################## Calculate AquaCrop water use efficiency #############################
     
-    AquaCrop_Water_Use_Efficiency_Data = 1000 * (Accumulated_Biomass_Production.Data/(10 * Accumulated_DOY_Data * Accumulated_T_Data/Accumulated_ET0_Data))
+    AquaCrop_Water_Use_Efficiency_Data = (Accumulated_Biomass_Production.Data/(10 * Accumulated_DOY_Data * (Accumulated_T_Data/Accumulated_ET0_Data)))
 
     # Write in DataCube
     AquaCrop_Water_Use_Efficiency = DataCube.Rasterdata_Empty()
@@ -341,7 +344,7 @@ def main(inputs):
     AquaCrop_Water_Use_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "All"))    
 
     # Season 1
-    AquaCrop_Water_Use_Efficiency_Data_S1 = 1000 * (Accumulated_Biomass_Production_S1.Data/(10 * Accumulated_DOY_Data_S1 * Accumulated_T_Data_S1/Accumulated_ET0_Data_S1))
+    AquaCrop_Water_Use_Efficiency_Data_S1 = (Accumulated_Biomass_Production_S1.Data/(10 * Accumulated_DOY_Data_S1 * Accumulated_T_Data_S1/Accumulated_ET0_Data_S1))
 
     # Write in DataCube
     AquaCrop_Water_Use_Efficiency_S1 = DataCube.Rasterdata_Empty()
@@ -358,7 +361,7 @@ def main(inputs):
     AquaCrop_Water_Use_Efficiency_S1.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "S1"))    
 
    # Season 2
-    AquaCrop_Water_Use_Efficiency_Data_S2 = 1000 * (Accumulated_Biomass_Production_S2.Data/(10 * Accumulated_DOY_Data_S2 * Accumulated_T_Data_S2/Accumulated_ET0_Data_S2))
+    AquaCrop_Water_Use_Efficiency_Data_S2 = (Accumulated_Biomass_Production_S2.Data/(10 * Accumulated_DOY_Data_S2 * Accumulated_T_Data_S2/Accumulated_ET0_Data_S2))
 
     # Write in DataCube
     AquaCrop_Water_Use_Efficiency_S2 = DataCube.Rasterdata_Empty()
@@ -375,7 +378,7 @@ def main(inputs):
     AquaCrop_Water_Use_Efficiency_S2.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "S2"))    
 
    # Season 3
-    AquaCrop_Water_Use_Efficiency_Data_S3 = 1000 * (Accumulated_Biomass_Production_S3.Data/(10 * Accumulated_DOY_Data_S3 * Accumulated_T_Data_S3/Accumulated_ET0_Data_S3))
+    AquaCrop_Water_Use_Efficiency_Data_S3 = (Accumulated_Biomass_Production_S3.Data/(10 * Accumulated_DOY_Data_S3 * Accumulated_T_Data_S3/Accumulated_ET0_Data_S3))
 
     # Write in DataCube
     AquaCrop_Water_Use_Efficiency_S3 = DataCube.Rasterdata_Empty()
@@ -392,7 +395,7 @@ def main(inputs):
     AquaCrop_Water_Use_Efficiency_S3.Save_As_Tiff(os.path.join(output_folder_L3, "AquaCrop_Water_Use_Efficiency", "S3"))    
 
    # Season Perennial
-    AquaCrop_Water_Use_Efficiency_Data_Per = 1000 * (Accumulated_Biomass_Production_Per.Data/(10 * Accumulated_DOY_Data_Per * Accumulated_T_Data_Per/Accumulated_ET0_Data_Per))
+    AquaCrop_Water_Use_Efficiency_Data_Per = (Accumulated_Biomass_Production_Per.Data/(10 * Accumulated_DOY_Data_Per * Accumulated_T_Data_Per/Accumulated_ET0_Data_Per))
 
     # Write in DataCube
     AquaCrop_Water_Use_Efficiency_Per = DataCube.Rasterdata_Empty()
@@ -424,6 +427,27 @@ def main(inputs):
     del GBWP_Decade_Data
     
     GBWP_Decade.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Decade"))         
+
+    ######################### Calculate Gross Biomass Water Productivity - Trend ###############################
+    
+    # Set time
+    T = np.arange(len(Dates)) 
+    
+    # Calculate trend GBWP
+    trend_dekad = ((np.sum(np.where(np.isnan(GBWP_Decade.Data),0,1),axis = 0) * np.nansum(GBWP_Decade.Data * T[:,None,None], axis = 0)) - (np.nansum(GBWP_Decade.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(GBWP_Decade.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
+    GBWP_Change_In_Time_Data = trend_dekad / np.nanmean(GBWP_Decade.Data, axis = 0) * 100
+    
+    # Write in DataCube
+    GBWP_Change_In_Time = DataCube.Rasterdata_Empty()
+    GBWP_Change_In_Time.Data = GBWP_Change_In_Time_Data * MASK
+    GBWP_Change_In_Time.Projection = ET.Projection
+    GBWP_Change_In_Time.GeoTransform = ET.GeoTransform
+    GBWP_Change_In_Time.Ordinal_time = None
+    GBWP_Change_In_Time.Size = GBWP_Change_In_Time_Data.shape
+    GBWP_Change_In_Time.Variable = "GWBP Trend"
+    GBWP_Change_In_Time.Unit = "Percentage-year-1"
+    
+    GBWP_Change_In_Time.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_GWBP_Trend"))    
     
     ######################### Calculate Gross Biomass Water Productivity - Accumulated #########################
     GBWP_Accumulated_Data = (Accumulated_Biomass_Production.Data)/(10 * Accumulated_ET_Data)
@@ -599,7 +623,7 @@ def main(inputs):
     L3_AEZ_ET = dict()
     AEZ.Data = AEZ.Data.astype(np.int)
     for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
-        L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ.Data == AEZ_ID, ET.Data, np.nan), 99, axis=(1,2))
+        L3_AEZ_ET[int(AEZ_ID)] = np.nanpercentile(np.where(AEZ.Data == AEZ_ID, ET.Data, np.nan), Champion_per, axis=(1,2))
         
     ET_target_Data = np.ones(Actual_Biomass_Production.Size) * np.nan
     for AEZ_ID in np.unique(AEZ.Data[~np.isnan(AEZ.Data)]):
@@ -658,22 +682,52 @@ def main(inputs):
     GBWP_Improvements_Required.Save_As_Tiff(os.path.join(output_folder_L3, "GBWP_Improvement_Required"))     
     
     ######################### Calculate Normalized Gross Biomass Water Productivity Maximum Per TBP #########################
-    Total_years = int(np.ceil(ET0.Size[0]/36))
-    Mean_Long_Term_ET0_Data = np.ones([36, ET0.Size[1], ET0.Size[2]]) * np.nan
+
+    a_min = np.ones(len(Dates_Years)) * np.nan  
+    a_max = np.ones(len(Dates_Years)) * np.nan     
+    b_min = np.ones(len(Dates_Years)) * np.nan  
+    b_max = np.ones(len(Dates_Years)) * np.nan      
     
-    for dekad in range(0,36):
-        IDs = np.array(range(0, Total_years)) * 36 + dekad  
-        IDs_good = IDs[IDs<=ET0.Size[0]]
-        Mean_Long_Term_ET0_Data[dekad, :, :] = np.nanmean(ET0.Data[IDs_good,:,:], axis = 0) 
-   
-    Normalized_GBWP_Max_Per_TBP_Data = 5.7 * ET0.Data/np.tile(Mean_Long_Term_ET0_Data, (Total_years, 1, 1))
+    y = 0
+    for Date_Year in Dates_Years:
+        
+        GBWP_Season_year = GBWP_Season.Data[GBWP_Season.Ordinal_time == Date_Year.toordinal(), :, :]
+        Accumulated_Biomass_Production_year = Accumulated_Biomass_Production.Data[Accumulated_Biomass_Production.Ordinal_time == Date_Year.toordinal(), :, :]
+    
+        x = np.ones(19) * np.nan  
+        y_min = np.ones(19) * np.nan  
+        y_max = np.ones(19) * np.nan  
+        
+        Start_per = 0
+        End_per = 5
+        for i in range(0,19):
+            
+            Start_value = np.nanpercentile(Accumulated_Biomass_Production_year, Start_per)
+            End_value = np.nanpercentile(Accumulated_Biomass_Production_year, End_per)   
+            x[i] = np.nanmean(Accumulated_Biomass_Production_year[np.logical_and(Accumulated_Biomass_Production_year>=Start_value, Accumulated_Biomass_Production_year<End_value)])
+            y_min[i] = np.nanpercentile(GBWP_Season_year[np.logical_and(Accumulated_Biomass_Production_year>=Start_value, Accumulated_Biomass_Production_year<End_value)],5)
+            y_max[i] = np.nanpercentile(GBWP_Season_year[np.logical_and(Accumulated_Biomass_Production_year>=Start_value, Accumulated_Biomass_Production_year<End_value)],99)
+            Start_per += 5
+            End_per += 5
+            
+        pop_min, pcov_min = curve_fit(func_min, x, y_min)
+        pop_max, pcov_max = curve_fit(func_max, x, y_max)
+            
+        a_min[y] = pop_min[0]
+        a_max[y] = pop_max[0]  
+        b_min[y] = pop_min[1]
+        b_max[y] = pop_max[1] 
+        y += 1           
+        
+    
+    Normalized_GBWP_Max_Per_TBP_Data = a_max[:,None,None] * np.log(Accumulated_Biomass_Production.Data) + b_max[:,None,None]
 
     # Write in DataCube
     Normalized_GBWP_Max_Per_TBP = DataCube.Rasterdata_Empty()
     Normalized_GBWP_Max_Per_TBP.Data = Normalized_GBWP_Max_Per_TBP_Data * MASK
     Normalized_GBWP_Max_Per_TBP.Projection = ET.Projection
     Normalized_GBWP_Max_Per_TBP.GeoTransform = ET.GeoTransform
-    Normalized_GBWP_Max_Per_TBP.Ordinal_time = ET.Ordinal_time
+    Normalized_GBWP_Max_Per_TBP.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Normalized_GBWP_Max_Per_TBP.Size = Normalized_GBWP_Max_Per_TBP_Data.shape
     Normalized_GBWP_Max_Per_TBP.Variable = "Normalized Gross Biomass Water Productivity Maximum per TBP"
     Normalized_GBWP_Max_Per_TBP.Unit = "kg-m-3"
@@ -683,14 +737,14 @@ def main(inputs):
     Normalized_GBWP_Max_Per_TBP.Save_As_Tiff(os.path.join(output_folder_L3, "Normalized_GBWP_Max_Per_TBP"))  
     
     ######################### Calculate Normalized Gross Biomass Water Productivity Minimum Per TBP #########################
-    Normalized_GBWP_Min_Per_TBP_Data = 1.7 * ET0.Data/np.tile(Mean_Long_Term_ET0_Data, (Total_years, 1, 1))
+    Normalized_GBWP_Min_Per_TBP_Data = a_min[:,None,None] * Accumulated_Biomass_Production.Data + b_min[:,None,None]
 
     # Write in DataCube
     Normalized_GBWP_Min_Per_TBP = DataCube.Rasterdata_Empty()
     Normalized_GBWP_Min_Per_TBP.Data = Normalized_GBWP_Min_Per_TBP_Data * MASK
     Normalized_GBWP_Min_Per_TBP.Projection = ET.Projection
     Normalized_GBWP_Min_Per_TBP.GeoTransform = ET.GeoTransform
-    Normalized_GBWP_Min_Per_TBP.Ordinal_time = ET.Ordinal_time
+    Normalized_GBWP_Min_Per_TBP.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Normalized_GBWP_Min_Per_TBP.Size = Normalized_GBWP_Min_Per_TBP_Data.shape
     Normalized_GBWP_Min_Per_TBP.Variable = "Normalized Gross Biomass Water Productivity Minimum per TBP"
     Normalized_GBWP_Min_Per_TBP.Unit = "kg-m-3"
@@ -700,14 +754,14 @@ def main(inputs):
     Normalized_GBWP_Min_Per_TBP.Save_As_Tiff(os.path.join(output_folder_L3, "Normalized_GBWP_Min_Per_TBP"))      
     
     ########################## Calculate Water Productivity Score #########################
-    Water_Productivity_Score_Data = 9 * (GBWP_Decade.Data * ET0.Data/np.tile(Mean_Long_Term_ET0_Data, (Total_years, 1, 1)) - Normalized_GBWP_Min_Per_TBP.Data)/(Normalized_GBWP_Max_Per_TBP.Data - Normalized_GBWP_Min_Per_TBP.Data) + 1
+    Water_Productivity_Score_Data = 9 * (GBWP_Season.Data - Normalized_GBWP_Min_Per_TBP.Data)/(Normalized_GBWP_Max_Per_TBP.Data - Normalized_GBWP_Min_Per_TBP.Data) + 1
 
     # Write in DataCube
     Water_Productivity_Score = DataCube.Rasterdata_Empty()
-    Water_Productivity_Score.Data = Water_Productivity_Score_Data * MASK
+    Water_Productivity_Score.Data = Water_Productivity_Score_Data.clip(0,10) * MASK
     Water_Productivity_Score.Projection = ET.Projection
     Water_Productivity_Score.GeoTransform = ET.GeoTransform
-    Water_Productivity_Score.Ordinal_time = ET.Ordinal_time
+    Water_Productivity_Score.Ordinal_time = np.array(list(map(lambda i : i.toordinal(), Dates_Years)))
     Water_Productivity_Score.Size = Water_Productivity_Score_Data.shape
     Water_Productivity_Score.Variable = "Water Productivity Score Data"
     Water_Productivity_Score.Unit = "-"
@@ -1368,3 +1422,9 @@ def main(inputs):
     Accumulated_P_Trend_Per.Save_As_Tiff(os.path.join(output_folder_L3, "Accumulated_P_Trend", "Perennial")) 
 
     return()
+    
+def func_min(x, a, b):
+    return(a*x + b)
+    
+def func_max(x, a, b):
+    return(a*np.log(x) + b)    
