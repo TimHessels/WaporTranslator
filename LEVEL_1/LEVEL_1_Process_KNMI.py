@@ -45,6 +45,8 @@ def Download_MSGCPP_Parallel(Date, output_folder_L1, latlim, lonlim):
     Startdate = Date
     Enddate = Date
     watertools.Collect.MSGCPP.SDS(output_folder_L1, Startdate, Enddate, latlim, lonlim, Waitbar = 0)
+    
+    return()
 
 def Calc_daily_radiation(folder_in, folder_out, Date):
 
