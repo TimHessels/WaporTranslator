@@ -9,6 +9,7 @@ import os
 import gdal
 import warnings
 import numpy as np
+import pandas as pd
 
 def main(inputs):  
 
@@ -17,7 +18,8 @@ def main(inputs):
     End_year_analyses = inputs["End_year"]
     output_folder = inputs["Output_folder"]  
     WAPOR_LVL = inputs["WAPOR_LEVEL"]   
-
+    METEO_timestep = inputs["METEO_timestep"]    
+    
     import WaporTranslator.LEVEL_1.Input_Data as Inputs
     import WaporTranslator.LEVEL_1.DataCube as DataCube
     import WaporTranslator.LEVEL_2.Functions as Functions
@@ -58,8 +60,16 @@ def main(inputs):
     Surface_Runoff_P = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Surface_Runoff_P), Formats.Surface_Runoff_P, Dates, Conversion = Conversions.Surface_Runoff_P, Variable = 'Surface Runoff Precipitation', Product = '', Unit = 'mm/decade')
     Net_Radiation = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Net_Radiation), Formats.Net_Radiation, Dates, Conversion = Conversions.Net_Radiation, Variable = 'Net Radiation', Product = '', Unit = 'W/m2')
     Evaporative_Fraction = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.EF), Formats.EF, Dates, Conversion = Conversions.EF, Variable = 'Evaporative Fraction', Product = '', Unit = '-')
-    Wind = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Wind), Formats.Wind, Dates, Conversion = Conversions.Wind, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Wind Speed', Product = '', Unit = 'm/s')
-    
+    if METEO_timestep == "Daily":
+        Dates_D = list(pd.date_range("%s-01-01" %Start_year_analyses, "%s-12-31" %End_year_analyses, freq = "D" ))
+        Wind_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Wind), Formats.Wind, Dates_D, Conversion = Conversions.Wind, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Wind Speed', Product = '', Unit = 'm/s')
+        Wind = Functions.Calc_Dekads_from_Daily(Wind_daily, flux_state = "state")
+        
+    if METEO_timestep == "Monthly":
+        Dates_MS = list(pd.date_range("%s-01-01" %Start_year_analyses, "%s-12-31" %End_year_analyses, freq = "MS" ))        
+        Wind_monthly = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Wind_monthly), Formats.Wind_monthly, Dates_MS, Conversion = Conversions.Wind_monthly, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Wind Speed', Product = '', Unit = 'm/s')
+        Wind = Functions.Calc_Dekads_from_Monthly(Wind_monthly)
+        
     ################################# Static maps #################################     
     Soil_Organic_Carbon_Stock2 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.SOCS), Formats.SOCS.format(level = 2), Dates = None, Conversion = Conversions.SOCS, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Soil Organic Carbon Stock level 2', Product = '', Unit = 'ton/ha')
     Soil_Organic_Carbon_Stock3 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.SOCS), Formats.SOCS.format(level = 3), Dates = None, Conversion = Conversions.SOCS, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'Soil Organic Carbon Stock level 2', Product = '', Unit = 'ton/ha')
