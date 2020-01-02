@@ -170,61 +170,90 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                        # Get the end value for this start period 
                        End = int(Seasons_dict_end[dict_in[0]][np.argwhere(Starts[0] == dict_in[1])][0][0])
     
-                       # Set cumulative
-                       T_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
-                       ET_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = ET_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - ET_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
-                       P_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
-                       NPP_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
-                       Temp_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
-                       ET0_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
-    
-                       # Fill in array
-                       Start_Map_S1[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
-                       End_Map_S1[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
-                       LU_Crop_Map[dict_in[0]== ID_Matrix] = 1
+                       if np.nanmax(T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix])>150:
+        
+                           # Set cumulative
+                           T_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
+                           ET_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = ET_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - ET_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
+                           P_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
+                           NPP_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
+                           Temp_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
+                           ET0_end_sum[int(Starts[0]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix]
+         
+                           if np.nanmax(T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix])<400:
+
+                               # Fill in array
+                               Start_Map_S1[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
+                               End_Map_S1[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               LU_Crop_Map[dict_in[0]== ID_Matrix] = 1
+                               
+                           else: 
+                               # Fill in array
+                               Per_Map_Start[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
+                               Per_Map_End[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               LU_Crop_Map[dict_in[0]== ID_Matrix] = 4
                        
                     # If it is a double season               
                     if len(Starts) > 1:    
                         
                        # Get the end value for this start period   
                        End = int(Seasons_dict_end[dict_in[0]][np.argwhere(Starts[1] == dict_in[1])][0][0])
-             
-                       # Set cumulative
-                       T_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = T_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
-                       ET_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = ET_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - ET_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
-                       P_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
-                       NPP_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
-                       Temp_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
-                       ET0_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
-      
-                       # Fill in array
-                       Start_Map_S2[dict_in[0]== ID_Matrix] = Starts[1] - Year_DOY_Start      
-                       End_Map_S2[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
-                       LU_Crop_Map[dict_in[0] == ID_Matrix] = 2
+  
+                       if np.nanmax(T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix])>150:
+
+                           # Set cumulative
+                           T_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = T_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
+                           ET_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = ET_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - ET_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
+                           P_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
+                           NPP_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
+                           Temp_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
+                           ET0_end_sum[int(Starts[1]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[1]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[1])-1, 0)), dict_in[0] == ID_Matrix]
+
+                           if np.nanmax(T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix])<400:
+              
+                               # Fill in array
+                               Start_Map_S2[dict_in[0]== ID_Matrix] = Starts[1] - Year_DOY_Start      
+                               End_Map_S2[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               LU_Crop_Map[dict_in[0] == ID_Matrix] = 2
+                               
+                           else: 
+                               # Fill in array
+                               Per_Map_Start[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
+                               Per_Map_End[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               LU_Crop_Map[dict_in[0]== ID_Matrix] = 4
 
                     # If it is a triple season               
                     if len(Starts) > 2:    
                         
                        # Get the end value for this start period   
                        End = int(Seasons_dict_end[dict_in[0]][np.argwhere(Starts[2] == dict_in[1])][0][0])
-             
-                       # Set cumulative
-                       T_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = T_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
-                       ET_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = ET_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - ET_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
-                       P_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
-                       NPP_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
-                       Temp_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
-                       ET0_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
-      
-                       # Fill in array
-                       Start_Map_S3[dict_in[0]== ID_Matrix] = Starts[2] - Year_DOY_Start      
-                       End_Map_S3[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
-                       LU_Crop_Map[dict_in[0] == ID_Matrix] = 3
                        
+                       if np.nanmax(T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix])>150:
+
+                           # Set cumulative
+                           T_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = T_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                           ET_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = ET_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - ET_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                           P_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = P_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - P_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                           NPP_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = NPP_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - NPP_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                           Temp_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = Temp_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - Temp_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+                           ET0_end_sum[int(Starts[2]):End, dict_in[0]== ID_Matrix] = ET0_cum[int(Starts[2]):End, dict_in[0]== ID_Matrix] - ET0_cum[int(np.maximum(int(Starts[2])-1, 0)), dict_in[0] == ID_Matrix]
+
+                           if np.nanmax(T_cum[int(Starts[0]):End, dict_in[0]== ID_Matrix] - T_cum[int(np.maximum(int(Starts[0])-1, 0)), dict_in[0] == ID_Matrix])<400:
+          
+                               # Fill in array
+                               Start_Map_S3[dict_in[0]== ID_Matrix] = Starts[2] - Year_DOY_Start      
+                               End_Map_S3[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               LU_Crop_Map[dict_in[0] == ID_Matrix] = 3
+                           
+                           else: 
+                               # Fill in array
+                               Per_Map_Start[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
+                               Per_Map_End[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               LU_Crop_Map[dict_in[0]== ID_Matrix] = 4                           
             count += 1        
         print("                                                                                         ")      
 
-
+        '''
         # Do a Growing Degrees Days check
         GDD_CHECK = np.nanmax(Temp_end_sum, axis = 0)
         
@@ -246,7 +275,8 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
 
         LU_Crop_Map = np.where(np.logical_and(GDD_CHECK>7000,LU_Crop_Map==1), 4, LU_Crop_Map)
         LU_Crop_Map = np.where(np.logical_and(GDD_CHECK<7000,LU_Crop_Map==4), 1, LU_Crop_Map)
-
+        '''
+        
         # Save files
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "Start", "S1", "S1_Start_%s.tif" %year_nmbr), Start_Map_S1, geo, proj)    
         DC.Save_as_tiff(os.path.join(Output_Folder_L2, "Phenology", "Start", "S2", "S2_Start_%s.tif" %year_nmbr), Start_Map_S2, geo, proj)    
@@ -460,7 +490,7 @@ def Calc_Season(Ts, Phenology_Threshold, Phenology_Slope):
             Season_Amount_Decades = End_4_Perennial - Start 
             
             # If two seasons in a row is lower than .... combine season
-            Short_Season = np.where(Season_Amount_Decades<7, 1, 0)
+            Short_Season = np.where(Season_Amount_Decades<9, 1, 0)
             dist_right = Start - np.append(Start[1:], 0)
             dist_left = np.append(0, Start[:-1]) - Start  
             
@@ -482,7 +512,7 @@ def Calc_Season(Ts, Phenology_Threshold, Phenology_Slope):
                 Season_Amount_Decades = End - Start 
                 
                 # If two seasons in a row is lower than .... combine season
-                Short_Season = np.where(Season_Amount_Decades<7, 1, 0)
+                Short_Season = np.where(Season_Amount_Decades<9, 1, 0)
                 dist_right = Start - np.append(Start[1:], 0)
                 dist_left = np.append(0, Start[:-1]) - Start  
                 
