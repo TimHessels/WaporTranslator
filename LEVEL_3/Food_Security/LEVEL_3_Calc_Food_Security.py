@@ -338,7 +338,12 @@ def main(inputs):
     if not np.isnan(np.nanmean(Crop_S1_End.Data)):
         for Date_Year in Dates_Years:
             year_diff = int(Date_Year.year - Dates_Years[0].year)
-            for dekad in range(0,int(np.nanmax(Crop_S3_End.Data))):
+            max_decad = np.nanmax(Crop_S3_End.Data)
+            if np.isnan(max_decad):
+                max_decad = np.nanmax(Crop_S2_End.Data)                
+            if np.isnan(max_decad):
+                max_decad = np.nanmax(Crop_S1_End.Data)                     
+            for dekad in range(0,int(max_decad + 1)):
                 Accumulated_NPP_Data_Start_S1[year_diff, Crop_S1_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S1_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_NPP_Data_Start_S2[year_diff, Crop_S2_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S2_End.Data[year_diff, :, :] == dekad] 
                 Accumulated_NPP_Data_Start_S3[year_diff, Crop_S3_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[np.minimum(NPPcum.Size[0]-1, int(year_diff * 36 + dekad-1)), Crop_S3_End.Data[year_diff, :, :] == dekad] 
