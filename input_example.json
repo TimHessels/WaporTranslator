@@ -10,6 +10,7 @@
 			 "METEO_timestep": "Monthly",
 			 "Phenology_Threshold": 3,
 			 "Phenology_Slope": 0.5,
+			 "Champion_Percentage": 95,
 			 "Irrigation_Dekads_Threshold": 3,
 			 "Yield_info_S1": {"Croptype": "Rice", 
 			                   "Harvest_Index": 0.40,
