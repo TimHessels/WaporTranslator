@@ -11,7 +11,7 @@ import warnings
 import pandas as pd
 import WaporTranslator.LEVEL_1 as L1
 
-def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep):
+def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep, LU_Data):
     
     # Create output folder for LEVEL 1 data
     output_folder_L1 = os.path.join(output_folder, "LEVEL_1")
@@ -22,10 +22,11 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
     cores = 4
     
     # Get latlim and lonlim and create a mask of the shapefile
-    dest_AOI_MASK, latlim, lonlim = L1.LEVEL_1_AOI.main(Input_shapefile)
+    dest_AOI_MASK, latlim, lonlim = L1.LEVEL_1_AOI.main(Input_shapefile, Threshold_Mask)
     
     # Download ESACCI data
-    L1.LEVEL_1_Download_ESACCI.main(output_folder_L1, latlim, lonlim)
+    if LU_Data == "":
+        L1.LEVEL_1_Download_ESACCI.main(output_folder_L1, latlim, lonlim)
     
     # Download SoilGrids data
     L1.LEVEL_1_Download_SoilGrids.main(output_folder_L1, latlim, lonlim)
@@ -42,7 +43,7 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
         print("Collect data for the year %s" %year)
         
         # Download WAPOR data
-        L1.LEVEL_1_Download_WAPOR.main(output_folder_L1, year, year, latlim, lonlim, WAPOR_LVL, API_WAPOR_KEY)    
+        L1.LEVEL_1_Download_WAPOR.main(output_folder_L1, year, year, latlim, lonlim, WAPOR_LVL, API_WAPOR_KEY, LU_Data)    
         
         # Download GLDAS data
         if METEO_timestep == "Daily":
@@ -90,6 +91,7 @@ if __name__== "__main__":
     API_WAPOR_KEY = inputs["API_WAPOR_KEY"]    
     WAPOR_LVL = inputs["WAPOR_LEVEL"]  
     METEO_timestep = inputs["METEO_timestep"]      
+    LU_Data = inputs["LU_Map_Format"]    
     
     try:
         Radiation_Data = inputs["Radiation_Source"]   
@@ -101,4 +103,4 @@ if __name__== "__main__":
         Albedo_Data = "MODIS"        
     
     # run code
-    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep)
+    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep, LU_Data)

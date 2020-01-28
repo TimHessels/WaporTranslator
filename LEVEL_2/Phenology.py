@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import watertools.General.data_conversions as DC
 
-def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope):
+def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope, Phenology_Var):
 
     # Define start and enddate
     Startdate = "%s-01-01" %Start_year_analyses
@@ -57,8 +57,13 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     
     pixel = 1
     
-    T_selected = T.Data * Phenology_pixels_year
+    # Select the variable that will be used for the phenelogy
+    if Phenology_Var == "ET":
+        T_selected = ET.Data * Phenology_pixels_year        
+    else:        
+        T_selected = T.Data * Phenology_pixels_year
     
+    # Calculate start and end date
     for i in range(0, T.Size[1]):
         for j in range(0, T.Size[2]):    
           

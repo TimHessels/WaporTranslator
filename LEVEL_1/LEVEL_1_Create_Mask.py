@@ -34,6 +34,9 @@ def main(output_folder_L1, dest_AOI_MASK, Threshold_Mask):
     # Array mask
     Mask_with_Edge = dest_shp.GetRasterBand(1).ReadAsArray()
     
+    if Threshold_Mask == "OFF":
+        Threshold_Mask = 20
+    
     # Create End Mask
     Mask = np.where(Mask_with_Edge<Threshold_Mask/100., np.nan, 1)
     

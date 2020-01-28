@@ -118,7 +118,7 @@ If you forgot the $HOME folder, you can search by opening the Command Prompt and
 
 > dir Anaconda3 /AD /s
 
-After saving the changes within windowsOS.yml file, navigate to the folder where this .yml file is located by opening Anaconda prompt and type:
+After saving the windowsOS.yml file, navigate to the folder where this .yml file is located by opening Anaconda prompt and type:
 
 > cd C:\PATH\TO\DIRECTORY\WaporTranslator
 
@@ -168,7 +168,7 @@ The list below gives an overview of all the required modules for WaporTranslator
 | netCDF4 | netCDF4      |  conda install netCDF4 | 1.4.2 |
 | pandas | pandas      |  conda install pandas | 0.25.1 |
 | paramiko | paramiko      |  conda install paramiko | 2.6.0 |
-| pyproj | pyproj      |  pip install pyproj | 2.4.0 |
+| pyproj | pyproj      |  pip install pyproj | 2.4.1 |
 | Shapefile | pyshp      |  conda install pyshp  | 2.1.0 |
 | requests | requests      |  conda install requests | 2.22.0 |
 | scipy | scipy      |  conda install scipy | 1.3.1 |
@@ -176,6 +176,8 @@ The list below gives an overview of all the required modules for WaporTranslator
 | h5py | h5py      |  conda install h5py | 2.9.0 |
 | fiona | fiona      |  conda install fiona | 1.8.4 |
 | lxml | lxml      |  conda install lxml | 4.4.1 |
+| watertools | watertools      |  pip install watertools | 0.0.11 |
+| WaporAPI | WaporAPI      |  pip install WaporAPI | 0.0.3 |
 
 Python modules are function packages that can be imported into your python code. They usually contain stand-alone functions, which can be used within your own python code.
 
@@ -342,12 +344,28 @@ The inputs are the following:
 * **Start_Year** = integer, defining the start year of the analyses (must be 2009 or later)
 * **End_Year** = integer, defining the end year of the analyses
 * **Input_Shapefile** = string, defining the path to the shapefile (determines the area of interest of the analyses)
-* **Threshold_Mask** = interger, value beween 0 and 100 that defines the percentage of the pixel that needs to be within the shapefiles border in order to include within the analyses
+* **Threshold_Mask** = integer or string, value beween 0 and 100 that defines the percentage of the pixel that needs to be within the shapefiles border in order to include within the analyses. If the shapefile is very large this option can cause a MEMORY ERROR on the computer. If this is the case you can turn this option off by replacing the value by "OFF".
 * **Output_folder** = string, defines the directory to store the outputs, it will be created if folder does not exists
 * **API_WAPOR_KEY** = string, the personal API-WAPOR-TOKEN generated in [Account 1: WaPOR](#chapter7_1) section of this manual
+* **WAPOR_LEVEL** = integer, the options are 1 for 30m data, 2 for 100m data, or 3 if the 250m dataset of WAPOR has to be used within the analyses
+* **LU_Map_Format** = string, the default is "", this will use a combined map of WAPOR and ESACCI as standard. If an own Landuse map needs to be used, one can fill in the format of the path to this dataset here. Example: "C:\\Landuse\\LU.tif" is an example if the map is fixed in time and "C:\\Landuse\\LU_{yyyy}.tif" is an example if the map changes every year. The {yyyy} will be fillend in with the year.
+* **LU_Legend** = dictionary, if LU_Map_Format is filled in one need to define the conversion from the given LU map to the WaporTranslator LU map. This is done by defining the corresponding "Agriculture" and "Grassland" pixels. An example: {"Agriculture":[10, 20], "Grassland":[130]}. This example shows that the regions with number 10 and 20 corresponds to Agriculture and number 130 corresponds with Grassland.
+* **Albedo_Source** = string, options are "MODIS" or "Table". This variable defines the source of the Albedo dataset. (Table will increase the downloading speed)
+* **Radiation_Source** = string, Options are "LANDSAF" or "KNMI". Defines the source of radiation data.
+* **METEO_timestep** = string, options are "Daily" or "Monthly". The monthly timestep will increase the calculation speed. The required meteo datasets will be taken from GLDAS in monthly timesteps instead of daily timesteps. For monthly also the GLDAS data will be used as default for radiation instead of the source defined in Radiation_Source variable. The montlhly option will reduce the required memory and will increase the calculation speed.
+* **Phenology_Variable** = string, options are "T" or "ET". This parameter defines if the Transpiration or the Evapotranspiration has to be used for calculating the phenology.
+* **Phenology_Threshold** = float, this variable defines the minimum amount of maximum Transpiration/Evapotranspiraton in mm/day (dekadal average) a pixel needs to have in a season in order to start a season. 
+* **Phenology_Slope** = float, this variable defines the minimum amount of maximum Transpiration/Evapotranspiraton slope in delta mm/day (difference between two following dekadal averages) a pixel needs to have in a season in order to start a season. 
+* **Champion_Percentage** = float, to define the champion pixels value (the local heroes) a certain percentile over all the agricultural pixels within one Area Ecological Zone is used. This variable defines this percentile.
+* **On_Farm_Efficiency** = float, this variable defines the on farm efficiency.
+* **Irrigation_Dekads_Threshold** = integer, defines the amount of dekads needs to be assigned as irrigated in a year before a pixel within the yearly irrigation map is also assigned as irrigated.
+* **Yield_info_S1** = dictionary, defines the crop type, harvest index, and moisture index of the crop in Season 1. The Yield is calculated by Total Biomass * Harvest_Index / Moisture_Index.
+An example of the dictionary:
+ > "Yield_info_S1": {"Croptype": "Rice", "Harvest_Index": 0.40, "Moisture_Index": 0.15}
 
-Optional input:
-* **Radiation_Source** = string, default is "KNMI", but "LANDSAF" is also possible as radiation source
+ * **Yield_info_S2** = dictionary, defines the crop type, harvest index, and moisture index of the crop in Season 2.
+ * **Yield_info_S3** = dictionary, defines the crop type, harvest index, and moisture index of the crop in Season 3.
+ * **Yield_info_Per** = dictionary, defines the crop type, harvest index, and moisture index of the Perennial crops.
 
 After creating this file with the inputs, the WaporTranslator can be runned. Using the following steps:
 

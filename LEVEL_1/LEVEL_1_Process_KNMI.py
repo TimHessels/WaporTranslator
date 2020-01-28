@@ -52,32 +52,34 @@ def Calc_daily_radiation(folder_in, folder_out, Date):
 
     filename_trans = "SDS_MSGCPP_W-m-2_15min_%d.%02d.%02d_H{hour}.M{minutes}.tif"  %(Date.year, Date.month, Date.day)
     filename_trans_out = "SDS_MSGCPP_W-m-2_daily_%d.%02d.%02d.tif" %(Date.year, Date.month, Date.day)           
-    
-    os.chdir(folder_in)
-    files = glob.glob(filename_trans.format(hour = "*", minutes = "*"))
-    i = 0
-    
-    # Open all the 15 minutes files
-    for file in files:
-        file_in = os.path.join(folder_in, file)
-        destswgone = gdal.Open(file_in)
-        try:
-            swgnet_one = destswgone.GetRasterBand(1).ReadAsArray()
-            swgnet_one[swgnet_one<0] = 0                 
-            if not "geo_trans" in locals():
-                swgnet = np.ones([destswgone.RasterYSize, destswgone.RasterXSize, len(files)]) * np.nan
-                geo_trans = destswgone.GetGeoTransform()
-                proj_trans = destswgone.GetProjection()
-            swgnet[:,:,i] = swgnet_one
-        except:
-            pass
-        i+=1 
-        
-    # Calculate the daily mean     
-    swgnet_mean = np.nansum(swgnet, 2)/(24*4)
-    
     Dir_trans_out = os.path.join(folder_out, filename_trans_out)
+        
+    if not os.path.exists(Dir_trans_out):
     
-    DC.Save_as_tiff(Dir_trans_out, swgnet_mean, geo_trans, proj_trans)
+        os.chdir(folder_in)
+        files = glob.glob(filename_trans.format(hour = "*", minutes = "*"))
+        i = 0
+        
+        # Open all the 15 minutes files
+        for file in files:
+            file_in = os.path.join(folder_in, file)
+            destswgone = gdal.Open(file_in)
+            try:
+                swgnet_one = destswgone.GetRasterBand(1).ReadAsArray()
+                swgnet_one[swgnet_one<0] = 0                 
+                if not "geo_trans" in locals():
+                    swgnet = np.ones([destswgone.RasterYSize, destswgone.RasterXSize, len(files)]) * np.nan
+                    geo_trans = destswgone.GetGeoTransform()
+                    proj_trans = destswgone.GetProjection()
+                swgnet[:,:,i] = swgnet_one
+            except:
+                pass
+            i+=1 
+            
+        # Calculate the daily mean     
+        swgnet_mean = np.nansum(swgnet, 2)/(24*4)
+    
+        
+        DC.Save_as_tiff(Dir_trans_out, swgnet_mean, geo_trans, proj_trans)
     
     return()   

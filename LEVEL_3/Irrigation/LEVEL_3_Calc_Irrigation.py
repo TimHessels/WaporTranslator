@@ -24,6 +24,7 @@ def main(inputs):
     WAPOR_LVL = inputs["WAPOR_LEVEL"]   
     threshold_irrigated = inputs["Irrigation_Dekads_Threshold"]   
     Champion_per = inputs["Champion_Percentage"]     
+    on_farm_efficiency = inputs["On_Farm_Efficiency"]  
     
     # Do not show non relevant warnings
     warnings.filterwarnings("ignore")
@@ -77,7 +78,7 @@ def main(inputs):
     Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)
 
     ######################## Calculate Irrigation Water Requirement ########################
-    Irrigation_Water_Requirement_Data = (Crop_Water_Requirement.Data - 0.7 * P.Data * Days_in_Dekads[:, None, None])/(0.65)
+    Irrigation_Water_Requirement_Data = (Crop_Water_Requirement.Data - 0.7 * P.Data * Days_in_Dekads[:, None, None])/(on_farm_efficiency)
  
     # Write in DataCube
     Irrigation_Water_Requirement = DataCube.Rasterdata_Empty()

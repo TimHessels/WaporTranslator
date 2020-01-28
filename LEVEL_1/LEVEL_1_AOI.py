@@ -12,7 +12,7 @@ from pyproj import Proj, transform
 import watertools.General.raster_conversions as RC
 import watertools.General.data_conversions as DC
 
-def main(Input_shapefile):
+def main(Input_shapefile, Threshold_Mask):
     
     # Create example dest
     Basin_shp = shapefile.Reader(Input_shapefile, Input_shapefile.replace(".shp", ".dbf"))
@@ -47,9 +47,12 @@ def main(Input_shapefile):
     Boundaries['Lonmin'] = np.floor(Boundaries['Lonmin']*100)/100
     Boundaries['Lonmax'] = np.ceil(Boundaries['Lonmax']*100)/100
     Boundaries['Latmin'] = np.floor(Boundaries['Latmin']*100)/100
-    Boundaries['Latmax'] = np.ceil(Boundaries['Latmax']*100)/100        
-
-    Resolution = 0.0001
+    Boundaries['Latmax'] = np.ceil(Boundaries['Latmax']*100)/100       
+    
+    if Threshold_Mask == "OFF":
+        Resolution = 0.001       
+    else:    
+        Resolution = 0.0001
 
     size_x = int((Boundaries['Lonmax'] - Boundaries['Lonmin']) / Resolution)
     size_y = int((Boundaries['Latmax'] - Boundaries['Latmin']) / Resolution)

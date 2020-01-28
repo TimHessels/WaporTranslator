@@ -5,12 +5,16 @@
 			 "Output_folder": "C:\\.....", 
 			 "API_WAPOR_KEY": "PUT_HERE_YOUR_API_KEY", 
 			 "WAPOR_LEVEL": 2,
+			 "LU_Map_Format": "",
+			 "LU_Legend": {"Agriculture":[10, 20], "Grassland":[130]},
 			 "Albedo_Source": "MODIS",
 			 "Radiation_Source": "KNMI",
 			 "METEO_timestep": "Monthly",
+			 "Phenology_Variable": "T",			 
 			 "Phenology_Threshold": 3,
 			 "Phenology_Slope": 0.5,
 			 "Champion_Percentage": 95,
+			 "On_Farm_Efficiency": 0.65,			 
 			 "Irrigation_Dekads_Threshold": 3,
 			 "Yield_info_S1": {"Croptype": "Rice", 
 			                   "Harvest_Index": 0.40,
@@ -25,3 +29,7 @@
 			                   "Harvest_Index": 0.45,
 							   "Moisture_Index": 0.13}              							   
 			 }]}
+			 
+			 
+			 
+			 

@@ -27,8 +27,8 @@ def main(inputs):
     Yield_info_S1 = inputs["Yield_info_S1"]       
     Yield_info_S2 = inputs["Yield_info_S2"]       
     Yield_info_S3 = inputs["Yield_info_S3"]       
-    Yield_info_Per = inputs["Yield_info_Per"]   
-    Threshold = inputs["Irrigation_Dekads_Threshold"]  
+    Yield_info_Per = inputs["Yield_info_Per"]      
+    threshold_irrigated = inputs["Irrigation_Dekads_Threshold"]  
     Champion_per = inputs["Champion_Percentage"] 
     
     # Do not show non relevant warnings
@@ -91,7 +91,7 @@ def main(inputs):
     Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Irrigation"))
 
     ################################# Calculate Irrigation yes/no #################################
-    Grassland_Data = np.where(CropType.Data==3, 1, np.nan)
+    Grassland_Data = np.where(CropType.Data==2, 1, np.nan)
     Grassland = DataCube.Rasterdata_Empty()
     Grassland.Data = Grassland_Data * MASK
     Grassland.Projection = Irrigation.Projection
@@ -114,7 +114,7 @@ def main(inputs):
         Start = (Date_Year.year - Dates_Years[0].year) * 36
         End = Start + 36
         Irrigation_year_Data[Dates_Years == Date_Year, :, :] = np.nansum(Irrigation.Data[Start:End, :, :], axis = 0)
-    
+        
     Irrigation_Yearly = DataCube.Rasterdata_Empty()
     Irrigation_Yearly.Data = Irrigation_year_Data * MASK
     Irrigation_Yearly.Projection = Irrigation.Projection
@@ -136,7 +136,7 @@ def main(inputs):
     Season_Type = Calc_Crops(CropType, CropSeason, MASK)
     
     ################################# Created AEZ numbers #################################
-    AEZ = Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Type, MASK, Threshold)
+    AEZ = Calc_AEZ(Irrigation_Yearly, Aridity, Slope, DEM, Clay, Silt, Sand, Season_Type, MASK, threshold_irrigated)
     AEZ.Save_As_Tiff(os.path.join(output_folder_L3, "AEZ"))
     
     ################################# Create dictionary for all AEZ #################################
@@ -771,7 +771,7 @@ def Calc_Crops(CropType, CropClass, MASK):
     Class_Data = CropClass.Data
     
     # Create Season Type map
-    Season_Type_Data = np.where(Type_Data == 3, 5, Class_Data)
+    Season_Type_Data = np.where(Type_Data == 2, 5, Class_Data)
 
     Season_Type = DataCube.Rasterdata_Empty()
     Season_Type.Data = Season_Type_Data * MASK
