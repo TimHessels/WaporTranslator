@@ -74,16 +74,16 @@ def main(inputs):
     ET0 = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.ET0), Formats.ET0, Dates, Conversion = Conversions.ET0, Example_Data = example_file, Mask_Data = example_file, gap_filling = 1, reprojection_type = 2, Variable = 'ET0', Product = 'WAPOR', Unit = 'mm/day')
 
     if LU_Data == "":
-        LU = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.LU) %WAPOR_LVL), str(Formats.LU) %WAPOR_LVL, Dates_yearly, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
-        LUdek = DataCube.Rasterdata_tiffs(os.path.join(output_folder,str(Paths.LU) %WAPOR_LVL), str(Formats.LU) %WAPOR_LVL, Dates, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
+        LU = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.LU) %WAPOR_LVL), str(Formats.LU) %WAPOR_LVL, Dates_yearly, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 1, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
+        LUdek = DataCube.Rasterdata_tiffs(os.path.join(output_folder,str(Paths.LU) %WAPOR_LVL), str(Formats.LU) %WAPOR_LVL, Dates, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 1, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
     else:
-        LU = DataCube.Rasterdata_tiffs(os.path.dirname(LU_Data), os.path.basename(LU_Data), Dates_yearly, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
-        LUdek = DataCube.Rasterdata_tiffs(os.path.dirname(LU_Data), os.path.basename(LU_Data), Dates, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
+        LU = DataCube.Rasterdata_tiffs(os.path.dirname(LU_Data), os.path.basename(LU_Data), Dates_yearly, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 1, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
+        LUdek = DataCube.Rasterdata_tiffs(os.path.dirname(LU_Data), os.path.basename(LU_Data), Dates, Conversion = Conversions.LU, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 1, Variable = 'LU', Product = 'WAPOR', Unit = 'LU')
         
     ################################## Calculate LU map ##########################################
     
     Phenology_pixels_year, Grassland_pixels_year = Create_LU_MAP(output_folder, Dates_yearly, LU, LUdek, Paths.LU_ESA, Formats.LU_ESA, example_file, LU_Data, LU_Legend)
-    LU_END = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, list(Dates_yearly), Conversion = Conversions.LU_END, Variable = 'LU_END', Product = '', Unit = '-')
+    LU_END = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.LU_END), Formats.LU_END, list(Dates_yearly), Conversion = Conversions.LU_END, reprojection_type = 1, Variable = 'LU_END', Product = '', Unit = '-')
 
     del LU
        

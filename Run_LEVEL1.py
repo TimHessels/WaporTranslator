@@ -11,7 +11,7 @@ import warnings
 import pandas as pd
 import WaporTranslator.LEVEL_1 as L1
 
-def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep, LU_Data):
+def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep, LU_Data, Spatial_Resolution):
     
     # Create output folder for LEVEL 1 data
     output_folder_L1 = os.path.join(output_folder, "LEVEL_1")
@@ -69,7 +69,7 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
             L1.LEVEL_1_Download_MODIS.main(output_folder_L1, year, year, latlim, lonlim, Radiation_Data, METEO_timestep)
         
     # Create Mask
-    L1.LEVEL_1_Create_Mask.main(output_folder_L1, dest_AOI_MASK, Threshold_Mask)
+    L1.LEVEL_1_Create_Mask.main(output_folder_L1, dest_AOI_MASK, Threshold_Mask, Spatial_Resolution)
 
 if __name__== "__main__":
     
@@ -92,7 +92,10 @@ if __name__== "__main__":
     WAPOR_LVL = inputs["WAPOR_LEVEL"]  
     METEO_timestep = inputs["METEO_timestep"]      
     LU_Data = inputs["LU_Map_Format"]    
-    
+    try:
+        Spatial_Resolution = inputs["Spatial_Resolution"]    
+    except:
+        Spatial_Resolution = "None"      
     try:
         Radiation_Data = inputs["Radiation_Source"]   
     except:
@@ -103,4 +106,4 @@ if __name__== "__main__":
         Albedo_Data = "MODIS"        
     
     # run code
-    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep, LU_Data)
+    main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask, output_folder, API_WAPOR_KEY, WAPOR_LVL, Radiation_Data, Albedo_Data, METEO_timestep, LU_Data, Spatial_Resolution)

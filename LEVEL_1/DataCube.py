@@ -42,7 +42,7 @@ class Rasterdata_tiffs:
     Enddate = ''    
     Timestep = ''
     
-    def __init__(self, input_folder, input_format, Dates = None, Conversion = 1, Example_Data = None, Mask_Data = None, gap_filling = None, reprojection_type = 2, Variable = '', Product = '', Description = '', Unit = '', Dimension_description = ''):
+    def __init__(self, input_folder, input_format, Dates = None, Conversion = 1, Example_Data = None, Mask_Data = None, gap_filling = None, reprojection_type = 1, Variable = '', Product = '', Description = '', Unit = '', Dimension_description = ''):
 
         if Mask_Data != None:
             dest_MASK = RC.reproject_dataset_example(Mask_Data, Example_Data, 1)

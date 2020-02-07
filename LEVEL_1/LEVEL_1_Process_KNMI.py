@@ -44,7 +44,11 @@ def Download_MSGCPP_Parallel(Date, output_folder_L1, latlim, lonlim):
     
     Startdate = Date
     Enddate = Date
-    watertools.Collect.MSGCPP.SDS(output_folder_L1, Startdate, Enddate, latlim, lonlim, Waitbar = 0)
+    filename_trans = "SDS_MSGCPP_W-m-2_15min_%d.%02d.%02d_H00.M00.tif"  %(Date.year, Date.month, Date.day)
+    output_folder_knmi = os.path.join(output_folder_L1, "MSGCPP", "SDS", "15min")
+    Dir_trans_out = os.path.join(output_folder_knmi, filename_trans)
+    if not os.path.exists(Dir_trans_out):
+        watertools.Collect.MSGCPP.SDS(output_folder_L1, Startdate, Enddate, latlim, lonlim, Waitbar = 0)
     
     return()
 

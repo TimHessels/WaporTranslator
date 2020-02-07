@@ -195,7 +195,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                            else: 
                                # Fill in array
                                Per_Map_Start[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
-                               Per_Map_End[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               Per_Map_End[dict_in[0]== ID_Matrix] = np.minimum(End - Year_DOY_Start, 999)
                                LU_Crop_Map[dict_in[0]== ID_Matrix] = 4
                        
                     # If it is a double season               
@@ -224,7 +224,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                            else: 
                                # Fill in array
                                Per_Map_Start[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
-                               Per_Map_End[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               Per_Map_End[dict_in[0]== ID_Matrix] = np.minimum(End - Year_DOY_Start, 999)
                                LU_Crop_Map[dict_in[0]== ID_Matrix] = 4
 
                     # If it is a triple season               
@@ -253,7 +253,7 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
                            else: 
                                # Fill in array
                                Per_Map_Start[dict_in[0]== ID_Matrix] = Starts[0] - Year_DOY_Start
-                               Per_Map_End[dict_in[0]== ID_Matrix] = End - Year_DOY_Start
+                               Per_Map_End[dict_in[0]== ID_Matrix] = np.minimum(End - Year_DOY_Start, 999)
                                LU_Crop_Map[dict_in[0]== ID_Matrix] = 4                           
             count += 1        
         print("                                                                                         ")      
