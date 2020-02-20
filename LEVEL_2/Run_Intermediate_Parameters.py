@@ -91,7 +91,7 @@ def main(inputs):
 
     if Radiation_Data == "LANDSAF":
         Start_Rad = 2016
-    if Radiation_Data == "KNMI":  
+    if (Radiation_Data == "KNMI" and METEO_timestep == "Daily"):  
         
         # Check dataset
         os.chdir(os.path.join(output_folder, Paths.KNMI))
