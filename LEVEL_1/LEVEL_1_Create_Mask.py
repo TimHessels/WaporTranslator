@@ -13,18 +13,21 @@ import numpy as np
 import watertools.General.raster_conversions as RC
 import watertools.General.data_conversions as DC
 
-def main(output_folder_L1, dest_AOI_MASK, Threshold_Mask, Spatial_Resolution):
-    
-    # select input folder
-    input_folder_LCC = os.path.join(output_folder_L1, "L2_LCC_A")
-    
-    # Set input folder as working directory
-    os.chdir(input_folder_LCC)
+def main(output_folder_L1, dest_AOI_MASK, Threshold_Mask, Spatial_Resolution, LU_Data):
     
     # Find file for extend
-    re = glob.glob("L2_LCC_A_*.tif")[0]
-    Filename_Example = os.path.join(input_folder_LCC, re)
+    if LU_Data == "":
+        input_folder_LCC = os.path.join(output_folder_L1, "L2_LCC_A")
+        os.chdir(input_folder_LCC)
+        re = glob.glob("L2_LCC_A_*.tif")[0]
+    else:
+        input_folder_LCC = os.path.join(output_folder_L1, "L2_AETI_D")
+        os.chdir(input_folder_LCC)        
+        re = glob.glob("L2_AETI_D_*.tif")[0]
     
+    # Open file
+    Filename_Example = os.path.join(input_folder_LCC, re)
+        
     # Open file
     if Spatial_Resolution=="None":
         dest = gdal.Open(Filename_Example)

@@ -69,7 +69,7 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
             L1.LEVEL_1_Download_MODIS.main(output_folder_L1, year, year, latlim, lonlim, Radiation_Data, METEO_timestep)
         
     # Create Mask
-    L1.LEVEL_1_Create_Mask.main(output_folder_L1, dest_AOI_MASK, Threshold_Mask, Spatial_Resolution)
+    L1.LEVEL_1_Create_Mask.main(output_folder_L1, dest_AOI_MASK, Threshold_Mask, Spatial_Resolution, LU_Data)
 
 if __name__== "__main__":
     
