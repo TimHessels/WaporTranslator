@@ -323,7 +323,7 @@ def main(inputs):
     for Date_Year in Dates_Years:
         year_diff = int(Date_Year.year - Dates_Years[0].year)
         Harvest = np.where(Per_End.Data[year_diff, :, :]<37, 1, 0)
-        for dekad in range(int(np.nanmin(Per_Start.Data[year_diff, :, :])), 36):
+        for dekad in range(int(np.nanmin(np.append(np.nanmin(Per_Start.Data[year_diff, :, :]),36))), 36):
             Accumulated_NPP_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = NPPcum.Data[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
         for dekad in range(0,37):
             Accumulated_NPP_Data_End[year_diff, Per_End.Data[year_diff, :, :] == dekad] = NPPcum.Data[int(year_diff * 36 + dekad-1), Per_End.Data[year_diff, :, :] == dekad] 

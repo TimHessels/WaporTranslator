@@ -14,14 +14,19 @@ from joblib import Parallel, delayed
 import watertools
 import watertools.General.data_conversions as DC
 
-def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, cores, method = "Daily"):
+def main(output_folder_L1, Start_year_analyses, End_year_analyses, latlim, lonlim, cores, Radiation_Data, method = "Daily"):
 
     # Get Date range
     Startdate = "%s-01-01" %Start_year_analyses
     Enddate = "%s-12-31" %End_year_analyses
     if method == "Daily":
         Dates = pd.date_range(Startdate, Enddate, freq = "D")
-        Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst']   
+        if Radiation_Data == "GLDAS":
+             Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst', 'swdown_f_tavg']   
+        else:
+             Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst']   
+            
+            
     if method == "Monthly": 
         Dates = pd.date_range(Startdate, Enddate, freq = "MS")
         Vars = ['tair_f_inst', 'wind_f_inst', 'qair_f_inst', 'psurf_f_inst', 'swdown_f_tavg']           

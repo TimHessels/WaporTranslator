@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import watertools.General.data_conversions as DC
 
-def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope, Phenology_Var):
+def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope, Phenology_Var, inputs):
 
     # Define start and enddate
     Startdate = "%s-01-01" %Start_year_analyses
@@ -55,13 +55,34 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
     geo = ET.GeoTransform
     proj = ET.Projection   
     
-    pixel = 1
-    
+
     # Select the variable that will be used for the phenelogy
     if Phenology_Var == "ET":
         T_selected = ET.Data * Phenology_pixels_year        
     else:        
-        T_selected = T.Data * Phenology_pixels_year
+        T_selected = T.Data * Phenology_pixels_year    
+ 
+    Calculate_phenology = True
+    
+    if inputs["Yield_info_S1"]["Startdekad"] != None:
+        Startdekad = []
+        Enddekad = []
+        if not inputs["Yield_info_S1"]["Startdekad"] == None:
+            Startdekad.append(inputs["Yield_info_S1"]["Startdekad"])
+        if not inputs["Yield_info_S2"]["Startdekad"] == None:
+            Startdekad.append(inputs["Yield_info_S2"]["Startdekad"])        
+        if not inputs["Yield_info_S3"]["Startdekad"] == None:
+            Startdekad.append(inputs["Yield_info_S3"]["Startdekad"])
+        if not inputs["Yield_info_S1"]["Enddekad"] == None:
+            Enddekad.append(inputs["Yield_info_S1"]["Enddekad"])
+        if not inputs["Yield_info_S2"]["Enddekad"] == None:
+            Enddekad.append(inputs["Yield_info_S2"]["Enddekad"])        
+        if not inputs["Yield_info_S3"]["Enddekad"] == None:
+            Enddekad.append(inputs["Yield_info_S3"]["Enddekad"])            
+            
+        Calculate_phenology = False    
+             
+    pixel = 1
     
     # Calculate start and end date
     for i in range(0, T.Size[1]):
@@ -70,7 +91,17 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
           Ts = T_selected[:, i, j]
           if not np.isnan(np.nanmean(Ts)): 
            
-              Start, End, Start_Per, End_Per = Calc_Season(Ts, Phenology_Threshold, Phenology_Slope)
+              if Calculate_phenology == True:
+                  Start, End, Start_Per, End_Per = Calc_Season(Ts, Phenology_Threshold, Phenology_Slope)
+              else:
+                  Start_Per = []
+                  End_Per = []   
+                  Start = []
+                  End = []
+                  Start.append([[list(i + np.arange(0, len(Years)) * 36)] for i in Startdekad])
+                  Start = np.array(sorted(np.array(Start).flatten()))
+                  End.append([[list(i + np.arange(0, len(Years)) * 36)] for i in Enddekad])
+                  End = np.array(sorted(np.array(End).flatten()))
     
               Seasons_dict_start[pixel] = Start
               Seasons_dict_end[pixel] = End
@@ -79,10 +110,9 @@ def Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET,
             
           sys.stdout.write("\rCalculate Phenology %i/%i (%f %%)" %(pixel, T.Size[1] * T.Size[2], pixel/(T.Size[1] * T.Size[2]) * 100))
           sys.stdout.flush()
-    
-    
+
           pixel += 1
-    
+        
     Seasons_dict_per_start = dict( [(k,v) for k,v in Seasons_dict_per_start.items() if len(v)>0])
     Seasons_dict_per_end = dict( [(k,v) for k,v in Seasons_dict_per_end.items() if len(v)>0])
     Seasons_dict_start = dict( [(k,v) for k,v in Seasons_dict_start.items() if len(v)>0])

@@ -47,7 +47,7 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
         
         # Download GLDAS data
         if METEO_timestep == "Daily":
-            L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores, method = "Daily")
+            L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores, Radiation_Data, method = "Daily")
             
             # Process MSGCCP data
             if Radiation_Data == "LANDSAF":
@@ -60,7 +60,7 @@ def main(Start_year_analyses, End_year_analyses, Input_shapefile, Threshold_Mask
                 print("Choose for Radiation input LANDSAF or KNMI")     
                 
         elif METEO_timestep == "Monthly":
-            L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores, method = "Monthly")            
+            L1.LEVEL_1_Download_GLDAS.main(output_folder_L1, year, year, latlim, lonlim, cores, Radiation_Data, method = "Monthly")            
         else:
             print("Choose for METEO timestep Daily or Monthly")
             

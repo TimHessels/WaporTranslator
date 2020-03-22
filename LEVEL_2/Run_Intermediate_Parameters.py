@@ -102,7 +102,7 @@ def main(inputs):
                 Years_KNMI.append(Date_yearly.year)
         Start_Rad = np.nanmin(Years_KNMI)
         
-    if METEO_timestep == "Monthly":    
+    if METEO_timestep == "Monthly" or Radiation_Data == "GLDAS":    
         Start_Rad = Start_year_analyses
         
     Dates_Net_Radiation = Functions.Get_Dekads(str(np.maximum(int(Start_year_analyses), Start_Rad)), End_year_analyses)   
@@ -148,7 +148,9 @@ def main(inputs):
             DSSF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DSSF), Formats.DSSF, Dates_Net_Radiation_Daily, Conversion = Conversions.DSSF, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DSSF', Product = 'LANDSAF', Unit = 'W/m2')
         if Radiation_Data == "KNMI":
             DSSF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.KNMI), Formats.KNMI, Dates_Net_Radiation_Daily, Conversion = Conversions.KNMI, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'SDS', Product = 'KNMI', Unit = 'W/m2')
-            
+        if Radiation_Data == "GLDAS":
+            DSSF_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DSSF_GLDAS), Formats.DSSF_GLDAS, Dates_Net_Radiation_Daily, Conversion = Conversions.DSSF_GLDAS, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'SDS', Product = 'KNMI', Unit = 'W/m2')
+
         Temp_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Temp), Formats.Temp, Dates_Daily, Conversion = Conversions.Temp, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Temperature', Product = 'GLDAS', Unit = 'Celcius')
         Hum_daily = DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.Hum), Formats.Hum, Dates_Daily, Conversion = Conversions.Hum, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'Humidity', Product = 'GLDAS', Unit = 'Percentage')
      
@@ -262,7 +264,7 @@ def main(inputs):
             del Land_Surface_Emissivity_Daily, DSSF_daily, DSLF_daily
             
         #################### Calculate Net Radiation KNMI method ###################################  
-        if Radiation_Data == "KNMI":
+        if Radiation_Data == "KNMI" or Radiation_Data == "GLDAS":
             
             DEM =  DataCube.Rasterdata_tiffs(os.path.join(output_folder, Paths.DEM), Formats.DEM, Dates = None, Conversion = Conversions.DEM, Example_Data = example_file, Mask_Data = example_file, reprojection_type = 2, Variable = 'DEM', Product = 'SRTM', Unit = 'm')
     
@@ -365,7 +367,7 @@ def main(inputs):
     NPP = DataCube.Rasterdata_tiffs(os.path.join(output_folder, str(Paths.NPP) %WAPOR_LVL), str(Formats.NPP) %WAPOR_LVL, Dates, Conversion = Conversions.NPP, Example_Data = example_file, Mask_Data = example_file, Variable = 'NPP', Product = 'WAPOR', Unit = 'kg/ha/day')
  
     ############################ Calculate Root Depth ##########################################
-    Root_Depth_Data = 0.85 * 100 * np.maximum(0, -0.0326 * LAI.Data**2 + 0.4755 * LAI.Data - 0.0411)
+    Root_Depth_Data = 0.65 * 100 * np.maximum(0, -0.0326 * LAI.Data**2 + 0.4755 * LAI.Data - 0.0411)
     Root_Depth_Data = Root_Depth_Data.clip(0, 500)
     
     # Write in DataCube
@@ -602,8 +604,8 @@ def main(inputs):
     
     ################## Calculate Soil Moisture Change ##################################  
     
-    Soil_Moisture_Change_Data = 10 * Root_Depth.Data * Days_in_Dekads[:, None, None] * (Soil_Moisture_End.Data - Soil_Moisture_Start.Data)
-    
+    Soil_Moisture_Change_Data = 10 * Root_Depth.Data * (Soil_Moisture_End.Data - Soil_Moisture_Start.Data) # * Days_in_Dekads[:, None, None] heb deze term weggehaald #!!!
+       
     # Write in DataCube
     Soil_Moisture_Change = DataCube.Rasterdata_Empty()
     Soil_Moisture_Change.Data = Soil_Moisture_Change_Data * MASK
@@ -837,7 +839,7 @@ def main(inputs):
     
     ############################### Calculate Phenelogy ####################################
     
-    L2.Phenology.Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope, Phenology_Var)
+    L2.Phenology.Calc_Phenology(output_folder, Start_year_analyses, End_year_analyses, T, ET, NPP, P, Temp, ET0, LU_END, Phenology_pixels_year, Grassland_pixels_year, example_file, Days_in_Dekads, Phenology_Threshold, Phenology_Slope, Phenology_Var, inputs)
 
     return()    
     

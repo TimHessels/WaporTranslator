@@ -9,9 +9,9 @@
 			 "LU_Map_Format": "",
 			 "LU_Legend": {"Agriculture":[10, 20], "Grassland":[130]},
 			 "Albedo_Source": "MODIS",
-			 "Radiation_Source": "KNMI",
+			 "Radiation_Source": "GLDAS",
 			 "METEO_timestep": "Monthly",
-			 "Phenology_Variable": "T",			 
+			 "Phenology_Variable": "ET",			 
 			 "Phenology_Threshold": 3,
 			 "Phenology_Slope": 0.5,
 			 "Champion_Percentage": 95,
@@ -19,18 +19,23 @@
 			 "Irrigation_Dekads_Threshold": 3,
 			 "Yield_info_S1": {"Croptype": "Rice", 
 			                   "Harvest_Index": 0.40,
-							   "Moisture_Index": 0.15},
+							   "Moisture_Index": 0.15,
+							   "Startdekad":null,
+							   "Enddekad":null},
 			 "Yield_info_S2": {"Croptype": "Rice", 
 			                   "Harvest_Index": 0.42,
-							   "Moisture_Index": 0.14},
+							   "Moisture_Index": 0.14,
+							   "Startdekad":null,
+							   "Enddekad":null},
 			 "Yield_info_S3": {"Croptype": "Rice", 
 			                   "Harvest_Index": 0.40,
-							   "Moisture_Index": 0.15},
+							   "Moisture_Index": 0.15,
+							   "Startdekad":null,
+							   "Enddekad":null},
 			 "Yield_info_Per": {"Croptype": "Rice", 
 			                   "Harvest_Index": 0.45,
-							   "Moisture_Index": 0.13}              							   
-			 }]}
-			 
+							   "Moisture_Index": 0.13
+							  	}   
 			 
 			 
 			 

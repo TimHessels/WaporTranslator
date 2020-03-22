@@ -22,6 +22,7 @@ class Input_Paths():
     DSLF = r"LEVEL_1\LANDSAF\DSLF"
     DSSF = r"LEVEL_1\LANDSAF\DSSF"
     KNMI = r"LEVEL_1\MSGCPP\SDS\daily"
+    DSSF_GLDAS = r"LEVEL_1\Weather_Data\Model\GLDAS\daily\swdown_f_tavg\mean"  
     
     Albedo = r"LEVEL_1\Albedo\MCD43"
     
@@ -121,7 +122,7 @@ class Input_Formats:
     DSLF = "DSLF_LSASAF_MSG_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     DSSF = "DSSF_LSASAF_MSG_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     KNMI = "SDS_MSGCPP_W-m-2_daily_{yyyy}.{mm:02d}.{dd:02d}.tif"
-    DSSF_monthly = "DSSF_LSASAF_MSG_{yyyy}.{mm:02d}.{dd:02d}.tif"  #!!!
+    DSSF_GLDAS = "SWdown_GLDAS-NOAH_W-m-2_daily_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     
     Albedo = "Albedo_MCD43A3_-_daily_{yyyy}.{mm:02d}.{dd:02d}.tif" 
     
@@ -222,7 +223,8 @@ class Input_Conversions:
     DSLF = 0.000001                 #w/m2
     DSSF = 0.000001                 #w/m2
     KNMI = 1                        #w/m2
-    DSSF_monthly = 1               #w/m2
+    DSSF_monthly = 1                #w/m2
+    DSSF_GLDAS = 1                  #w/m2
     
     Albedo = 1                      # -
     
