@@ -151,7 +151,7 @@ def main(inputs):
     for Date_Year in Dates_Years:
         year_diff = int(Date_Year.year - Dates_Years[0].year)
         Harvest = np.where(Per_End.Data[year_diff, :, :]<37, 1, 0)
-        for dekad in range(int(np.nanmin(Per_Start.Data[year_diff, :, :])), 36):
+        for dekad in range(int(np.nanmin([np.nanmin(Per_Start.Data[year_diff, :, :]),36])), 36):
             Accumulated_T_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = NPPcum.Data[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
             Accumulated_ET0_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = ET0cum.Data[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
             Accumulated_DOY_Data_Start[year_diff, np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] = DOYcum[int(year_diff * 36 + dekad), np.logical_and(Per_Start.Data[year_diff, :, :] == dekad, Harvest==1)] 
