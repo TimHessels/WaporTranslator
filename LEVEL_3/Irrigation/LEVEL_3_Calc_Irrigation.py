@@ -78,7 +78,7 @@ def main(inputs):
     Days_in_Dekads = np.append(ET.Ordinal_time[1:] - ET.Ordinal_time[:-1], 11)
 
     ######################## Calculate Irrigation Water Requirement ########################
-    Irrigation_Water_Requirement_Data = (Crop_Water_Requirement.Data - 0.7 * P.Data * Days_in_Dekads[:, None, None])/(on_farm_efficiency)
+    Irrigation_Water_Requirement_Data = np.maximum((Crop_Water_Requirement.Data - 0.7 * P.Data * Days_in_Dekads[:, None, None])/(on_farm_efficiency), 0)
  
     # Write in DataCube
     Irrigation_Water_Requirement = DataCube.Rasterdata_Empty()
@@ -199,6 +199,24 @@ def main(inputs):
     del Onfarm_Irrigation_Efficiency_Data
     
     Onfarm_Irrigation_Efficiency.Save_As_Tiff(os.path.join(output_folder_L3, "Onfarm_Irrigation_Efficiency"))    
+
+    ######################### Calculate Surface Runoff Due to Irrigation ########################
+    Surface_Runoff_Irrigation_Data = np.maximum(Gross_Irrigation_Water_Supply.Data - ETblue.Data, 0)
+
+    # Write in DataCube
+    Surface_Runoff_Irrigation = DataCube.Rasterdata_Empty()
+    Surface_Runoff_Irrigation.Data = Surface_Runoff_Irrigation_Data * MASK
+    Surface_Runoff_Irrigation.Projection = ET.Projection
+    Surface_Runoff_Irrigation.GeoTransform = ET.GeoTransform
+    Surface_Runoff_Irrigation.Ordinal_time = ET.Ordinal_time
+    Surface_Runoff_Irrigation.Size = Surface_Runoff_Irrigation_Data.shape
+    Surface_Runoff_Irrigation.Variable = "Surface Runoff Irrigation"
+    Surface_Runoff_Irrigation.Unit = "mm-dekad-1"
+    
+    del Surface_Runoff_Irrigation_Data
+    
+    Surface_Runoff_Irrigation.Save_As_Tiff(os.path.join(output_folder_L3, "Surface_Runoff_Irrigation"))    
+    
     
     ########################## Calculate Degree Of Over Irrigation #########################
     Degree_Of_Over_Irrigation_Data = np.maximum(Theta_FC_Subsoil.Data[None, :, :]/Soil_Moisture.Data,1) * 100

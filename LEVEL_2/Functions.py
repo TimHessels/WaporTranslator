@@ -195,8 +195,7 @@ def Calc_Daily_from_Dekads(DataCube_in):
     print("                                                                                                                      ")
             
     return(DataCube_out)            
-            
-            
+                    
 def Calc_Dekad_Raster_from_Daily(input_folder, input_format, Date, flux_state = "flux", example_file = None):    
     
     # Calculate the start and enddate of the decade
@@ -246,6 +245,63 @@ def Calc_Dekad_Raster_from_Daily(input_folder, input_format, Date, flux_state = 
     dest = DC.Save_as_MEM(data, geo, proj)
     
     return(dest)
+
+                   
+def Convert_Dekads_to_Monthly(input_folder, input_format, output_folder, output_format, Startdate, Enddate, flux_state = "flux"):    
+    
+    # Define dates
+    Dates = pd.date_range(Startdate, Enddate, freq = "MS")
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    for date in Dates:
+        
+        year = date.year
+        month = date.month
+        day = date.day
+        
+        Dates_dek = []
+        Dates_dek.append(datetime.datetime(date.year, date.month, 1))
+        Dates_dek.append(datetime.datetime(date.year, date.month, 11))
+        Dates_dek.append(datetime.datetime(date.year, date.month, 21))
+        
+        output_filename = os.path.join(output_folder, output_format.format(yyyy=year, mm=month, dd=day))
+        
+        if "Array_End" in locals():
+            del Array_End
+            
+        i = 0
+        
+        for date_dek in Dates_dek:
+                
+            year_dek = date_dek.year
+            month_dek = date_dek.month
+            day_dek = date_dek.day    
+            
+            dest = gdal.Open(os.path.join(input_folder, input_format.format(yyyy=year_dek, mm=month_dek, dd=day_dek)))
+            Array_one = dest.GetRasterBand(1).ReadAsArray()
+            
+            if day_dek == 1:
+                
+                Array_End = np.ones([3, Array_one.shape[0], Array_one.shape[1]]) * np.nan
+                geo = dest.GetGeoTransform()
+                proj = dest.GetProjection()
+                
+            Array_End[i, :, :] = Array_one
+            i+=1
+            
+        if flux_state == "state":
+            Array_month = np.nanmean(Array_End, axis = 0)
+        
+        if flux_state == "flux":
+            Array_month = np.nansum(Array_End, axis = 0)    
+             
+        DC.Save_as_tiff(output_filename, Array_month, geo, proj)
+    
+    return()
+
+
 
 def Get_Dekads(Start_year_analyses, End_year_analyses):
     

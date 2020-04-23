@@ -662,7 +662,7 @@ def main(inputs):
     
     ############### Calculate Storage coefficient for surface runoff #################   
     
-    Storage_Coeff_Surface_Runoff_Data = 4 * (Sand.Data[None, :, :] * LAI.Data) * (Theta_Sat_Subsoil.Data[None, :, :] - Soil_Moisture.Data)
+    Storage_Coeff_Surface_Runoff_Data = 4 * (Sand.Data[None, :, :] * np.maximum(LAI.Data),0.5) * (Theta_Sat_Subsoil.Data[None, :, :] - Soil_Moisture.Data)
     
     # Write in DataCube
     Storage_Coeff_Surface_Runoff = DataCube.Rasterdata_Empty()
