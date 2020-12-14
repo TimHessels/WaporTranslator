@@ -223,7 +223,7 @@ def main(inputs):
     ################################# Calculate NPP Change In Time #################################
     
     # Set time
-    T = np.arange(len(Dates)) 
+    T = np.float_(np.arange(len(Dates)) +1 )
     
     # Calculate trend
     trend_dekad = ((np.sum(np.where(np.isnan(NPP.Data),0,1),axis = 0) * np.nansum(NPP.Data * T[:,None,None], axis = 0)) - (np.nansum(NPP.Data, axis = 0) * np.nansum(T[:,None,None], axis = 0)))/((np.sum(np.where(np.isnan(NPP.Data),0,1),axis = 0)* np.nansum(T[:,None,None] * T[:,None,None], axis = 0)) - (np.nansum(T[:,None,None], axis = 0) * np.nansum(T[:,None,None], axis = 0))) 
